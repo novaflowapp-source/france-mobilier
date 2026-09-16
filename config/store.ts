@@ -2,13 +2,18 @@
  * Branding & store configuration — edit this file to rebrand.
  */
 
+function publicSiteUrl() {
+  const fromEnv = process.env.NEXT_PUBLIC_SITE_URL?.trim() || process.env.BETTER_AUTH_URL?.trim();
+  return (fromEnv || "https://francemobilier.org").replace(/\/$/, "");
+}
+
 export const store = {
   storeName: "France Mobilier",
   storeTagline:
     "Des meubles sélectionnés pour gagner en confort, en espace et en simplicité au quotidien.",
   tagline: "Des meubles sélectionnés pour gagner en confort, en espace et en simplicité au quotidien.",
-  domain: "https://francemobilier.com",
-  supportEmail: "contact@francemobilier.com",
+  domain: publicSiteUrl(),
+  supportEmail: process.env.SUPPORT_EMAIL?.trim() || "contact@francemobilier.org",
   /** Horaires affichés publiquement (bandeau, contact). */
   supportHoursShort: "lun–ven 10h–22h",
   supportHours: "Du lundi au vendredi, de 10h à 22h",

@@ -70,7 +70,7 @@ export async function lookupSiren(siren: string): Promise<SirenLookup | null> {
       signal: controller.signal,
       headers: {
         Accept: "application/json",
-        "User-Agent": "FranceMobilier/1.0 (contact@francemobilier.com)",
+        "User-Agent": "FranceMobilier/1.0 (contact@francemobilier.org)",
       },
       next: { revalidate: 0 },
     });

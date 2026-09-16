@@ -4,10 +4,27 @@ import { db, ensureDatabase } from "@/lib/db";
 import * as schema from "@/lib/db/schema";
 import { sendPasswordResetEmail } from "@/lib/mail";
 
-const baseURL =
+const baseURL = (
   process.env.BETTER_AUTH_URL ||
   process.env.NEXT_PUBLIC_SITE_URL ||
-  "http://localhost:3000";
+  "http://localhost:3000"
+).replace(/\/$/, "");
+
+function extraOrigins() {
+  const fromEnv = (process.env.BETTER_AUTH_TRUSTED_ORIGINS || "")
+    .split(",")
+    .map((value) => value.trim().replace(/\/$/, ""))
+    .filter(Boolean);
+  const railwayHost = process.env.RAILWAY_PUBLIC_DOMAIN?.trim();
+  return [
+    ...fromEnv,
+    railwayHost
+      ? railwayHost.startsWith("http")
+        ? railwayHost.replace(/\/$/, "")
+        : `https://${railwayHost}`
+      : "",
+  ].filter(Boolean);
+}
 
 let ready: Promise<void> | null = null;
 
@@ -47,11 +64,16 @@ export const auth = betterAuth({
     updateAge: 60 * 60 * 24,
   },
   trustedOrigins: [
-    baseURL,
-    "https://francemobilier.com",
-    "https://www.francemobilier.com",
-    "http://localhost:3000",
-    "http://localhost:3001",
+    ...new Set([
+      baseURL,
+      "https://francemobilier.org",
+      "https://www.francemobilier.org",
+      "https://francemobilier.com",
+      "https://www.francemobilier.com",
+      "http://localhost:3000",
+      "http://localhost:3001",
+      ...extraOrigins(),
+    ]),
   ],
   databaseHooks: {
     user: {
