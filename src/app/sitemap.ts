@@ -4,6 +4,8 @@ import { collections } from "@/config/store";
 import { isSellable } from "@/lib/products/merchandising";
 import { listProducts } from "@/lib/products/repository";
 
+export const dynamic = "force-dynamic";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = store.domain.replace(/\/$/, "");
   const staticRoutes = [

@@ -20,9 +20,13 @@ RUN echo "=== APP ROUTES IN CONTEXT ===" \
   && test -d src/app/api/reviews
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
+# Public URL must be known at build: sitemap.xml and robots.txt are generated then.
+# BETTER_AUTH_URL stays localhost so the auth adapter can compile without the live host.
+ENV NEXT_PUBLIC_SITE_URL=https://francemobilier.org
 RUN DATABASE_URL=:memory: \
   BETTER_AUTH_SECRET=build-time-placeholder-not-for-runtime \
   BETTER_AUTH_URL=http://localhost:3000 \
+  NEXT_PUBLIC_SITE_URL=https://francemobilier.org \
   npm run build \
   && test -f .next/standalone/server.js \
   && test -d .next/static

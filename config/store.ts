@@ -2,9 +2,26 @@
  * Branding & store configuration — edit this file to rebrand.
  */
 
+const PRODUCTION_SITE_URL = "https://francemobilier.org";
+
+function isLocalHostUrl(value: string) {
+  try {
+    const host = new URL(value).hostname.toLowerCase();
+    return host === "localhost" || host === "127.0.0.1" || host === "0.0.0.0" || host.endsWith(".local");
+  } catch {
+    return true;
+  }
+}
+
 function publicSiteUrl() {
   const fromEnv = process.env.NEXT_PUBLIC_SITE_URL?.trim() || process.env.BETTER_AUTH_URL?.trim();
-  return (fromEnv || "https://francemobilier.org").replace(/\/$/, "");
+  const value = (fromEnv || PRODUCTION_SITE_URL).replace(/\/$/, "");
+  // Docker build sets BETTER_AUTH_URL=http://localhost:3000. That must not leak into
+  // robots.txt / sitemap.xml or Google treats the catalog as unreachable.
+  if (process.env.NODE_ENV === "production" && isLocalHostUrl(value)) {
+    return PRODUCTION_SITE_URL;
+  }
+  return value;
 }
 
 export const store = {
