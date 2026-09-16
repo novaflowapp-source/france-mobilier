@@ -19,27 +19,27 @@ const groups = [
   {
     title: "Aide",
     links: [
-      { href: "/shipping", label: "Livraison" },
+      { href: "/livraison", label: "Livraison" },
       { href: "/retours", label: "Retours et remboursements" },
       { href: "/contact", label: "Contact" },
-      { href: "/faq", label: "FAQ" },
+      { href: "/questions-frequentes", label: "FAQ" },
       { href: "/guides", label: "Conseils" },
     ],
   },
   {
     title: "Professionnels",
     links: [
-      { href: "/pro", label: "France Mobilier Pro" },
+      { href: "/professionnels", label: "France Mobilier Pro" },
       { href: "/compte/devis", label: "Demande de devis" },
     ],
   },
   {
     title: "Informations",
     links: [
-      { href: "/about", label: "Notre histoire" },
-      { href: "/legal", label: "Mentions légales" },
-      { href: "/terms", label: "CGV" },
-      { href: "/privacy", label: "Confidentialité" },
+      { href: "/a-propos", label: "Notre histoire" },
+      { href: "/mentions-legales", label: "Mentions légales" },
+      { href: "/cgv", label: "CGV" },
+      { href: "/confidentialite", label: "Confidentialité" },
     ],
   },
 ];
@@ -60,7 +60,7 @@ export function SiteFooter() {
             />
           </Link>
           <p className="mt-5 max-w-xs text-sm leading-relaxed text-white/75">
-            {identity.relationship} Une sélection courte pour les logements d’aujourd’hui.
+            {identity.relationship} Une sélection pensée pour les logements d’aujourd’hui.
           </p>
           <p className="mt-4 text-sm text-white/75">{identity.email}</p>
           {identity.phone ? <p className="mt-1 text-sm text-white/75">{identity.phone}</p> : null}

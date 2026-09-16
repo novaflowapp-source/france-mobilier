@@ -29,7 +29,7 @@ const rooms = [
     slug: "bureau",
     image: "/lifestyle/bureau.jpg",
     title: "Bureau",
-    text: "Travailler chez soi sans encombrer.",
+    text: "Travailler chez soi, avec aisance.",
   },
 ] as const;
 
@@ -46,7 +46,7 @@ const guarantees = [
   },
   {
     title: "Livraison suivie",
-    text: "Un suivi sur les zones réellement desservies.",
+    text: "Un suivi clair, de l’expédition à la réception.",
     icon: IconTruck,
   },
   {
@@ -78,7 +78,7 @@ export default function HomePage() {
         <div className="container-page relative flex min-h-[70svh] items-end py-12 md:min-h-[84vh] md:items-center md:py-24">
           <div className="max-w-xl pb-2">
             <p className="eyebrow text-white">
-              <span className="text-white">Choisir, pas tout proposer</span>
+              <span className="text-white">Une sélection exigeante</span>
             </p>
             <h1 className="display mt-4 text-[1.85rem] text-white sm:text-4xl md:text-6xl">
               Le mobilier qui simplifie votre intérieur.
@@ -180,7 +180,7 @@ export default function HomePage() {
           </div>
           <div>
             <p className="eyebrow">Petits espaces</p>
-            <h2 className="display mt-3 text-3xl text-navy md:text-4xl">Moins de place. Pas moins de confort.</h2>
+            <h2 className="display mt-3 text-3xl text-navy md:text-4xl">Petits espaces, grand confort.</h2>
             <p className="mt-5 leading-relaxed text-muted">
               Découvrez des meubles pensés pour les appartements, studios et pièces où chaque
               centimètre compte.
@@ -198,8 +198,7 @@ export default function HomePage() {
             <p className="eyebrow">Univers</p>
             <h2 className="display mt-3 text-3xl text-navy md:text-4xl">Pour l’entrée</h2>
             <p className="mt-3 max-w-xl text-muted">
-              Des meubles qui se glissent dans un couloir, sans inventer une collection qui n’existe
-              pas.
+              Des meubles qui se glissent dans un couloir et libèrent le passage.
             </p>
             <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
               {entryUniverse.map((product) => (
@@ -248,12 +247,13 @@ export default function HomePage() {
           </div>
           <div>
             <p className="eyebrow">La marque</p>
-            <h2 className="display mt-3 text-3xl text-navy md:text-4xl">Choisir, pas tout proposer.</h2>
+            <h2 className="display mt-3 text-3xl text-navy md:text-4xl">Une sélection qui a du sens.</h2>
             <p className="mt-5 leading-relaxed text-muted">
-              Chez {store.storeName}, chaque meuble doit justifier sa place. Une sélection courte,
-              pensée pour les logements d’aujourd’hui — appartements, studios, bureaux à la maison.
+              Chez {store.storeName}, chaque meuble apporte du confort, de l’ordre et de la clarté.
+              Une sélection pensée pour les logements d’aujourd’hui — appartements, studios, bureaux
+              à la maison.
             </p>
-            <Link href="/about" className="btn btn-primary mt-8 w-full sm:w-auto">
+            <Link href="/a-propos" className="btn btn-primary mt-8 w-full sm:w-auto">
               Lire notre histoire
             </Link>
           </div>
@@ -276,7 +276,7 @@ export default function HomePage() {
               commandés.
             </p>
           </div>
-          <Link href="/pro" className="btn btn-inverse w-full shrink-0 text-base sm:w-auto md:min-h-12 md:px-8">
+          <Link href="/professionnels" className="btn btn-inverse w-full shrink-0 text-base sm:w-auto md:min-h-12 md:px-8">
             Découvrir l’espace Pro
           </Link>
         </div>
@@ -291,7 +291,7 @@ export default function HomePage() {
               réception, lorsque le droit français le prévoit.
             </p>
             <div className="mt-5 flex gap-4 text-sm">
-              <Link href="/shipping" className="text-navy underline-offset-4 hover:underline">
+              <Link href="/livraison" className="text-navy underline-offset-4 hover:underline">
                 Livraison
               </Link>
               <Link href="/retours" className="text-navy underline-offset-4 hover:underline">

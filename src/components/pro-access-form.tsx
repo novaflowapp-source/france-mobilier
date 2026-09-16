@@ -28,7 +28,7 @@ function splitName(full: string) {
 
 export function ProAccessForm() {
   const pathname = usePathname();
-  const next = pathname?.startsWith("/compte") ? "/compte/entreprise" : "/pro";
+  const next = pathname?.startsWith("/compte") ? "/compte/entreprise" : "/professionnels";
   const { data: session, isPending } = authClient.useSession();
   const [existing, setExisting] = useState<RequestState | null>(null);
   const [loading, setLoading] = useState(false);

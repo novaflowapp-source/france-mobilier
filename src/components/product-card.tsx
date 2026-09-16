@@ -18,7 +18,7 @@ export function ProductCard({ product }: { product: Product }) {
 
   return (
     <article className="group flex h-full min-w-0 flex-col rounded-[var(--radius)] bg-white">
-      <Link href={`/products/${product.slug}`} className="flex h-full min-w-0 flex-col">
+      <Link href={`/produits/${product.slug}`} className="flex h-full min-w-0 flex-col">
         <div className="relative aspect-square overflow-hidden rounded-t-[var(--radius)] bg-cream">
           <Image
             src={productHeroImage(product)}

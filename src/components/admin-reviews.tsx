@@ -37,7 +37,7 @@ function ReviewCard({
       {item.title ? <p className="mt-2 text-sm font-medium text-navy">{item.title}</p> : null}
       <p className="mt-3 text-xs text-muted">
         {item.productSlug ? (
-          <Link href={`/products/${item.productSlug}`} className="underline-offset-2 hover:underline">
+          <Link href={`/produits/${item.productSlug}`} className="underline-offset-2 hover:underline">
             {item.productName}
           </Link>
         ) : (

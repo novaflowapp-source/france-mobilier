@@ -61,7 +61,7 @@ export function QuoteRequestForm({
   if (!session?.user) {
     return (
       <p className="text-sm text-muted">
-        <Link href="/connexion?next=/pro" className="underline">
+        <Link href="/connexion?next=/professionnels" className="underline">
           Connectez-vous
         </Link>{" "}
         avec un compte professionnel activé pour demander un devis.

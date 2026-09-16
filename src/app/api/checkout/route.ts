@@ -207,7 +207,7 @@ export async function POST(request: Request) {
         ...(siren ? { siren } : {}),
       },
       success_url: `${siteUrl}/commande/confirmation?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${siteUrl}/checkout`,
+      cancel_url: `${siteUrl}/paiement`,
       ...(proActive && companyName && siren
         ? {
             custom_text: {

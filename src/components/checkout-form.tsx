@@ -231,7 +231,7 @@ export function CheckoutForm() {
         </p>
         <p className="text-sm text-muted">{SHIPPING_OFFERED_SENTENCE}</p>
         <p className="text-xs text-muted">
-          <Link href="/shipping" className="underline-offset-4 hover:underline">
+          <Link href="/livraison" className="underline-offset-4 hover:underline">
             Livraison
           </Link>
           {" · "}
@@ -239,7 +239,7 @@ export function CheckoutForm() {
             Retours et remboursements
           </Link>
           {" · "}
-          <Link href="/terms" className="underline-offset-4 hover:underline">
+          <Link href="/cgv" className="underline-offset-4 hover:underline">
             CGV
           </Link>
         </p>
@@ -247,7 +247,7 @@ export function CheckoutForm() {
         <button type="submit" disabled={loading} className="btn btn-primary w-full">
           {loading ? "Ouverture de Stripe…" : `Payer ${formatPrice(subtotal)}`}
         </button>
-        <Link href="/cart" className="block text-center text-sm text-muted underline-offset-4 hover:underline">
+        <Link href="/panier" className="block text-center text-sm text-muted underline-offset-4 hover:underline">
           Retour au panier
         </Link>
       </aside>

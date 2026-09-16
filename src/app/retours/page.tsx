@@ -95,11 +95,11 @@ export default function ReturnsPage() {
         </section>
 
         <p>
-          <Link href="/shipping" className="text-navy underline-offset-4 hover:underline">
+          <Link href="/livraison" className="text-navy underline-offset-4 hover:underline">
             Livraison
           </Link>
           {" · "}
-          <Link href="/terms" className="text-navy underline-offset-4 hover:underline">
+          <Link href="/cgv" className="text-navy underline-offset-4 hover:underline">
             CGV
           </Link>
           {" · "}

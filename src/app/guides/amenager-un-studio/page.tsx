@@ -3,7 +3,7 @@ import Link from "next/link";
 import { store } from "@/config/store";
 
 export const metadata: Metadata = {
-  title: "Comment aménager un studio sans le surcharger ?",
+  title: "Comment aménager un studio avec aisance ?",
   description:
     "Meubles peu profonds, tables extensibles et rangements étroits pour un studio ou un petit appartement.",
   alternates: { canonical: `${store.domain}/guides/amenager-un-studio` },
@@ -17,17 +17,17 @@ export default function GuideStudioPage() {
         <span className="text-foreground">Studio</span>
       </nav>
       <h1 className="display text-3xl text-navy md:text-4xl">
-        Comment aménager un studio sans le surcharger ?
+        Comment aménager un studio avec aisance ?
       </h1>
       <p className="mt-5 text-lg leading-relaxed text-muted">
-        Dans 20 à 35 m², chaque meuble doit faire au moins deux choses, ou n’occuper qu’une bande
-        étroite le long du mur.
+        Dans 20 à 35 m², chaque meuble gagne à rendre plusieurs services, et à s’aligner le long du
+        mur.
       </p>
       <div className="mt-8 space-y-4 leading-relaxed text-muted">
         <p>
           Une{" "}
           <Link
-            href="/products/table-a-manger-extensible"
+            href="/produits/table-a-manger-extensible"
             className="text-navy underline-offset-4 hover:underline"
           >
             table à manger extensible
@@ -37,11 +37,11 @@ export default function GuideStudioPage() {
         </p>
         <p>
           Un{" "}
-          <Link href="/products/meuble-tv" className="text-navy underline-offset-4 hover:underline">
+          <Link href="/produits/meuble-tv" className="text-navy underline-offset-4 hover:underline">
             meuble TV de 24 cm de profondeur
           </Link>{" "}
           et un{" "}
-          <Link href="/products/meuble-casiers" className="text-navy underline-offset-4 hover:underline">
+          <Link href="/produits/meuble-casiers" className="text-navy underline-offset-4 hover:underline">
             meuble à casiers de 20 cm
           </Link>{" "}
           se placent contre le mur sans avancer dans la pièce.

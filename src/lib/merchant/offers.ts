@@ -31,8 +31,8 @@ export function merchantOffers(product: Product): MerchantOffer[] {
 function offerFrom(product: Product, variant: ProductVariant | null, base: string): MerchantOffer {
   const id = variant?.id ?? product.id;
   const link = variant
-    ? `${base}/products/${product.slug}?variant=${encodeURIComponent(variant.id)}`
-    : `${base}/products/${product.slug}`;
+    ? `${base}/produits/${product.slug}?variant=${encodeURIComponent(variant.id)}`
+    : `${base}/produits/${product.slug}`;
   return {
     id,
     itemGroupId: product.id,

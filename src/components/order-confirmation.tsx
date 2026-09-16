@@ -85,7 +85,7 @@ export function OrderConfirmation() {
     return (
       <div>
         <p className="text-muted">Nous n’avons pas pu confirmer ce paiement.</p>
-        <Link href="/checkout" className="btn btn-primary mt-6 inline-flex">
+        <Link href="/paiement" className="btn btn-primary mt-6 inline-flex">
           Retour à la commande
         </Link>
       </div>

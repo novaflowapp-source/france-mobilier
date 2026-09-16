@@ -43,7 +43,7 @@ export function CookieConsent() {
       </p>
       <p className="mt-2 text-sm leading-relaxed text-muted">
         Vous pouvez tout accepter, ou refuser les cookies non essentiels — le site reste utilisable.{" "}
-        <Link href="/privacy#cookies" className="text-navy underline-offset-2 hover:underline">
+        <Link href="/confidentialite#cookies" className="text-navy underline-offset-2 hover:underline">
           En savoir plus
         </Link>
         .

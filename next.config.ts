@@ -19,6 +19,16 @@ const nextConfig: NextConfig = {
       { source: "/collections/maison", destination: "/collections/meubles", permanent: true },
       { source: "/collections/rangement", destination: "/collections/entree-rangement", permanent: true },
       { source: "/returns", destination: "/retours", permanent: true },
+      { source: "/products/:slug([^/.]+)", destination: "/produits/:slug", permanent: true },
+      { source: "/cart", destination: "/panier", permanent: true },
+      { source: "/checkout", destination: "/paiement", permanent: true },
+      { source: "/about", destination: "/a-propos", permanent: true },
+      { source: "/shipping", destination: "/livraison", permanent: true },
+      { source: "/privacy", destination: "/confidentialite", permanent: true },
+      { source: "/terms", destination: "/cgv", permanent: true },
+      { source: "/legal", destination: "/mentions-legales", permanent: true },
+      { source: "/faq", destination: "/questions-frequentes", permanent: true },
+      { source: "/pro", destination: "/professionnels", permanent: true },
       ...legacyHosts.flatMap((host) =>
         toOrg.map(({ source, destination }) => ({
           source,

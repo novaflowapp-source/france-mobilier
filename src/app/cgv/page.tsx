@@ -115,7 +115,7 @@ export default function TermsPage() {
           <h2 className="text-xl font-semibold text-navy">12. Données personnelles</h2>
           <p className="mt-3">
             Le traitement des données est décrit dans la{" "}
-            <Link href="/privacy" className="text-navy underline-offset-4 hover:underline">
+            <Link href="/confidentialite" className="text-navy underline-offset-4 hover:underline">
               politique de confidentialité
             </Link>
             .

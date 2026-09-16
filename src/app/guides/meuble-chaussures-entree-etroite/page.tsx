@@ -26,19 +26,18 @@ export default function GuideEntryPage() {
       <div className="mt-8 space-y-4 leading-relaxed text-muted">
         <p>
           Si la profondeur est connue, visez un meuble qui reste le long du mur. Notre{" "}
-          <Link href="/products/meuble-casiers" className="text-navy underline-offset-4 hover:underline">
+          <Link href="/produits/meuble-casiers" className="text-navy underline-offset-4 hover:underline">
             meuble à casiers
           </Link>{" "}
-          fait 20 cm de profondeur : il range sans occuper le passage.
+          fait 20 cm de profondeur : il range et laisse le passage libre.
         </p>
         <p>
           Le{" "}
-          <Link href="/products/meuble-entree" className="text-navy underline-offset-4 hover:underline">
+          <Link href="/produits/meuble-entree" className="text-navy underline-offset-4 hover:underline">
             meuble d’entrée / meuble à chaussures
           </Link>{" "}
-          sert aussi d’assise. Sa profondeur n’est pas encore établie : on ne l’invente pas. On le
-          choisit surtout pour l’usage — s’asseoir, ranger les paires derrière les portes
-          coulissantes.
+          sert aussi d’assise. Sa profondeur sera publiée dès qu’elle est connue. On le choisit
+          surtout pour l’usage — s’asseoir, ranger les paires derrière les portes coulissantes.
         </p>
         <p>
           Un meuble à chaussures étroit, à ouverture verticale, peut aussi convenir quand on veut

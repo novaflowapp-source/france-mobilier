@@ -84,7 +84,7 @@ export function SiteHeader() {
       >
         <p className="border-b border-border bg-navy text-center text-[11px] tracking-[0.04em] text-white/90 md:text-xs">
           <span className="container-page flex h-8 items-center justify-center gap-x-3 overflow-hidden whitespace-nowrap">
-            <Link href="/shipping" className="inline-flex items-center gap-1.5 hover:text-white">
+            <Link href="/livraison" className="inline-flex items-center gap-1.5 hover:text-white">
               <IconTruck className="h-3.5 w-3.5" />
               Livraison gratuite
             </Link>
@@ -181,7 +181,7 @@ export function SiteHeader() {
             </form>
             <div className="flex items-center gap-1">
               <Link
-                href={session?.user ? (proApproved ? "/compte" : "/compte/entreprise") : "/pro"}
+                href={session?.user ? (proApproved ? "/compte" : "/compte/entreprise") : "/professionnels"}
                 className="hidden h-11 items-center px-2 text-sm font-medium text-navy hover:opacity-70 sm:inline-flex"
               >
                 {session?.user && proApproved ? "Espace Pro" : "Accès pro"}
@@ -194,7 +194,7 @@ export function SiteHeader() {
                 <IconUser />
               </Link>
               <Link
-                href="/cart"
+                href="/panier"
                 className="relative inline-flex h-11 w-11 items-center justify-center text-navy hover:opacity-70"
                 aria-label={itemCount > 0 ? `Panier, ${itemCount} articles` : "Panier"}
               >

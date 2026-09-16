@@ -18,26 +18,26 @@ export default function GuideSmallLivingTablePage() {
       </nav>
       <h1 className="display text-3xl text-navy md:text-4xl">Quelle table pour un petit salon ?</h1>
       <p className="mt-5 text-lg leading-relaxed text-muted">
-        Dans un salon compact, une table doit laisser circuler. La profondeur et la possibilité
-        d’agrandir comptent plus que le nombre de places annoncé.
+        Dans un salon compact, une table gagne à rester fluide. La profondeur et la possibilité
+        d’agrandir comptent autant que le nombre de places.
       </p>
       <div className="mt-8 space-y-4 leading-relaxed text-muted">
         <p>
           Pour le quotidien, une table basse peu encombrante suffit souvent. Notre{" "}
-          <Link href="/products/table-basse-metal" className="text-navy underline-offset-4 hover:underline">
+          <Link href="/produits/table-basse-metal" className="text-navy underline-offset-4 hover:underline">
             table basse
           </Link>{" "}
-          reste un point d’appui, pas un îlot au milieu de la pièce.
+          reste un point d’appui, léger au centre de la pièce.
         </p>
         <p>
           Si le salon sert aussi de salle à manger, mieux vaut une table qui s’agrandit. La{" "}
           <Link
-            href="/products/table-a-manger-extensible"
+            href="/produits/table-a-manger-extensible"
             className="text-navy underline-offset-4 hover:underline"
           >
             table à manger extensible
           </Link>{" "}
-          occupe moins de place fermée, puis s’ouvre quand on reçoit.
+          reste compacte au quotidien, puis s’ouvre quand on reçoit.
         </p>
         <p>
           Avant d’acheter, mesurez le passage autour : canapé sorti, portes, circulation vers

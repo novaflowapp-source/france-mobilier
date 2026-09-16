@@ -22,13 +22,13 @@ const guides = [
   },
   {
     href: "/guides/amenager-un-studio",
-    title: "Comment aménager un studio sans le surcharger ?",
-    text: "Extensible, peu profond, multifonction : ce qui justifie vraiment sa place.",
+    title: "Comment aménager un studio avec aisance ?",
+    text: "Extensible, peu profond, multifonction : le meuble qui rend la pièce plus belle.",
   },
   {
     href: "/guides/quelle-table-petit-salon",
     title: "Quelle table pour un petit salon ?",
-    text: "Table basse ou extensible : ce qui laisse encore circuler.",
+    text: "Table basse ou extensible : pour un salon plus fluide.",
   },
 ];
 
@@ -38,8 +38,7 @@ export default function GuidesPage() {
       <p className="eyebrow">Conseils</p>
       <h1 className="display mt-3 text-3xl text-navy md:text-4xl">Conseils & inspiration</h1>
       <p className="mt-4 max-w-2xl text-lg text-muted">
-        Des articles utiles, liés à des meubles que nous vendons réellement. Pas de contenu pour
-        remplir les pages.
+        Des articles utiles, liés aux meubles de la boutique.
       </p>
       <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {guides.map((guide) => (

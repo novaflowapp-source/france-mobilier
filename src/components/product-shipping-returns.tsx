@@ -48,7 +48,7 @@ export function ProductShippingReturns({ product }: { product: Product }) {
               revente.
             </p>
             <p>
-              <Link href="/shipping" className="text-navy underline-offset-4 hover:underline">
+              <Link href="/livraison" className="text-navy underline-offset-4 hover:underline">
                 Livraison
               </Link>
               {" · "}

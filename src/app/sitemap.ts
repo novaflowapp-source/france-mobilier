@@ -8,16 +8,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const base = store.domain.replace(/\/$/, "");
   const staticRoutes = [
     "",
-    "/about",
-    "/pro",
-    "/faq",
+    "/a-propos",
+    "/professionnels",
+    "/questions-frequentes",
     "/contact",
     "/nouveautes",
-    "/legal",
-    "/privacy",
-    "/terms",
+    "/mentions-legales",
+    "/confidentialite",
+    "/cgv",
     "/retours",
-    "/shipping",
+    "/livraison",
     "/guides",
     "/guides/meuble-chaussures-entree-etroite",
     "/guides/amenager-un-studio",
@@ -38,7 +38,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const productRoutes = listProducts()
     .filter(isSellable)
     .map((p) => ({
-      url: `${base}/products/${p.slug}`,
+      url: `${base}/produits/${p.slug}`,
       lastModified: new Date(),
     }));
 

@@ -45,7 +45,7 @@ export default function CartPage() {
                   <Image src={item.image} alt={item.name} fill className="object-cover" sizes="80px" />
                 </div>
                 <div className="min-w-0 flex-1 space-y-2">
-                  <Link href={`/products/${item.slug}`} className="block font-medium break-words hover:underline">
+                  <Link href={`/produits/${item.slug}`} className="block font-medium break-words hover:underline">
                     {item.name}
                   </Link>
                   <p className="text-sm text-muted">{formatPrice(item.price)}</p>
@@ -108,7 +108,7 @@ export default function CartPage() {
             <p className="mt-4 text-sm leading-relaxed text-muted">
               {SHIPPING_OFFERED_SENTENCE}
             </p>
-            <Link href="/checkout" className="btn btn-primary mt-6 w-full">
+            <Link href="/paiement" className="btn btn-primary mt-6 w-full">
               Commander
             </Link>
             <div className="mt-4">

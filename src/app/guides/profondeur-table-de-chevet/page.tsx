@@ -26,7 +26,7 @@ export default function GuideNightstandPage() {
       <div className="mt-8 space-y-4 leading-relaxed text-muted">
         <p>
           La{" "}
-          <Link href="/products/table-de-chevet" className="text-navy underline-offset-4 hover:underline">
+          <Link href="/produits/table-de-chevet" className="text-navy underline-offset-4 hover:underline">
             table de chevet en rotin
           </Link>{" "}
           mesure 50 cm de large et 45 cm de haut. La profondeur n’est pas encore publiée : mieux

@@ -49,11 +49,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: product.name,
     description: product.shortDescription,
-    alternates: { canonical: `${store.domain}/products/${product.slug}` },
+    alternates: { canonical: `${store.domain}/produits/${product.slug}` },
     openGraph: {
       title: product.name,
       description: product.shortDescription,
-      url: `${store.domain}/products/${product.slug}`,
+      url: `${store.domain}/produits/${product.slug}`,
       images: [hero, ...product.images.filter((src) => src !== hero)].map((url) => ({ url })),
     },
   };
@@ -96,7 +96,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
             const price = getPublicPrice(product, variant);
             return {
               "@type": "Offer",
-              url: `${store.domain}/products/${product.slug}?variant=${encodeURIComponent(variant.id)}`,
+              url: `${store.domain}/produits/${product.slug}?variant=${encodeURIComponent(variant.id)}`,
               priceCurrency: "EUR",
               price: price.amount,
               availability,
@@ -105,7 +105,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
           })
         : {
             "@type": "Offer",
-            url: `${store.domain}/products/${product.slug}`,
+            url: `${store.domain}/produits/${product.slug}`,
             priceCurrency: "EUR",
             price: getPublicPrice(product).amount,
             lowPrice,
@@ -141,7 +141,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
         "@type": "ListItem",
         position: 3,
         name: product.name,
-        item: `${store.domain}/products/${product.slug}`,
+        item: `${store.domain}/produits/${product.slug}`,
       },
     ],
   };
