@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { buildGoogleMerchantFeedXml, merchantFeedStatus } from "@/lib/merchant/feed";
-import { businessChecks, returnChecks } from "@/lib/merchant/readiness";
+import { businessChecks, checkoutChecks, returnChecks, shippingChecks } from "@/lib/merchant/readiness";
 
 export function googleMerchantFeedResponse() {
   const status = merchantFeedStatus();
