@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { store } from "@/config/store";
 import { CookieManageButton } from "@/components/cookie-manage-button";
+import { indexableMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Confidentialité" };
+export const metadata: Metadata = indexableMetadata("/confidentialite", { title: "Confidentialité" });
 
 export default function PrivacyPage() {
   return (

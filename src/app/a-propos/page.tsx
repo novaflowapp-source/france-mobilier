@@ -3,13 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { store } from "@/config/store";
 import { getBusinessIdentity } from "@/lib/business/identity";
+import { indexableMetadata } from "@/lib/seo";
 import { SHIPPING_OFFERED_SENTENCE } from "@/lib/shipping-zone";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = indexableMetadata("/a-propos", {
   title: "Notre histoire",
   description: `L’histoire de ${store.storeName} : une sélection de meubles pensés pour les logements d’aujourd’hui.`,
-  alternates: { canonical: `${store.domain}/a-propos` },
-};
+});
 
 const chapters = [
   {

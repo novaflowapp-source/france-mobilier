@@ -4,7 +4,8 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ProductCard } from "@/components/product-card";
 import { ProductFilters } from "@/components/product-filters";
-import { collections, store } from "@/config/store";
+import { collections } from "@/config/store";
+import { canonicalUrl } from "@/lib/seo";
 import {
   filterAndSortProducts,
   getCollection,
@@ -38,10 +39,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const collection = getCollection(slug);
   if (!collection) return {};
+  const path = `/collections/${collection.slug}`;
   return {
     title: collection.name,
     description: collection.description,
-    alternates: { canonical: `${store.domain}/collections/${collection.slug}` },
+    alternates: { canonical: canonicalUrl(path) },
+    robots: { index: true, follow: true },
+    openGraph: { url: canonicalUrl(path) },
   };
 }
 

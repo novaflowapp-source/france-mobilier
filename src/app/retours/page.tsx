@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getBusinessIdentity } from "@/lib/business/identity";
 import { getReturnPolicy } from "@/lib/business/policies";
+import { indexableMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = indexableMetadata("/retours", {
   title: "Retours et remboursements",
   description:
     "Droit de rétractation, retours, produits défectueux et remboursements chez France Mobilier.",
-  alternates: { canonical: "/retours" },
-};
+});
 
 export default function ReturnsPage() {
   const identity = getBusinessIdentity();

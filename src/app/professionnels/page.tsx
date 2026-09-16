@@ -3,13 +3,13 @@ import Link from "next/link";
 import { ProAccessForm } from "@/components/pro-access-form";
 import { store } from "@/config/store";
 import { b2bConfig } from "@/lib/b2b";
+import { indexableMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = indexableMetadata("/professionnels", {
   title: "France Mobilier Pro | Mobilier pour professionnels",
   description:
     "Compte professionnel France Mobilier : informations d’entreprise, devis et commandes de mobilier pour l’aménagement, l’hôtellerie, la restauration et l’entreprise.",
-  alternates: { canonical: `${store.domain}/professionnels` },
-};
+});
 
 const benefits = [
   {

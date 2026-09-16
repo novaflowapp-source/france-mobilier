@@ -1,5 +1,28 @@
 import type { MetadataRoute } from "next";
-import { store } from "@/config/store";
+import { publicOrigin } from "@/lib/seo";
+
+const privatePaths = [
+  "/admin",
+  "/panier",
+  "/paiement",
+  "/commande",
+  "/api/",
+  "/compte",
+  "/connexion",
+  "/inscription",
+  "/mot-de-passe-oublie",
+  "/nouveau-mot-de-passe",
+];
+
+const googleCrawlers = [
+  "Googlebot",
+  "Googlebot-Image",
+  "Googlebot-Mobile",
+  "AdsBot-Google",
+  "AdsBot-Google-Mobile",
+  "Google-InspectionTool",
+  "Storebot-Google",
+];
 
 export const dynamic = "force-dynamic";
 
@@ -9,20 +32,14 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: [
-          "/admin",
-          "/panier",
-          "/paiement",
-          "/commande",
-          "/api/",
-          "/compte",
-          "/connexion",
-          "/inscription",
-          "/mot-de-passe-oublie",
-          "/nouveau-mot-de-passe",
-        ],
+        disallow: privatePaths,
+      },
+      {
+        userAgent: googleCrawlers,
+        allow: ["/", "/produits/", "/collections/", "/guides/"],
+        disallow: privatePaths,
       },
     ],
-    sitemap: `${store.domain.replace(/\/$/, "")}/sitemap.xml`,
+    sitemap: `${publicOrigin()}/sitemap.xml`,
   };
 }

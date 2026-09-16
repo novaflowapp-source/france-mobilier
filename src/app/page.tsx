@@ -1,10 +1,14 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ProductCard } from "@/components/product-card";
 import { IconHeadset, IconRuler, IconSofa, IconTruck } from "@/components/icons";
 import { store } from "@/config/store";
 import { listFeaturedProducts, listSellableProducts } from "@/lib/products/repository";
+import { indexableMetadata } from "@/lib/seo";
 import { SHIPPING_OFFERED_SENTENCE } from "@/lib/shipping-zone";
+
+export const metadata: Metadata = indexableMetadata("/");
 
 const rooms = [
   {

@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { store } from "@/config/store";
+import { indexableMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = indexableMetadata("/guides/quelle-table-petit-salon", {
   title: "Quelle table pour un petit salon ?",
   description:
     "Comment choisir une table basse ou une table à manger quand le salon est compact : profondeur, extensible, circulation.",
-  alternates: { canonical: `${store.domain}/guides/quelle-table-petit-salon` },
-};
+});
 
 export default function GuideSmallLivingTablePage() {
   return (

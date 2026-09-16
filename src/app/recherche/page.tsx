@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ProductCard } from "@/components/product-card";
-import { store } from "@/config/store";
 import { filterAndSortProducts, listProducts } from "@/lib/products/repository";
+import { canonicalUrl } from "@/lib/seo";
 
 type Props = {
   searchParams: Promise<{ q?: string; sort?: string }>;
@@ -13,7 +13,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   return {
     title: q ? `Recherche : ${q}` : "Recherche",
     robots: { index: false, follow: true },
-    alternates: { canonical: `${store.domain}/recherche` },
+    alternates: { canonical: canonicalUrl("/recherche") },
   };
 }
 

@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { store } from "@/config/store";
+import { indexableMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = indexableMetadata("/guides/profondeur-table-de-chevet", {
   title: "Quelle profondeur pour une table de chevet ?",
   description:
     "Les mesures à vérifier pour une table de chevet dans une petite chambre : largeur, hauteur, dégagement.",
-  alternates: { canonical: `${store.domain}/guides/profondeur-table-de-chevet` },
-};
+});
 
 export default function GuideNightstandPage() {
   return (

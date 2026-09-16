@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { store } from "@/config/store";
+import { indexableMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = indexableMetadata("/guides", {
   title: "Conseils & inspiration",
   description:
     "Guides courts pour choisir un meuble selon la pièce, la profondeur et les petits espaces.",
-  alternates: { canonical: `${store.domain}/guides` },
-};
+});
 
 const guides = [
   {

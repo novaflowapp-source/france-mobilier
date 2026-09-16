@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { store } from "@/config/store";
+import { indexableMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = indexableMetadata("/guides/amenager-un-studio", {
   title: "Comment aménager un studio avec aisance ?",
   description:
     "Meubles peu profonds, tables extensibles et rangements étroits pour un studio ou un petit appartement.",
-  alternates: { canonical: `${store.domain}/guides/amenager-un-studio` },
-};
+});
 
 export default function GuideStudioPage() {
   return (

@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/contact-form";
 import { formatPublicAddress, getBusinessIdentity } from "@/lib/business/identity";
+import { indexableMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = indexableMetadata("/contact", {
   title: "Contact",
   description: "Contacter France Mobilier : e-mail, formulaire et coordonnées de l’entreprise.",
-};
+});
 
 export default function ContactPage() {
   const identity = getBusinessIdentity();

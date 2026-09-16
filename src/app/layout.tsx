@@ -8,6 +8,7 @@ import { SiteHeader } from "@/components/site-header";
 import { store } from "@/config/store";
 import { GOOGLE_ADS_ID, gtagBootstrap } from "@/lib/ads/gtag";
 import { organizationJsonLd } from "@/lib/business/identity";
+import { publicOrigin } from "@/lib/seo";
 import "./globals.css";
 
 export const dynamic = "force-dynamic";
@@ -30,19 +31,18 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(store.domain),
+  metadataBase: new URL(publicOrigin()),
   title: {
     default: `${store.storeName} — Le mobilier qui simplifie votre intérieur`,
     template: `%s | ${store.storeName}`,
   },
   description: store.storeTagline,
-  alternates: { canonical: store.domain },
   openGraph: {
     title: store.storeName,
     description: store.storeTagline,
     locale: "fr_FR",
     type: "website",
-    url: store.domain,
+    url: publicOrigin(),
     siteName: store.storeName,
     images: [{ url: store.logoPath, alt: store.storeName }],
   },
@@ -64,10 +64,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: store.storeName,
-    url: store.domain,
+    url: publicOrigin(),
     potentialAction: {
       "@type": "SearchAction",
-      target: `${store.domain}/recherche?q={search_term_string}`,
+      target: `${publicOrigin()}/recherche?q={search_term_string}`,
       "query-input": "required name=search_term_string",
     },
   };

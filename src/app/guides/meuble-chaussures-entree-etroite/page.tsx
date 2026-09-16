@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { store } from "@/config/store";
+import { indexableMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = indexableMetadata("/guides/meuble-chaussures-entree-etroite", {
   title: "Quel meuble à chaussures pour une entrée étroite ?",
   description:
     "Comment choisir un meuble à chaussures quand le couloir est étroit : profondeur, assise, portes coulissantes.",
-  alternates: { canonical: `${store.domain}/guides/meuble-chaussures-entree-etroite` },
-};
+});
 
 export default function GuideEntryPage() {
   return (

@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ProductCard } from "@/components/product-card";
 import { listProducts } from "@/lib/products/repository";
+import { indexableMetadata } from "@/lib/seo";
 import { SHIPPING_OFFERED_SENTENCE } from "@/lib/shipping-zone";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = indexableMetadata("/nouveautes", {
   title: "Nouveautés",
   description: "Nouveautés — mobilier et rangement.",
-};
+});
 
 export default function NewArrivalsPage() {
   const products = listProducts()

@@ -1,15 +1,16 @@
 import type { MetadataRoute } from "next";
-import { store } from "@/config/store";
 import { collections } from "@/config/store";
 import { isSellable } from "@/lib/products/merchandising";
 import { listProducts } from "@/lib/products/repository";
+import { canonicalUrl, publicOrigin } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = store.domain.replace(/\/$/, "");
+  const origin = publicOrigin();
+  const lastModified = new Date();
   const staticRoutes = [
-    "",
+    "/",
     "/a-propos",
     "/professionnels",
     "/questions-frequentes",
@@ -26,23 +27,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/guides/profondeur-table-de-chevet",
     "/guides/quelle-table-petit-salon",
   ].map((path) => ({
-    url: `${base}${path || "/"}`,
-    lastModified: new Date(),
+    url: canonicalUrl(path),
+    lastModified,
   }));
 
   const collectionRoutes = collections
     .filter((collection) => collection.slug !== "maison" && collection.slug !== "rangement")
-    .map((c) => ({
-      url: `${base}/collections/${c.slug}`,
-      lastModified: new Date(),
+    .map((collection) => ({
+      url: canonicalUrl(`/collections/${collection.slug}`),
+      lastModified,
     }));
 
   const productRoutes = listProducts()
     .filter(isSellable)
-    .map((p) => ({
-      url: `${base}/produits/${p.slug}`,
-      lastModified: new Date(),
+    .map((product) => ({
+      url: canonicalUrl(`/produits/${product.slug}`),
+      lastModified,
     }));
 
-  return [...staticRoutes, ...collectionRoutes, ...productRoutes];
+  return [...staticRoutes, ...collectionRoutes, ...productRoutes].filter(
+    (entry) => entry.url.startsWith(origin),
+  );
 }

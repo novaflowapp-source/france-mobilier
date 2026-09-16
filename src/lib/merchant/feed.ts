@@ -11,6 +11,7 @@ import { formatFeedPrice } from "@/lib/merchant/price";
 import { globalMerchantReady, productMerchantReady } from "@/lib/merchant/readiness";
 import { googleProductCategory, merchantProductType } from "@/lib/merchant/taxonomy";
 import { listProducts } from "@/lib/products/repository";
+import { canonicalUrl } from "@/lib/seo";
 
 function escapeXml(value: string) {
   return value
@@ -58,7 +59,7 @@ function offerXml(offer: MerchantOffer) {
     `<g:google_product_category>${escapeXml(googleProductCategory(product))}</g:google_product_category>`,
     offer.color ? `<g:color>${escapeXml(offer.color)}</g:color>` : "",
     offer.size ? `<g:size>${escapeXml(offer.size)}</g:size>` : "",
-    variant ? `<g:canonical_link>${escapeXml(`${getBusinessIdentity().url}/produits/${product.slug}`)}</g:canonical_link>` : "",
+    variant ? `<g:canonical_link>${escapeXml(canonicalUrl(`/produits/${product.slug}`))}</g:canonical_link>` : "",
     product.weight != null ? `<g:shipping_weight>${product.weight} kg</g:shipping_weight>` : "",
     ...shipping.merchantTargetCountries.map((country) => {
       const handling =

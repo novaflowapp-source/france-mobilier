@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { formatPublicAddress, getBusinessIdentity } from "@/lib/business/identity";
+import { indexableMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = indexableMetadata("/mentions-legales", {
   title: "Mentions légales",
-};
+});
 
 export default function LegalPage() {
   const identity = getBusinessIdentity();

@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getShippingPolicy } from "@/lib/business/policies";
 import { getDefaultDeliveryProfile } from "@/lib/merchant/delivery";
+import { indexableMetadata } from "@/lib/seo";
 import { SHIPPING_OFFERED_SENTENCE } from "@/lib/shipping-zone";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = indexableMetadata("/livraison", {
   title: "Livraison",
   description: "Zones, coût, suivi et délais de livraison France Mobilier.",
-};
+});
 
 export default function ShippingPage() {
   const shipping = getShippingPolicy();

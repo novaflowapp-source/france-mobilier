@@ -11,9 +11,9 @@ import { ProductReviews } from "@/components/product-reviews";
 import { ProductViewTracker } from "@/components/product-view-tracker";
 import { ProductShippingReturns } from "@/components/product-shipping-returns";
 import { ProductSpecifications } from "@/components/product-specifications";
-import { store } from "@/config/store";
 import { schemaAvailability } from "@/lib/merchant/delivery";
 import { getPublicPrice } from "@/lib/merchant/price";
+import { isSellable } from "@/lib/products/merchandising";
 import {
   collectionSlugForProductPage,
   findCollectionProducts,
@@ -28,6 +28,7 @@ import {
   productHighlights,
 } from "@/lib/products/presentation";
 import { listApprovedReviews } from "@/lib/reviews";
+import { canonicalUrl, publicOrigin } from "@/lib/seo";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -46,15 +47,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const product = findProductBySlug(slug);
   if (!product) return {};
   const hero = productHeroImage(product);
+  const path = `/produits/${product.slug}`;
+  const url = canonicalUrl(path);
   return {
     title: product.name,
     description: product.shortDescription,
-    alternates: { canonical: `${store.domain}/produits/${product.slug}` },
+    alternates: { canonical: url },
+    robots: isSellable(product)
+      ? { index: true, follow: true }
+      : { index: false, follow: true },
     openGraph: {
       title: product.name,
       description: product.shortDescription,
-      url: `${store.domain}/produits/${product.slug}`,
-      images: [hero, ...product.images.filter((src) => src !== hero)].map((url) => ({ url })),
+      url,
+      images: [hero, ...product.images.filter((src) => src !== hero)].map((src) => ({ url: src })),
     },
   };
 }
@@ -88,7 +94,9 @@ export default async function ProductPage({ params, searchParams }: Props) {
     name: product.name,
     ...(product.alternateNames?.length ? { alternateName: product.alternateNames } : {}),
     description: product.description,
-    image: [hero, ...gallery.filter((src) => src !== hero)].map((src) => `${store.domain}${src}`),
+    image: [hero, ...gallery.filter((src) => src !== hero)].map((src) =>
+      src.startsWith("http") ? src : `${publicOrigin()}${src}`,
+    ),
     ...(product.brand ? { brand: { "@type": "Brand", name: product.brand } } : {}),
     offers:
       variants.length > 1
@@ -96,7 +104,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
             const price = getPublicPrice(product, variant);
             return {
               "@type": "Offer",
-              url: `${store.domain}/produits/${product.slug}?variant=${encodeURIComponent(variant.id)}`,
+              url: `${canonicalUrl(`/produits/${product.slug}`)}?variant=${encodeURIComponent(variant.id)}`,
               priceCurrency: "EUR",
               price: price.amount,
               availability,
@@ -105,7 +113,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
           })
         : {
             "@type": "Offer",
-            url: `${store.domain}/produits/${product.slug}`,
+            url: canonicalUrl(`/produits/${product.slug}`),
             priceCurrency: "EUR",
             price: getPublicPrice(product).amount,
             lowPrice,
@@ -130,18 +138,18 @@ export default async function ProductPage({ params, searchParams }: Props) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Accueil", item: store.domain },
+      { "@type": "ListItem", position: 1, name: "Accueil", item: publicOrigin() },
       {
         "@type": "ListItem",
         position: 2,
         name: collection?.name ?? "Catalogue",
-        item: `${store.domain}/collections/${collectionSlug}`,
+        item: canonicalUrl(`/collections/${collectionSlug}`),
       },
       {
         "@type": "ListItem",
         position: 3,
         name: product.name,
-        item: `${store.domain}/produits/${product.slug}`,
+        item: canonicalUrl(`/produits/${product.slug}`),
       },
     ],
   };

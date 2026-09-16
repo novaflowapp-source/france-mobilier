@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { getBusinessIdentity } from "@/lib/business/identity";
+import { indexableMetadata } from "@/lib/seo";
 import { SHIPPING_OFFERED_SENTENCE } from "@/lib/shipping-zone";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = indexableMetadata("/questions-frequentes", {
   title: "FAQ",
   description: "Questions fréquentes sur la livraison, les retours et les commandes.",
-};
+});
 
 export default function FaqPage() {
   const identity = getBusinessIdentity();

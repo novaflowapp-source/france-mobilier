@@ -1,8 +1,8 @@
-import { getBusinessIdentity } from "@/lib/business/identity";
 import { getDeliveryEstimate } from "@/lib/merchant/delivery";
 import { getPublicPrice } from "@/lib/merchant/price";
 import { formatLph } from "@/lib/products/merchandising";
 import { getProductMeasures, productHeroImage, productGalleryImages } from "@/lib/products/presentation";
+import { publicOrigin } from "@/lib/seo";
 import type { Product, ProductVariant } from "@/lib/types/commerce";
 
 export type MerchantOffer = {
@@ -20,12 +20,12 @@ export type MerchantOffer = {
 };
 
 export function merchantOffers(product: Product): MerchantOffer[] {
-  const identity = getBusinessIdentity();
+  const base = publicOrigin();
   const variants = product.variants ?? [];
   if (variants.length === 0) {
-    return [offerFrom(product, null, identity.url)];
+    return [offerFrom(product, null, base)];
   }
-  return variants.map((variant) => offerFrom(product, variant, identity.url));
+  return variants.map((variant) => offerFrom(product, variant, base));
 }
 
 function offerFrom(product: Product, variant: ProductVariant | null, base: string): MerchantOffer {
