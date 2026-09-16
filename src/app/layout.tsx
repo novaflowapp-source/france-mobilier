@@ -76,6 +76,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="fr">
       <head>
         <meta name="google-site-verification" content="vQe3HrEPuyNqaWOhMQ3YLVtLpg6pGwkLZvtIaaE99vc" />
+        <meta name="google-site-verification" content="X1t-3bOz44QjPw2gznrdLPBeTqZPErySlFsT3H_Gx9U" />
         <script async src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`} />
         <script dangerouslySetInnerHTML={{ __html: gtagBootstrap }} />
       </head>
