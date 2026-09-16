@@ -119,7 +119,14 @@ export function checkoutChecks(): MerchantCheck[] {
   return [
     isCheckoutEnabled()
       ? check("CHECKOUT", "PASS", "Checkout", stripeMode() === "live" ? "Stripe live ouvert" : "Stripe test ouvert")
-      : check("CHECKOUT_DISABLED", "BLOCKER", "Checkout", "Le paiement n’est pas ouvert."),
+      : merchantLaunchMode()
+        ? check(
+            "CHECKOUT_DISABLED",
+            "WARNING",
+            "Checkout",
+            "Paiement non ouvert — le flux Merchant reste publié en pré-lancement.",
+          )
+        : check("CHECKOUT_DISABLED", "BLOCKER", "Checkout", "Le paiement n’est pas ouvert."),
     check("GUEST_CHECKOUT", "PASS", "Compte", "Aucun compte obligatoire avant le paiement"),
     check("CHECKOUT_CURRENCY", "PASS", "Prix", "EUR TTC, livraison offerte dans la zone"),
   ];

@@ -11,7 +11,7 @@ export function googleMerchantFeedResponse() {
         enabled: status.enabled,
         businessReady: status.businessReady,
         offerCount: status.offerCount,
-        blockers: [...businessChecks(), ...returnChecks()]
+        blockers: [...businessChecks(), ...returnChecks(), ...checkoutChecks(), ...shippingChecks()]
           .filter((item) => item.level === "BLOCKER")
           .map((item) => item.id),
         message:
