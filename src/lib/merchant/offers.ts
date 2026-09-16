@@ -30,9 +30,8 @@ export function merchantOffers(product: Product): MerchantOffer[] {
 
 function offerFrom(product: Product, variant: ProductVariant | null, base: string): MerchantOffer {
   const id = variant?.id ?? product.id;
-  const link = variant
-    ? `${base}/produits/${product.slug}?variant=${encodeURIComponent(variant.id)}`
-    : `${base}/produits/${product.slug}`;
+  // Same crawlable URL for every variant: Google indexes the canonical page, not ?variant=.
+  const link = `${base}/produits/${product.slug}`;
   return {
     id,
     itemGroupId: product.id,

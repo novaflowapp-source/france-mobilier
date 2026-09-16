@@ -59,7 +59,7 @@ function offerXml(offer: MerchantOffer) {
     `<g:google_product_category>${escapeXml(googleProductCategory(product))}</g:google_product_category>`,
     offer.color ? `<g:color>${escapeXml(offer.color)}</g:color>` : "",
     offer.size ? `<g:size>${escapeXml(offer.size)}</g:size>` : "",
-    variant ? `<g:canonical_link>${escapeXml(canonicalUrl(`/produits/${product.slug}`))}</g:canonical_link>` : "",
+    `<g:canonical_link>${escapeXml(canonicalUrl(`/produits/${product.slug}`))}</g:canonical_link>`,
     product.weight != null ? `<g:shipping_weight>${product.weight} kg</g:shipping_weight>` : "",
     ...shipping.merchantTargetCountries.map((country) => {
       const handling =

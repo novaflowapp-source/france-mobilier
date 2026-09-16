@@ -104,7 +104,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
             const price = getPublicPrice(product, variant);
             return {
               "@type": "Offer",
-              url: `${canonicalUrl(`/produits/${product.slug}`)}?variant=${encodeURIComponent(variant.id)}`,
+              url: canonicalUrl(`/produits/${product.slug}`),
               priceCurrency: "EUR",
               price: price.amount,
               availability,
