@@ -16,7 +16,7 @@ export type ReviewItem = {
 
 function Stars({ value }: { value: number }) {
   return (
-    <span className="tracking-tight text-accent" aria-label={`${value} sur 5`}>
+    <span className="product-review-stars" aria-label={`${value} sur 5`}>
       {"★".repeat(value)}
       <span className="text-border">{"★".repeat(5 - value)}</span>
     </span>
@@ -92,17 +92,16 @@ export function ProductReviews({
   }
 
   return (
-    <section className="section border-t border-border">
+    <section className="section product-reviews border-t border-border">
       <div className="container-page">
-      <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h2 className="display text-3xl text-navy">Avis clients vérifiés</h2>
-        </div>
+      <div className="product-reviews-header">
+        <h2 className="display text-3xl text-navy">Avis clients vérifiés</h2>
         {average !== null && (
-          <p className="text-sm text-muted">
-            <Stars value={Math.round(average)} />{" "}
-            <span className="ml-1">
-              {average.toFixed(1)} / 5 · {reviews.length} avis
+          <p className="product-reviews-summary">
+            <Stars value={Math.round(average)} />
+            <span>
+              {average.toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} / 5 ·{" "}
+              {reviews.length} avis
             </span>
           </p>
         )}
@@ -113,42 +112,41 @@ export function ProductReviews({
           Aucun avis pour le moment.
         </p>
       ) : (
-        <ul className="space-y-4">
+        <ul className="product-reviews-list">
           {reviews.map((item) => (
-            <li key={item.id} className="rounded-2xl border border-border bg-white p-5">
-              <div className="flex items-start justify-between gap-4 sm:items-center">
-                <div className="min-w-0 flex-1">
-                  <Stars value={item.rating} />
-                  {item.title && <p className="mt-2 font-medium">{item.title}</p>}
-                  <p className="mt-2 text-sm leading-relaxed text-muted">{item.body}</p>
-                  <p className="mt-3 text-xs text-muted">
-                    {item.authorName} ·{" "}
-                    {new Date(item.createdAt).toLocaleDateString("fr-FR", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}
-                  </p>
-                </div>
-                {item.verifiedPurchase ? <VerifiedPurchaseMark /> : null}
+            <li key={item.id} className="product-review-card">
+              <div className="product-review-body">
+                <Stars value={item.rating} />
+                {item.title ? <p className="product-review-title">{item.title}</p> : null}
+                <p className="product-review-text">{item.body}</p>
+                <p className="product-review-meta">
+                  <span className="product-review-author">{item.authorName}</span>
+                  {" · "}
+                  {new Date(item.createdAt).toLocaleDateString("fr-FR", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </p>
               </div>
+              {item.verifiedPurchase ? (
+                <>
+                  <span className="product-review-divider" aria-hidden="true" />
+                  <VerifiedPurchaseMark />
+                </>
+              ) : null}
             </li>
           ))}
         </ul>
       )}
 
-      <div className="mt-8 rounded-2xl border border-border bg-white p-5">
-        <h3 className="font-medium">Laisser un avis</h3>
+      <div className="product-review-compose">
+        <h3>Laisser un avis</h3>
         {!session?.user ? (
-          <p className="mt-2 text-sm text-muted">
-            <Link
-              href="/connexion"
-              className="font-semibold text-navy underline underline-offset-4 decoration-navy/40 hover:decoration-navy"
-            >
-              Connectez-vous
-            </Link>{" "}
-            après un achat vérifié pour commenter ce produit.
-          </p>
+          <div className="product-review-compose-copy">
+            <p>Connectez-vous après un achat vérifié pour partager votre expérience.</p>
+            <Link href="/connexion">Se connecter →</Link>
+          </div>
         ) : (
           <form onSubmit={onSubmit} className="mt-4 space-y-3">
             <label className="block text-sm">
