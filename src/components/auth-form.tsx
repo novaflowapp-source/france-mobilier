@@ -179,7 +179,10 @@ function AuthFormFields({ mode }: { mode: Mode }) {
         {mode === "login" ? (
           <>
             Pas encore de compte ?{" "}
-            <Link href={`/inscription${nextQuery}`} className="text-accent underline-offset-2 hover:underline">
+            <Link
+              href={`/inscription${nextQuery}`}
+              className="font-semibold text-navy underline underline-offset-2 decoration-navy/40 hover:decoration-navy"
+            >
               S’inscrire
             </Link>
           </>
