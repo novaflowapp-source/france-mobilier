@@ -158,5 +158,8 @@ export async function countPendingReviews() {
 
 export async function setReviewStatus(id: string, status: ReviewStatus) {
   await ensureDatabase();
-  await db.update(review).set({ status }).where(eq(review.id, id));
+  await db
+    .update(review)
+    .set(status === "approved" ? { status, verifiedPurchase: true } : { status })
+    .where(eq(review.id, id));
 }
