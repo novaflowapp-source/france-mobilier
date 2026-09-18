@@ -6,6 +6,7 @@ import { ProductDimensions } from "@/components/product-dimensions";
 import { ProductFAQ } from "@/components/product-faq";
 import { ProductHighlights } from "@/components/product-highlights";
 import { ProductMedia } from "@/components/product-media";
+import { ProductNotices } from "@/components/product-notices";
 import { ProductRecommendations } from "@/components/product-recommendations";
 import { ProductReviews } from "@/components/product-reviews";
 import { ProductViewTracker } from "@/components/product-view-tracker";
@@ -108,7 +109,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
   };
 
   return (
-    <div className="min-w-0 max-w-full overflow-x-hidden bg-white pb-[calc(5.75rem+env(safe-area-inset-bottom))] md:pb-0">
+    <div className="min-w-0 max-w-full overflow-x-hidden bg-white pb-[calc(5.75rem+env(safe-area-inset-bottom))] has-[.product-go-to-cart]:pb-[calc(9.5rem+env(safe-area-inset-bottom))] md:pb-0 md:has-[.product-go-to-cart]:pb-0">
       <ProductViewTracker
         productId={product.id}
         productName={product.name}
@@ -126,12 +127,23 @@ export default async function ProductPage({ params, searchParams }: Props) {
           <span className="text-foreground">{product.name}</span>
         </nav>
 
-        <ProductMedia product={product} images={gallery} initialVariantId={variantParam} />
+        <ProductMedia
+          product={product}
+          images={gallery}
+          initialVariantId={variantParam}
+          ratingAverage={
+            reviews.length > 0
+              ? reviews.reduce((sum, item) => sum + item.rating, 0) / reviews.length
+              : undefined
+          }
+          ratingCount={reviews.length}
+        />
       </div>
 
       <ProductHighlights items={highlights} />
       <ProductDailyUse items={product.dailyUses ?? []} />
       <ProductDimensions product={product} />
+      <ProductNotices />
       <ProductSpecifications product={product} />
       <ProductShippingReturns product={product} />
       <ProductFAQ product={product} />

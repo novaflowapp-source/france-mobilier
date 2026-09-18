@@ -92,7 +92,7 @@ export function ProductReviews({
   }
 
   return (
-    <section className="section product-reviews border-t border-border">
+    <section id="avis" className="section product-reviews border-t border-border">
       <div className="container-page">
       <div className="product-reviews-header">
         <h2 className="display text-3xl text-navy">Avis clients vérifiés</h2>

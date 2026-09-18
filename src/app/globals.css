@@ -338,6 +338,41 @@ button:disabled {
   }
 }
 
+#avis {
+  scroll-margin-top: calc(6.25rem + env(safe-area-inset-top));
+}
+
+.product-rating-jump {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  line-height: 1.2;
+  color: var(--navy);
+}
+
+.product-rating-jump-stars {
+  letter-spacing: 0.06em;
+  font-size: 0.82rem;
+}
+
+.product-rating-jump-stars span {
+  color: var(--border);
+}
+
+.product-rating-jump-label {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+}
+
+.product-rating-jump:hover .product-rating-jump-label,
+.product-rating-jump:focus-visible .product-rating-jump-label {
+  text-decoration-thickness: 1.5px;
+}
+
 .product-reviews-header {
   display: flex;
   flex-wrap: wrap;

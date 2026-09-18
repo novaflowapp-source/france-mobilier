@@ -18,10 +18,14 @@ export function ProductInfo({
   product,
   variantId,
   onVariantIdChange,
+  ratingAverage,
+  ratingCount = 0,
 }: {
   product: Product;
   variantId: string | undefined;
   onVariantIdChange: (id: string) => void;
+  ratingAverage?: number;
+  ratingCount?: number;
 }) {
   const unavailable = product.availabilityStatus !== "available";
   const delivery = deliveryLabel(product);
@@ -59,7 +63,30 @@ export function ProductInfo({
           {product.madeToOrder ? "Disponible à la commande" : "Disponible"}
         </p>
       )}
-      <h1 className="display text-[1.75rem] text-navy md:text-4xl">{product.name}</h1>
+      <div>
+        <h1 className="display text-[1.75rem] text-navy md:text-4xl">{product.name}</h1>
+        {ratingCount > 0 && ratingAverage != null ? (
+          <a
+            href="#avis"
+            className="product-rating-jump"
+            aria-label={`Voir les avis : ${ratingAverage.toLocaleString("fr-FR", {
+              minimumFractionDigits: 1,
+              maximumFractionDigits: 1,
+            })} sur 5, ${ratingCount} avis`}
+          >
+            <span className="product-rating-jump-stars" aria-hidden="true">
+              {"★".repeat(Math.round(ratingAverage))}
+              <span>{"★".repeat(5 - Math.round(ratingAverage))}</span>
+            </span>
+            <span className="product-rating-jump-label">
+              {`${ratingAverage.toLocaleString("fr-FR", {
+                minimumFractionDigits: 1,
+                maximumFractionDigits: 1,
+              })}/5 (${ratingCount} avis)`}
+            </span>
+          </a>
+        ) : null}
+      </div>
       <div>
         <ProductPrice product={product} price={price} compareAtPrice={compareAtPrice} size="pdp" />
         <p className="mt-1 text-sm text-muted">Prix TTC</p>

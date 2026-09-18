@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { store } from "@/config/store";
 import { CookieManageButton } from "@/components/cookie-manage-button";
+import { IconLock, IconReturn, IconTruck } from "@/components/icons";
+import { PaymentMarks } from "@/components/payment-marks";
 import { getBusinessIdentity } from "@/lib/business/identity";
 
 const groups = [
@@ -90,6 +92,29 @@ export function SiteFooter() {
             </ul>
           </div>
         ))}
+      </div>
+      <div className="border-t border-white/10">
+        <div className="container-page flex flex-col gap-5 py-6 md:flex-row md:items-center md:justify-between md:gap-8">
+          <ul className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-white/75">
+            <li>
+              <Link href="/livraison" className="inline-flex min-h-11 items-center gap-2">
+                <IconTruck className="h-4 w-4" />
+                Livraison offerte
+              </Link>
+            </li>
+            <li>
+              <Link href="/retours" className="inline-flex min-h-11 items-center gap-2">
+                <IconReturn className="h-4 w-4" />
+                Retours 14 jours
+              </Link>
+            </li>
+            <li className="inline-flex min-h-11 items-center gap-2">
+              <IconLock className="h-4 w-4" />
+              Paiement sécurisé
+            </li>
+          </ul>
+          <PaymentMarks />
+        </div>
       </div>
       <div className="border-t border-white/10">
         <div className="container-page flex flex-col gap-2 py-5 text-xs text-white/55 md:flex-row md:justify-between">

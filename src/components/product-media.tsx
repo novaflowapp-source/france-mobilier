@@ -10,10 +10,14 @@ export function ProductMedia({
   product,
   images,
   initialVariantId,
+  ratingAverage,
+  ratingCount,
 }: {
   product: Product;
   images: string[];
   initialVariantId?: string;
+  ratingAverage?: number;
+  ratingCount?: number;
 }) {
   const variants = product.variants ?? [];
   const initial =
@@ -79,7 +83,13 @@ export function ProductMedia({
         />
       </div>
       <div className="min-w-0">
-        <ProductInfo product={product} variantId={variantId} onVariantIdChange={handleVariantIdChange} />
+        <ProductInfo
+          product={product}
+          variantId={variantId}
+          onVariantIdChange={handleVariantIdChange}
+          ratingAverage={ratingAverage}
+          ratingCount={ratingCount}
+        />
       </div>
     </div>
   );

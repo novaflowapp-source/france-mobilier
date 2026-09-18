@@ -174,3 +174,28 @@ export function IconEyeOff({ className = base }: IconProps) {
     </svg>
   );
 }
+
+export function IconSort({ className = base }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 48 48" aria-hidden>
+      <circle cx="24" cy="24" r="22" fill="currentColor" />
+      <g fill="none" stroke="#fff" strokeWidth="2.15" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="16.4" cy="14.6" r="2.7" />
+        <path d="M16.4 18.4v9.2" />
+        <path d="M16.4 27.6 14.6 36" />
+        <path d="M16.4 21.4 26 17.4" />
+        <path d="M29.2 21.2h10.2l-1.5 13.4H30.7L29.2 21.2Z" />
+        <path d="M28 19.2h12.8" />
+      </g>
+    </svg>
+  );
+}
+
+export function IconCamera({ className = base }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden>
+      <path d="M8.2 7.2 9.4 5.4h5.2l1.2 1.8H19a1.6 1.6 0 0 1 1.6 1.6v9.2A1.6 1.6 0 0 1 19 19.6H5a1.6 1.6 0 0 1-1.6-1.6V8.8A1.6 1.6 0 0 1 5 7.2h3.2Z" strokeWidth="1.6" strokeLinejoin="round" />
+      <circle cx="12" cy="13.2" r="3.1" strokeWidth="1.6" />
+    </svg>
+  );
+}
