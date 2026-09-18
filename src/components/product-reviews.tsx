@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 
@@ -19,6 +20,22 @@ function Stars({ value }: { value: number }) {
     <span className="tracking-tight text-accent" aria-label={`${value} sur 5`}>
       {"★".repeat(value)}
       <span className="text-border">{"★".repeat(5 - value)}</span>
+    </span>
+  );
+}
+
+function VerifiedPurchaseMark() {
+  return (
+    <span className="inline-flex shrink-0 items-center gap-1.5 text-[0.72rem] font-semibold uppercase tracking-[0.04em] text-[#22a45a]">
+      <Image
+        src="/achat-verifie.png"
+        alt=""
+        width={28}
+        height={28}
+        className="h-7 w-7"
+        aria-hidden
+      />
+      Achat vérifié
     </span>
   );
 }
@@ -102,22 +119,22 @@ export function ProductReviews({
         <ul className="space-y-4">
           {reviews.map((item) => (
             <li key={item.id} className="rounded-2xl border border-border bg-white p-5">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <Stars value={item.rating} />
-                {item.verifiedPurchase && (
-                  <span className="badge">Achat vérifié</span>
-                )}
+              <div className="flex items-start justify-between gap-4 sm:items-center">
+                <div className="min-w-0 flex-1">
+                  <Stars value={item.rating} />
+                  {item.title && <p className="mt-2 font-medium">{item.title}</p>}
+                  <p className="mt-2 text-sm leading-relaxed text-muted">{item.body}</p>
+                  <p className="mt-3 text-xs text-muted">
+                    {item.authorName} ·{" "}
+                    {new Date(item.createdAt).toLocaleDateString("fr-FR", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </p>
+                </div>
+                {item.verifiedPurchase ? <VerifiedPurchaseMark /> : null}
               </div>
-              {item.title && <p className="mt-2 font-medium">{item.title}</p>}
-              <p className="mt-2 text-sm leading-relaxed text-muted">{item.body}</p>
-              <p className="mt-3 text-xs text-muted">
-                {item.authorName} ·{" "}
-                {new Date(item.createdAt).toLocaleDateString("fr-FR", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                })}
-              </p>
             </li>
           ))}
         </ul>

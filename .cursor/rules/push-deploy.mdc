@@ -1,16 +1,14 @@
 ---
-description: Après chaque consigne, commit, push GitHub et déploiement Railway sans redemander.
+description: Ne jamais pusher ni déployer sur Railway sans demande explicite.
 alwaysApply: true
 ---
 
-# Push et déploiement automatiques
+# Pas de push ni de deploy Railway par défaut
 
-Après chaque consigne qui change le site, **sans redemander** :
+Ne pas exécuter `git push`, `railway up`, `railway redeploy`, ni aucun autre déploiement production **sauf si Hugo le demande clairement** (ex. « push », « deploy », « mets en ligne », « railway »).
 
-1. Commit les fichiers concernés (message en anglais, 1–2 phrases sur le pourquoi).
-2. `git push origin HEAD`
-3. `railway up --ci --yes --service web --environment production`
+Un changement de site, un « continue », un commit local ou un test ne suffit pas. `git push` ne déploie pas tout seul ; c’est `railway up` / `railway redeploy` qui déploie — ne pas les lancer pour « anticiper ».
 
-`git push` ne déploie pas tout seul. Il faut le `railway up`.
+Quand il demande le déploiement : `git push origin HEAD` puis `railway redeploy --from-source --yes --service web --environment production`.
 
 Ne pas commiter `data/*.db-shm`, `data/*.db-wal`, `.env`, secrets. Ne pas activer Stripe live ni `STORE_CHECKOUT_ENABLED`.

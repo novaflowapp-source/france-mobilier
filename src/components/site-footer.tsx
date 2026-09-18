@@ -62,23 +62,29 @@ export function SiteFooter() {
           <p className="mt-5 max-w-xs text-sm leading-relaxed text-white/75">
             {identity.relationship} Une sélection pensée pour les logements d’aujourd’hui.
           </p>
-          <p className="mt-4 text-sm text-white/75">{identity.email}</p>
-          {identity.phone ? <p className="mt-1 text-sm text-white/75">{identity.phone}</p> : null}
+          <p className="mt-4 text-sm text-white/70">
+            <a href={`mailto:${identity.email}`}>{identity.email}</a>
+          </p>
+          {identity.phone ? (
+            <p className="mt-1 text-sm text-white/70">
+              <a href={`tel:${identity.phone.replace(/\s+/g, "")}`}>{identity.phone}</a>
+            </p>
+          ) : null}
         </div>
         {groups.map((group) => (
           <div key={group.title}>
             <p className="text-sm font-semibold">{group.title}</p>
-            <ul className="mt-3 text-sm text-white/75">
+            <ul className="mt-3 text-sm text-white/70">
               {group.links.map((link) => (
                 <li key={`${group.title}-${link.href}-${link.label}`}>
-                  <Link href={link.href} className="inline-flex min-h-11 items-center hover:text-white">
+                  <Link href={link.href} className="inline-flex min-h-11 items-center">
                     {link.label}
                   </Link>
                 </li>
               ))}
               {group.title === "Informations" ? (
                 <li>
-                  <CookieManageButton className="inline-flex min-h-11 items-center bg-transparent p-0 text-inherit hover:text-white" />
+                  <CookieManageButton className="inline-flex min-h-11 items-center bg-transparent p-0 text-inherit" />
                 </li>
               ) : null}
             </ul>
