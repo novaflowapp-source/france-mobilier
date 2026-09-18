@@ -62,7 +62,8 @@ export async function createReview(input: {
 }) {
   await ensureDatabase();
   const verified = await userHasVerifiedPurchase(input.userId, input.productId);
-  if (!verified) {
+  // Temporary: unverified reviews are accepted, still pending until Hugo approves them.
+  if (!verified && process.env.ALLOW_UNVERIFIED_REVIEWS === "false") {
     throw new Error("AVIS_ACHAT_REQUIS");
   }
 
@@ -86,7 +87,7 @@ export async function createReview(input: {
     rating: input.rating,
     title: input.title?.trim() || null,
     body: input.body.trim(),
-    verifiedPurchase: true,
+    verifiedPurchase: verified,
     status: "pending",
     createdAt: now,
   });
