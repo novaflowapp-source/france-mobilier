@@ -1,3 +1,4 @@
+import { store } from "@/config/store";
 import { getDeliveryEstimate } from "@/lib/merchant/delivery";
 import { getPublicPrice } from "@/lib/merchant/price";
 import { formatLph } from "@/lib/products/merchandising";
@@ -102,10 +103,10 @@ export function offerPurchasable(offer: MerchantOffer) {
 }
 
 export function offerIdentifiers(product: Product) {
-  const brand = product.brand?.trim() || null;
+  const brand = product.brand?.trim() || store.storeName;
   const gtin = product.gtin?.trim() || null;
   const mpn = product.mpn?.trim() || null;
-  const exists = product.identifierExists ?? Boolean(brand || gtin || mpn);
+  const exists = product.identifierExists ?? Boolean(gtin || mpn);
   return { brand, gtin, mpn, identifierExists: exists };
 }
 

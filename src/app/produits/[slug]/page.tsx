@@ -11,9 +11,9 @@ import { ProductReviews } from "@/components/product-reviews";
 import { ProductViewTracker } from "@/components/product-view-tracker";
 import { ProductShippingReturns } from "@/components/product-shipping-returns";
 import { ProductSpecifications } from "@/components/product-specifications";
-import { schemaAvailability } from "@/lib/merchant/delivery";
 import { getPublicPrice } from "@/lib/merchant/price";
 import { isSellable } from "@/lib/products/merchandising";
+import { productJsonLd } from "@/lib/schema/product-jsonld";
 import {
   collectionSlugForProductPage,
   findCollectionProducts,
@@ -81,58 +81,11 @@ export default async function ProductPage({ params, searchParams }: Props) {
   const hero = productHeroImage(product);
   const highlights = productHighlights(product);
 
-  const variants = product.variants ?? [];
-  const publicPrices = (variants.length ? variants : [null]).map((variant) =>
-    getPublicPrice(product, variant),
+  const jsonLd = productJsonLd(
+    product,
+    [hero, ...gallery.filter((src) => src !== hero)],
+    reviews,
   );
-  const lowPrice = Math.min(...publicPrices.map((row) => row.amount));
-  const highPrice = Math.max(...publicPrices.map((row) => row.amount));
-  const availability = schemaAvailability(product);
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: product.name,
-    ...(product.alternateNames?.length ? { alternateName: product.alternateNames } : {}),
-    description: product.description,
-    image: [hero, ...gallery.filter((src) => src !== hero)].map((src) =>
-      src.startsWith("http") ? src : `${publicOrigin()}${src}`,
-    ),
-    ...(product.brand ? { brand: { "@type": "Brand", name: product.brand } } : {}),
-    offers:
-      variants.length > 1
-        ? variants.map((variant) => {
-            const price = getPublicPrice(product, variant);
-            return {
-              "@type": "Offer",
-              url: canonicalUrl(`/produits/${product.slug}`),
-              priceCurrency: "EUR",
-              price: price.amount,
-              availability,
-              itemCondition: "https://schema.org/NewCondition",
-            };
-          })
-        : {
-            "@type": "Offer",
-            url: canonicalUrl(`/produits/${product.slug}`),
-            priceCurrency: "EUR",
-            price: getPublicPrice(product).amount,
-            lowPrice,
-            highPrice,
-            availability,
-            itemCondition: "https://schema.org/NewCondition",
-          },
-    ...(reviews.length > 0
-      ? {
-          aggregateRating: {
-            "@type": "AggregateRating",
-            ratingValue: (
-              reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
-            ).toFixed(1),
-            reviewCount: reviews.length,
-          },
-        }
-      : {}),
-  };
 
   const breadcrumbLd = {
     "@context": "https://schema.org",
