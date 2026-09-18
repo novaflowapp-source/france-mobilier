@@ -29,7 +29,11 @@ function ReviewCard({
         </p>
       </div>
       <p className="mt-3 text-sm leading-relaxed">
-        Avis laissé par <span className="font-medium text-navy">{item.authorName}</span>
+        Avis publié sous le nom{" "}
+        <span className="font-medium text-navy">{item.displayName || item.authorName}</span>
+      </p>
+      <p className="text-xs text-muted">
+        Compte : {item.authorName} · {item.authorEmail}
       </p>
       <blockquote className="mt-2 text-sm leading-relaxed text-muted">
         « {item.body} »

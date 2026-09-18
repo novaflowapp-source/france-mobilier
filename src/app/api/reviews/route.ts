@@ -9,6 +9,7 @@ const createSchema = z.object({
   rating: z.number().int().min(1).max(5),
   title: z.string().max(120).optional(),
   body: z.string().min(10).max(2000),
+  displayName: z.string().min(2).max(40),
 });
 
 export async function GET(request: Request) {
@@ -41,10 +42,17 @@ export async function POST(request: Request) {
       rating: parsed.data.rating,
       title: parsed.data.title,
       body: parsed.data.body,
+      displayName: parsed.data.displayName,
     });
     return NextResponse.json({ id }, { status: 201 });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Erreur";
+    if (message === "AVIS_NOM_REQUIS") {
+      return NextResponse.json(
+        { error: "Indiquez le nom sous lequel publier l’avis." },
+        { status: 400 },
+      );
+    }
     if (message === "AVIS_ACHAT_REQUIS") {
       return NextResponse.json(
         {

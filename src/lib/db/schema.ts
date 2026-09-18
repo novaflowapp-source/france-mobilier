@@ -70,6 +70,7 @@ export const review = sqliteTable("review", {
   rating: integer("rating").notNull(),
   title: text("title"),
   body: text("body").notNull(),
+  displayName: text("display_name"),
   verifiedPurchase: integer("verified_purchase", { mode: "boolean" }).notNull().default(false),
   status: text("status").notNull().default("pending"),
   createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull(),

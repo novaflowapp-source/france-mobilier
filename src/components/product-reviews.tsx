@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 
@@ -35,9 +35,19 @@ export function ProductReviews({
   const [rating, setRating] = useState(5);
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [prefilledName, setPrefilledName] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (prefilledName) return;
+    const sessionName = session?.user?.name?.trim() || "";
+    if (!sessionName) return;
+    setDisplayName(sessionName);
+    setPrefilledName(true);
+  }, [session, prefilledName]);
 
   const average = useMemo(() => {
     if (reviews.length === 0) return null;
@@ -53,7 +63,7 @@ export function ProductReviews({
       const res = await fetch("/api/reviews", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId, rating, title, body }),
+        body: JSON.stringify({ productId, rating, title, body, displayName }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Envoi impossible");
@@ -127,6 +137,19 @@ export function ProductReviews({
           </p>
         ) : (
           <form onSubmit={onSubmit} className="mt-4 space-y-3">
+            <label className="block text-sm">
+              <span className="mb-1 block text-muted">Nom affiché</span>
+              <input
+                required
+                minLength={2}
+                maxLength={40}
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                className="input"
+                autoComplete="nickname"
+                placeholder="Prénom ou pseudo"
+              />
+            </label>
             <label className="block text-sm">
               <span className="mb-1 block text-muted">Note</span>
               <select

@@ -141,6 +141,7 @@ async function migrateDatabase() {
         rating INTEGER NOT NULL,
         title TEXT,
         body TEXT NOT NULL,
+        display_name TEXT,
         verified_purchase INTEGER NOT NULL DEFAULT 0,
         status TEXT NOT NULL DEFAULT 'pending',
         created_at INTEGER NOT NULL
@@ -329,6 +330,11 @@ async function migrateDatabase() {
   const accountCols = new Set(accountInfo.rows.map((row) => String(row.name)));
   if (!accountCols.has("issuer")) {
     extras.push("ALTER TABLE account ADD COLUMN issuer TEXT");
+  }
+  const reviewInfo = await client.execute("PRAGMA table_info(review)");
+  const reviewCols = new Set(reviewInfo.rows.map((row) => String(row.name)));
+  if (!reviewCols.has("display_name")) {
+    extras.push("ALTER TABLE review ADD COLUMN display_name TEXT");
   }
   for (const sql of extras) {
     try {

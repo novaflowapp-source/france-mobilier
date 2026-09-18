@@ -5,6 +5,13 @@ import { findProductById } from "@/lib/products/repository";
 
 export type ReviewStatus = "pending" | "approved" | "archived";
 
+export function sanitizeReviewDisplayName(value: string) {
+  const name = value.replace(/\s+/g, " ").trim();
+  if (name.length < 2 || name.length > 40) return null;
+  if (/@/.test(name) || /https?:\/\//i.test(name)) return null;
+  return name;
+}
+
 export type PublicReview = {
   id: string;
   rating: number;
@@ -23,6 +30,7 @@ export async function listApprovedReviews(productId: string): Promise<PublicRevi
       rating: review.rating,
       title: review.title,
       body: review.body,
+      displayName: review.displayName,
       authorName: user.name,
       createdAt: review.createdAt,
       verifiedPurchase: review.verifiedPurchase,
@@ -37,7 +45,7 @@ export async function listApprovedReviews(productId: string): Promise<PublicRevi
     rating: row.rating,
     title: row.title,
     body: row.body,
-    authorName: row.authorName,
+    authorName: row.displayName?.trim() || row.authorName,
     createdAt: new Date(row.createdAt as Date).toISOString(),
     verifiedPurchase: Boolean(row.verifiedPurchase),
   }));
@@ -59,12 +67,18 @@ export async function createReview(input: {
   rating: number;
   title?: string;
   body: string;
+  displayName: string;
 }) {
   await ensureDatabase();
   const verified = await userHasVerifiedPurchase(input.userId, input.productId);
   // Temporary: unverified reviews are accepted, still pending until Hugo approves them.
   if (!verified && process.env.ALLOW_UNVERIFIED_REVIEWS === "false") {
     throw new Error("AVIS_ACHAT_REQUIS");
+  }
+
+  const displayName = sanitizeReviewDisplayName(input.displayName);
+  if (!displayName) {
+    throw new Error("AVIS_NOM_REQUIS");
   }
 
   const existing = await db
@@ -87,6 +101,7 @@ export async function createReview(input: {
     rating: input.rating,
     title: input.title?.trim() || null,
     body: input.body.trim(),
+    displayName,
     verifiedPurchase: verified,
     status: "pending",
     createdAt: now,
@@ -101,6 +116,7 @@ export type ModerationReview = {
   productSlug: string | null;
   authorName: string;
   authorEmail: string;
+  displayName: string | null;
   rating: number;
   title: string | null;
   body: string;
@@ -123,6 +139,7 @@ export async function listModerationReviews(): Promise<ModerationReview[]> {
       createdAt: review.createdAt,
       authorName: user.name,
       authorEmail: user.email,
+      displayName: review.displayName,
     })
     .from(review)
     .innerJoin(user, eq(review.userId, user.id))
@@ -137,6 +154,7 @@ export async function listModerationReviews(): Promise<ModerationReview[]> {
       productSlug: product?.slug ?? null,
       authorName: row.authorName,
       authorEmail: row.authorEmail,
+      displayName: row.displayName?.trim() || null,
       rating: row.rating,
       title: row.title,
       body: row.body,
