@@ -1,7 +1,6 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 
@@ -26,17 +25,15 @@ function Stars({ value }: { value: number }) {
 
 function VerifiedPurchaseMark() {
   return (
-    <span className="inline-flex shrink-0 items-center gap-1.5 text-[0.72rem] font-semibold uppercase tracking-[0.04em] text-[#22a45a]">
-      <Image
+    <div className="verified-purchase">
+      <img
         src="/achat-verifie.png"
+        className="verified-purchase-icon"
         alt=""
-        width={28}
-        height={28}
-        className="h-7 w-7"
-        aria-hidden
+        aria-hidden="true"
       />
-      Achat vérifié
-    </span>
+      <span>Achat vérifié</span>
+    </div>
   );
 }
 

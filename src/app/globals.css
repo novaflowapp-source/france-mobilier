@@ -291,6 +291,52 @@ button:disabled {
   color: var(--navy);
 }
 
+.verified-purchase {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  min-height: 36px;
+  padding: 8px 16px 8px 38px;
+  background: var(--cream);
+  border-radius: 999px;
+  color: var(--navy);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.verified-purchase-icon {
+  position: absolute;
+  left: -4px;
+  top: 50%;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  transform: translateY(-50%) rotate(-8deg);
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.18));
+  z-index: 2;
+  pointer-events: none;
+  background: none;
+}
+
+@media (max-width: 640px) {
+  .verified-purchase {
+    min-height: 32px;
+    padding: 6px 12px 6px 33px;
+  }
+
+  .verified-purchase-icon {
+    width: 28px;
+    height: 28px;
+    left: -3px;
+  }
+}
+
 .input {
   width: 100%;
   border: 1px solid var(--border);
