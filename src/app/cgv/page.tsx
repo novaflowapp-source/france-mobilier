@@ -3,6 +3,7 @@ import Link from "next/link";
 import { formatPublicAddress, getBusinessIdentity } from "@/lib/business/identity";
 import { getReturnPolicy, getShippingPolicy } from "@/lib/business/policies";
 import { getDefaultDeliveryProfile } from "@/lib/merchant/delivery";
+import { PAYMENT_METHODS_PATH, paymentMethodHref, paymentMethods } from "@/lib/payment-methods";
 import { indexableMetadata } from "@/lib/seo";
 import { SHIPPING_OFFERED_SENTENCE } from "@/lib/shipping-zone";
 
@@ -55,21 +56,51 @@ export default function TermsPage() {
         <section>
           <h2 className="text-xl font-semibold text-navy">5. Commande et paiement</h2>
           <p className="mt-3">
-            La commande est ferme après confirmation du paiement. Le paiement est traité par Stripe
-            (carte bancaire, Apple Pay, Google Pay et les autres moyens proposés selon l’appareil).
-            Aucun compte n’est exigé
-            avant l’achat ; un accès client peut être ouvert après paiement.
+            La commande est ferme après confirmation du paiement. Le paiement est traité par Stripe.
+            Les moyens proposés (carte bancaire, Apple Pay, Google Pay, selon l’appareil) sont
+            décrits dans la catégorie{" "}
+            <Link href={PAYMENT_METHODS_PATH} className="text-navy underline-offset-4 hover:underline">
+              Moyens de paiement
+            </Link>
+            . Aucun compte n’est exigé avant l’achat ; un accès client peut être ouvert après
+            paiement.
+          </p>
+        </section>
+        <section id="moyens-de-paiement" className="scroll-mt-28">
+          <h2 className="text-xl font-semibold text-navy">6. Moyens de paiement</h2>
+          <p className="mt-3">
+            Les pages suivantes font partie des présentes conditions générales de vente. Elles
+            expliquent chaque moyen de paiement accepté sur {identity.storeName} :
+          </p>
+          <ul className="mt-3 list-disc space-y-1 pl-5">
+            {paymentMethods.map((method) => (
+              <li key={method.slug}>
+                <Link
+                  href={paymentMethodHref(method.slug)}
+                  className="text-navy underline-offset-4 hover:underline"
+                >
+                  {method.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-3">
+            Vue d’ensemble :{" "}
+            <Link href={PAYMENT_METHODS_PATH} className="text-navy underline-offset-4 hover:underline">
+              catégorie Moyens de paiement
+            </Link>
+            .
           </p>
         </section>
         <section>
-          <h2 className="text-xl font-semibold text-navy">6. Disponibilité</h2>
+          <h2 className="text-xl font-semibold text-navy">7. Disponibilité</h2>
           <p className="mt-3">
             Seuls les produits marqués disponibles peuvent être commandés. Un article « bientôt
             disponible » ne peut pas être acheté.
           </p>
         </section>
         <section>
-          <h2 className="text-xl font-semibold text-navy">7. Préparation et livraison</h2>
+          <h2 className="text-xl font-semibold text-navy">8. Préparation et livraison</h2>
           <p className="mt-3">
             {SHIPPING_OFFERED_SENTENCE} Coût : {shipping.shippingCostEur.toFixed(2)} €. Préparation :
             1 semaine ({delivery.handlingMinBusinessDays} jours ouvrés). Acheminement :{" "}
@@ -80,14 +111,14 @@ export default function TermsPage() {
           </p>
         </section>
         <section>
-          <h2 className="text-xl font-semibold text-navy">8. Réception</h2>
+          <h2 className="text-xl font-semibold text-navy">9. Réception</h2>
           <p className="mt-3">
             Vérifiez le colis à la réception. En cas de dommage visible, signalez-le au transporteur
             si possible et contactez-nous avec des photos.
           </p>
         </section>
         <section>
-          <h2 className="text-xl font-semibold text-navy">9. Rétractation, retours et remboursements</h2>
+          <h2 className="text-xl font-semibold text-navy">10. Rétractation, retours et remboursements</h2>
           <p className="mt-3">
             Droit de rétractation de {returns.returnWindowDays} jours à compter de la réception,
             lorsque le droit français de la consommation s’applique. La procédure, les cas
@@ -99,21 +130,21 @@ export default function TermsPage() {
           </p>
         </section>
         <section>
-          <h2 className="text-xl font-semibold text-navy">10. Produits endommagés et garanties</h2>
+          <h2 className="text-xl font-semibold text-navy">11. Produits endommagés et garanties</h2>
           <p className="mt-3">
             Garantie légale de conformité ({returns.legalConformityYears} ans) et garantie des vices
             cachés, indépendamment de tout geste commercial. Contact : {identity.email}.
           </p>
         </section>
         <section>
-          <h2 className="text-xl font-semibold text-navy">11. Service client</h2>
+          <h2 className="text-xl font-semibold text-navy">12. Service client</h2>
           <p className="mt-3">
             {identity.email}
             {identity.phone ? ` — ${identity.phone}` : ""}. {identity.hours}.
           </p>
         </section>
         <section>
-          <h2 className="text-xl font-semibold text-navy">12. Données personnelles</h2>
+          <h2 className="text-xl font-semibold text-navy">13. Données personnelles</h2>
           <p className="mt-3">
             Le traitement des données est décrit dans la{" "}
             <Link href="/confidentialite" className="text-navy underline-offset-4 hover:underline">
@@ -123,7 +154,7 @@ export default function TermsPage() {
           </p>
         </section>
         <section>
-          <h2 className="text-xl font-semibold text-navy">13. Litiges</h2>
+          <h2 className="text-xl font-semibold text-navy">14. Litiges</h2>
           <p className="mt-3">
             En cas de différend, contactez d’abord {identity.email}. Conformément à l’article
             L.612-1 du code de la consommation, vous pouvez recourir gratuitement à un médiateur de

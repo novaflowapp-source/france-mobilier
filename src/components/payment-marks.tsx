@@ -1,5 +1,8 @@
+import Link from "next/link";
+import { paymentMethods, paymentMethodHref, type PaymentMethodSlug } from "@/lib/payment-methods";
+
 const badge =
-  "inline-flex h-8 min-w-[2.6rem] items-center justify-center overflow-hidden rounded-[0.35rem] bg-white px-2";
+  "footer-payment-mark inline-flex h-9 min-w-[2.75rem] items-center justify-center overflow-hidden rounded-[0.4rem] bg-white px-2.5";
 
 function VisaMark() {
   return (
@@ -108,27 +111,36 @@ function GooglePayMark() {
   );
 }
 
-const marks = [
-  { name: "Visa", Mark: VisaMark },
-  { name: "Mastercard", Mark: MastercardMark },
-  { name: "Cartes Bancaires", Mark: CartesBancairesMark },
-  { name: "Apple Pay", Mark: ApplePayMark },
-  { name: "Google Pay", Mark: GooglePayMark },
+const marks: { slug: PaymentMethodSlug; Mark: typeof VisaMark }[] = [
+  { slug: "visa", Mark: VisaMark },
+  { slug: "mastercard", Mark: MastercardMark },
+  { slug: "cartes-bancaires", Mark: CartesBancairesMark },
+  { slug: "apple-pay", Mark: ApplePayMark },
+  { slug: "google-pay", Mark: GooglePayMark },
 ];
 
 export function PaymentMarks() {
   return (
     <ul
       className="flex flex-wrap items-center gap-1.5"
-      aria-label="Paiement par carte, Apple Pay et Google Pay"
+      aria-label="Moyens de paiement : carte, Apple Pay et Google Pay"
     >
-      {marks.map(({ name, Mark }) => (
-        <li key={name}>
-          <span className={badge} title={name} aria-label={name}>
-            <Mark />
-          </span>
-        </li>
-      ))}
+      {marks.map(({ slug, Mark }) => {
+        const method = paymentMethods.find((item) => item.slug === slug);
+        if (!method) return null;
+        return (
+          <li key={slug}>
+            <Link
+              href={paymentMethodHref(slug)}
+              className={badge}
+              title={`${method.name} — conditions de paiement`}
+              aria-label={`${method.name} — voir les conditions de paiement`}
+            >
+              <Mark />
+            </Link>
+          </li>
+        );
+      })}
     </ul>
   );
 }

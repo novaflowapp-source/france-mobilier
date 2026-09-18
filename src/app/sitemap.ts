@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { collections } from "@/config/store";
 import { isSellable } from "@/lib/products/merchandising";
 import { listProducts } from "@/lib/products/repository";
+import { PAYMENT_METHODS_PATH, paymentMethodHref, paymentMethods } from "@/lib/payment-methods";
 import { canonicalUrl, publicOrigin } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
@@ -19,6 +20,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/mentions-legales",
     "/confidentialite",
     "/cgv",
+    PAYMENT_METHODS_PATH,
+    ...paymentMethods.map((method) => paymentMethodHref(method.slug)),
     "/retours",
     "/livraison",
     "/guides",

@@ -41,6 +41,7 @@ const groups = [
       { href: "/a-propos", label: "Notre histoire" },
       { href: "/mentions-legales", label: "Mentions légales" },
       { href: "/cgv", label: "CGV" },
+      { href: "/cgv/moyens-de-paiement", label: "Moyens de paiement" },
       { href: "/confidentialite", label: "Confidentialité" },
     ],
   },

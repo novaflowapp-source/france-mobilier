@@ -1,5 +1,6 @@
 "use client";
 
+import type { MouseEvent } from "react";
 import { NotifyForm } from "@/components/notify-form";
 import { ProductBenefits } from "@/components/product-benefits";
 import { ProductBuyBox } from "@/components/product-buy-box";
@@ -54,6 +55,15 @@ export function ProductInfo({
     if (next) onVariantIdChange(next.id);
   }
 
+  function scrollToReviews(event: MouseEvent<HTMLAnchorElement>) {
+    const reviews = document.getElementById("avis");
+    if (!reviews) return;
+    event.preventDefault();
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    reviews.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+    window.history.replaceState(null, "", "#avis");
+  }
+
   return (
     <div className="space-y-5">
       {product.availabilityStatus !== "available" ? (
@@ -69,6 +79,7 @@ export function ProductInfo({
           <a
             href="#avis"
             className="product-rating-jump"
+            onClick={scrollToReviews}
             aria-label={`Voir les avis : ${ratingAverage.toLocaleString("fr-FR", {
               minimumFractionDigits: 1,
               maximumFractionDigits: 1,
