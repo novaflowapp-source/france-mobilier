@@ -95,7 +95,7 @@ export function ProductReviews({
     <section id="avis" className="section product-reviews border-t border-border">
       <div className="container-page">
       <div className="product-reviews-header">
-        <h2 className="display text-3xl text-navy">Avis clients vérifiés</h2>
+        <h2 className="display text-3xl text-navy">Avis clients</h2>
         {average !== null && (
           <p className="product-reviews-summary">
             <Stars value={Math.round(average)} />
@@ -144,7 +144,7 @@ export function ProductReviews({
         <h3>Laisser un avis</h3>
         {!session?.user ? (
           <div className="product-review-compose-copy">
-            <p>Connectez-vous après un achat vérifié pour partager votre expérience.</p>
+            <p>Connectez-vous pour partager votre expérience. Le badge « Achat vérifié » n’apparaît qu’après une commande de ce produit.</p>
             <Link href="/connexion">Se connecter →</Link>
           </div>
         ) : (

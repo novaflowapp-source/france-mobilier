@@ -76,7 +76,7 @@ export default async function AdminPage() {
           >
             <p className="text-sm text-muted">Depuis le début</p>
             <p className="mt-1 text-lg font-semibold text-navy">Activité boutique</p>
-            <p className="mt-1 text-xs text-muted">Vues, paniers, débuts de paiement et achats</p>
+            <p className="mt-1 text-xs text-muted">Vues, paniers, ouvertures Stripe et achats</p>
           </Link>
         ) : null}
       </div>

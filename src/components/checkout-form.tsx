@@ -4,25 +4,64 @@ import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/cart-provider";
 import { authClient } from "@/lib/auth-client";
-import { formatPrice } from "@/lib/products/repository";
-import { reportShopActivity } from "@/lib/activity-client";
 import { trackBeginCheckout } from "@/lib/ads/gtag";
+import { normalizeZonePhone } from "@/lib/phone";
+import { formatPrice } from "@/lib/products/repository";
 import {
   SHIPPING_COUNTRIES,
   SHIPPING_OFFERED_SENTENCE,
+  isShippingCountry,
+  normalizeShippingPostal,
   shippingFieldHints,
   type ShippingCountryCode,
 } from "@/lib/shipping-zone";
+
+const DRAFT_KEY = "francemobilier-checkout-v1";
+
+type Draft = {
+  name: string;
+  email: string;
+  line1: string;
+  postalCode: string;
+  city: string;
+  phone: string;
+  country: ShippingCountryCode;
+};
+
+const emptyDraft: Draft = {
+  name: "",
+  email: "",
+  line1: "",
+  postalCode: "",
+  city: "",
+  phone: "",
+  country: "FR",
+};
+
+function readDraft(): Partial<Draft> {
+  try {
+    const raw = sessionStorage.getItem(DRAFT_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw) as Partial<Draft>;
+    return {
+      ...parsed,
+      country: parsed.country && isShippingCountry(parsed.country) ? parsed.country : undefined,
+    };
+  } catch {
+    return {};
+  }
+}
 
 export function CheckoutForm() {
   const { items, subtotal, itemCount, ready } = useCart();
   const { data: session } = authClient.useSession();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [country, setCountry] = useState<ShippingCountryCode>("FR");
+  const [draft, setDraft] = useState<Draft>(emptyDraft);
+  const [hydrated, setHydrated] = useState(false);
   const [pro, setPro] = useState<{ companyName: string; siren: string } | null>(null);
-  const beginCheckoutSent = useRef(false);
-  const hints = useMemo(() => shippingFieldHints(country), [country]);
+  const hydratedOnce = useRef(false);
+  const hints = useMemo(() => shippingFieldHints(draft.country), [draft.country]);
 
   useEffect(() => {
     if (!session?.user) {
@@ -43,25 +82,55 @@ export function CheckoutForm() {
   }, [session?.user]);
 
   useEffect(() => {
-    if (!ready || itemCount === 0 || beginCheckoutSent.current) return;
+    if (!ready || hydratedOnce.current) return;
+    hydratedOnce.current = true;
+    const saved = readDraft();
+    const next: Draft = {
+      ...emptyDraft,
+      name: session?.user?.name || "",
+      email: session?.user?.email || "",
+      ...saved,
+    };
+    setDraft(next);
+    if (next.line1 && next.phone && next.postalCode) {
+      setHydrated(true);
+      return;
+    }
+    fetch("/api/checkout")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        const last = data?.lastDelivery;
+        if (!last) return;
+        setDraft((current) => ({
+          ...current,
+          name: current.name || last.name || "",
+          email: current.email || last.email || "",
+          line1: current.line1 || last.line1 || "",
+          postalCode: current.postalCode || last.postalCode || "",
+          city: current.city || last.city || "",
+          phone: current.phone || last.phone || "",
+          country:
+            last.country && isShippingCountry(last.country) && !saved.country
+              ? last.country
+              : current.country,
+        }));
+      })
+      .catch(() => {})
+      .finally(() => setHydrated(true));
+  }, [ready, session?.user?.email, session?.user?.name]);
+
+  useEffect(() => {
+    if (!hydrated) return;
     try {
-      if (sessionStorage.getItem("fm-begin-checkout")) return;
-      sessionStorage.setItem("fm-begin-checkout", "1");
+      sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
     } catch {
       /* private mode */
     }
-    beginCheckoutSent.current = true;
-    reportShopActivity({
-      type: "begin_checkout",
-      productName: items
-        .map((item) => `${item.name} × ${item.quantity}`)
-        .join(", ")
-        .slice(0, 240),
-      quantity: itemCount,
-      priceEur: subtotal,
-    });
-    trackBeginCheckout({ valueEur: subtotal, itemCount });
-  }, [ready, itemCount, items, subtotal]);
+  }, [draft, hydrated]);
+
+  function update<K extends keyof Draft>(key: K, value: Draft[K]) {
+    setDraft((current) => ({ ...current, [key]: value }));
+  }
 
   if (!ready) {
     return <div className="min-h-48" />;
@@ -81,8 +150,17 @@ export function CheckoutForm() {
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
+    const postalCode = normalizeShippingPostal(draft.country, draft.postalCode);
+    if (!postalCode) {
+      setError("Code postal invalide pour le pays choisi.");
+      return;
+    }
+    const phone = normalizeZonePhone(draft.phone, draft.country);
+    if (!phone) {
+      setError("Indiquez un numéro valide (France, Belgique, Luxembourg, Monaco ou Suisse).");
+      return;
+    }
     setLoading(true);
-    const form = new FormData(event.currentTarget);
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
@@ -93,17 +171,18 @@ export function CheckoutForm() {
             variantId: item.variantId,
             quantity: item.quantity,
           })),
-          name: String(form.get("name") || ""),
-          email: String(form.get("email") || ""),
-          line1: String(form.get("line1") || ""),
-          country: String(form.get("country") || "FR"),
-          postalCode: String(form.get("postalCode") || ""),
-          city: String(form.get("city") || ""),
-          phone: String(form.get("phone") || ""),
+          name: draft.name,
+          email: draft.email,
+          line1: draft.line1,
+          country: draft.country,
+          postalCode,
+          city: draft.city,
+          phone,
         }),
       });
       const data = await res.json();
       if (!res.ok || !data.url) throw new Error(data.error || "Paiement impossible");
+      trackBeginCheckout({ valueEur: subtotal, itemCount });
       window.location.href = data.url;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur");
@@ -115,6 +194,9 @@ export function CheckoutForm() {
     <form className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]" onSubmit={onSubmit}>
       <div className="space-y-4 rounded-2xl border border-border bg-card p-4 sm:p-6">
         <h2 className="text-lg font-medium">Livraison</h2>
+        <p className="text-sm text-muted">
+          Une seule étape ici. Le paiement carte, Apple Pay ou Google Pay s’ouvre ensuite sur Stripe.
+        </p>
         {pro ? (
           <p className="rounded-xl bg-cream px-4 py-3 text-sm leading-relaxed text-navy">
             Compte professionnel — {pro.companyName} (SIREN {pro.siren}). Cette commande porte le
@@ -127,8 +209,8 @@ export function CheckoutForm() {
             required
             name="country"
             autoComplete="country"
-            value={country}
-            onChange={(event) => setCountry(event.target.value as ShippingCountryCode)}
+            value={draft.country}
+            onChange={(event) => update("country", event.target.value as ShippingCountryCode)}
             className="input mt-1"
           >
             {SHIPPING_COUNTRIES.map((item) => (
@@ -144,7 +226,8 @@ export function CheckoutForm() {
             required
             name="name"
             autoComplete="name"
-            defaultValue={session?.user?.name || ""}
+            value={draft.name}
+            onChange={(event) => update("name", event.target.value)}
             className="input mt-1"
           />
         </label>
@@ -155,13 +238,21 @@ export function CheckoutForm() {
             type="email"
             name="email"
             autoComplete="email"
-            defaultValue={session?.user?.email || ""}
+            value={draft.email}
+            onChange={(event) => update("email", event.target.value)}
             className="input mt-1"
           />
         </label>
         <label className="block text-sm">
           Adresse
-          <input required name="line1" autoComplete="address-line1" className="input mt-1" />
+          <input
+            required
+            name="line1"
+            autoComplete="address-line1"
+            value={draft.line1}
+            onChange={(event) => update("line1", event.target.value)}
+            className="input mt-1"
+          />
         </label>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block text-sm">
@@ -173,11 +264,20 @@ export function CheckoutForm() {
               autoComplete="postal-code"
               inputMode="numeric"
               placeholder={hints.postal}
+              value={draft.postalCode}
+              onChange={(event) => update("postalCode", event.target.value)}
             />
           </label>
           <label className="block text-sm">
             Ville
-            <input required name="city" autoComplete="address-level2" className="input mt-1" />
+            <input
+              required
+              name="city"
+              autoComplete="address-level2"
+              value={draft.city}
+              onChange={(event) => update("city", event.target.value)}
+              className="input mt-1"
+            />
           </label>
         </div>
         <label className="block text-sm">
@@ -190,24 +290,20 @@ export function CheckoutForm() {
             inputMode="tel"
             placeholder={hints.phone}
             maxLength={30}
+            value={draft.phone}
+            onChange={(event) => update("phone", event.target.value)}
             className="input mt-1"
           />
           <span className="mt-1 block text-xs text-muted">
-            Obligatoire pour la livraison. Numéro français, belge, suisse, luxembourgeois ou
-            monégasque, avec ou sans indicatif (+33, +32, +41, +352, +377).
+            Pour la livraison. Exemple : {hints.phone}
           </span>
         </label>
-        {country === "CH" ? (
+        {draft.country === "CH" ? (
           <p className="text-sm text-muted">
             En Suisse, des droits ou taxes d’importation peuvent s’ajouter à la réception. Ils ne
             sont pas inclus dans le prix payé ici.
           </p>
         ) : null}
-        <p className="text-sm text-muted">
-          Paiement par carte, Apple Pay, Google Pay et les autres moyens proposés par Stripe selon
-          votre appareil et votre pays. Pas besoin de créer un compte avant : s’il n’existe pas
-          encore, un accès est ouvert après le paiement, identifiant = votre e-mail.
-        </p>
       </div>
       <aside className="h-fit space-y-4 rounded-2xl border border-border bg-card p-4 sm:p-6">
         <h2 className="text-lg font-medium">Récapitulatif</h2>
@@ -231,12 +327,15 @@ export function CheckoutForm() {
         </p>
         <p className="text-sm text-muted">{SHIPPING_OFFERED_SENTENCE}</p>
         <p className="text-xs text-muted">
+          Pas de compte obligatoire. Paiement sécurisé par Stripe (carte, Apple Pay, Google Pay).
+        </p>
+        <p className="text-xs text-muted">
           <Link href="/livraison" className="underline-offset-4 hover:underline">
             Livraison
           </Link>
           {" · "}
           <Link href="/retours" className="underline-offset-4 hover:underline">
-            Retours et remboursements
+            Retours
           </Link>
           {" · "}
           <Link href="/cgv" className="underline-offset-4 hover:underline">
@@ -245,7 +344,7 @@ export function CheckoutForm() {
         </p>
         {error ? <p className="text-sm text-red-700">{error}</p> : null}
         <button type="submit" disabled={loading} className="btn btn-primary w-full">
-          {loading ? "Ouverture de Stripe…" : `Payer ${formatPrice(subtotal)}`}
+          {loading ? "Ouverture du paiement…" : `Payer ${formatPrice(subtotal)}`}
         </button>
         <Link href="/panier" className="block text-center text-sm text-muted underline-offset-4 hover:underline">
           Retour au panier

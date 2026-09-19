@@ -388,6 +388,39 @@ export async function sendProAccessRequestEmails(input: {
   });
 }
 
+export async function sendWelcomeEmail(input: { email: string; name?: string | null }) {
+  const accountUrl = `${store.domain.replace(/\/$/, "")}/compte`;
+  const catalogUrl = `${store.domain.replace(/\/$/, "")}/collections/meubles`;
+  const greeting = input.name?.trim() ? `Bonjour ${input.name.trim()},` : "Bonjour,";
+  const subject = `Bienvenue chez ${store.storeName}`;
+  const text = [
+    greeting,
+    "",
+    `Votre compte ${store.storeName} est créé.`,
+    "Vous pouvez suivre vos commandes, enregistrer vos informations et parcourir nos meubles depuis votre espace.",
+    `Mon compte : ${accountUrl}`,
+    `Nos meubles : ${catalogUrl}`,
+    "",
+    `Une question ? ${store.supportEmail} — ${store.supportHoursShort}.`,
+    "",
+    store.storeName,
+  ].join("\n");
+  const html = layoutCustomerEmail({
+    preheader: `Votre compte ${store.storeName} est créé.`,
+    title: subject,
+    body: `
+    <p style="margin:0 0 8px;font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.3;color:${NAVY}">Bienvenue</p>
+    <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">${escapeHtml(greeting)}</p>
+    <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">
+      Votre compte ${escapeHtml(store.storeName)} est créé. Vous pouvez suivre vos commandes, enregistrer vos informations et parcourir nos meubles depuis votre espace.
+    </p>
+    <p style="margin:0 0 8px">${emailButton(accountUrl, "Ouvrir mon compte")}</p>
+    <p style="margin:0">${emailButton(catalogUrl, "Découvrir les meubles")}</p>
+    `,
+  });
+  return sendMail({ to: input.email, subject, text, html });
+}
+
 export async function sendPasswordResetEmail(input: { email: string; url: string }) {
   const subject = `Réinitialiser votre mot de passe — ${store.storeName}`;
   const text = [

@@ -84,6 +84,7 @@ export function organizationJsonLd(identity = getBusinessIdentity()) {
     url: identity.url,
     email: identity.email,
     logo: `${identity.url}${store.logoPath}`,
+    taxID: identity.siren,
     ...(identity.phone ? { telephone: identity.phone } : {}),
     address: {
       "@type": "PostalAddress",

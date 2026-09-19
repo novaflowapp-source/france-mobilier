@@ -16,7 +16,7 @@ export function CompteChrome({ children, isAdmin = false }: { children: ReactNod
         <Link href="/admin/activite" className="block rounded-2xl border border-navy/20 bg-white p-5 transition hover:border-navy">
           <p className="text-sm font-medium text-navy">Activité boutique</p>
           <p className="mt-1 text-sm text-muted">
-            Vues produit, ajouts au panier et débuts de paiement, depuis le début.
+            Vues produit, ajouts au panier, ouvertures Stripe et achats, depuis le début.
           </p>
         </Link>
       ) : null}

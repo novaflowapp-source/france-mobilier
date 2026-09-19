@@ -81,7 +81,8 @@ export function listMerchantFeedOffers() {
   return listProducts()
     .filter((product) => product.availabilityStatus === "available")
     .filter(productMerchantReady)
-    .flatMap(merchantOffers);
+    .flatMap(merchantOffers)
+    .filter((offer) => offerPublicPrice(offer).amount > 0);
 }
 
 export function buildGoogleMerchantFeedXml() {

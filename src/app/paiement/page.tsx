@@ -12,8 +12,8 @@ export default function CheckoutPage() {
     <div className="container-page py-10 md:py-14">
       <h1 className="text-3xl font-semibold tracking-tight">Commande</h1>
       <p className="mt-2 text-muted">
-        {SHIPPING_OFFERED_SENTENCE} Paiement par carte, Apple Pay, Google Pay et autres moyens selon
-        l’appareil.
+        {SHIPPING_OFFERED_SENTENCE} Indiquez l’adresse, puis payez sur Stripe (carte, Apple Pay,
+        Google Pay selon l’appareil).
       </p>
       <div className="mt-8">
         <CheckoutForm />

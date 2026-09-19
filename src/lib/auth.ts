@@ -2,7 +2,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db, ensureDatabase } from "@/lib/db";
 import * as schema from "@/lib/db/schema";
-import { sendPasswordResetEmail } from "@/lib/mail";
+import { sendPasswordResetEmail, sendWelcomeEmail } from "@/lib/mail";
 
 const baseURL = (
   process.env.BETTER_AUTH_URL ||
@@ -81,6 +81,12 @@ export const auth = betterAuth({
         after: async (created) => {
           const { attachOrdersToUser } = await import("@/lib/orders");
           await attachOrdersToUser(created.id, created.email);
+          try {
+            const sent = await sendWelcomeEmail({ email: created.email, name: created.name });
+            if (!sent) console.error("[auth] welcome email was not sent");
+          } catch (error) {
+            console.error("[auth] welcome email failed", error);
+          }
         },
       },
     },

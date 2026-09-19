@@ -111,6 +111,9 @@ export default function CartPage() {
             <Link href="/paiement" className="btn btn-primary mt-6 w-full">
               Commander
             </Link>
+            <p className="mt-3 text-center text-xs text-muted">
+              Livraison offerte · Paiement sécurisé · Pas de compte obligatoire
+            </p>
             <div className="mt-4">
               <ProQuoteActions
                 cartItems={items.map((item) => ({

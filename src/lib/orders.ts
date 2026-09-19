@@ -415,6 +415,27 @@ export async function getOrderByStripeSession(stripeSessionId: string) {
   return rows[0] ?? null;
 }
 
+export async function getLastDeliveryForEmail(email: string) {
+  await ensureDatabase();
+  const normalized = email.trim().toLowerCase();
+  if (!normalized) return null;
+  const rows = await db
+    .select({
+      name: shopOrder.name,
+      email: shopOrder.email,
+      phone: shopOrder.phone,
+      line1: shopOrder.line1,
+      postalCode: shopOrder.postalCode,
+      city: shopOrder.city,
+      country: shopOrder.country,
+    })
+    .from(shopOrder)
+    .where(eq(shopOrder.email, normalized))
+    .orderBy(desc(shopOrder.createdAt))
+    .limit(1);
+  return rows[0] ?? null;
+}
+
 export async function getOrderById(orderId: string) {
   await ensureDatabase();
   const rows = await db.select().from(shopOrder).where(eq(shopOrder.id, orderId)).limit(1);

@@ -33,22 +33,24 @@ export async function listApprovedReviews(productId: string): Promise<PublicRevi
       displayName: review.displayName,
       authorName: user.name,
       createdAt: review.createdAt,
-      verifiedPurchase: review.verifiedPurchase,
+      userId: review.userId,
     })
     .from(review)
     .innerJoin(user, eq(review.userId, user.id))
     .where(and(eq(review.productId, productId), eq(review.status, "approved")))
     .orderBy(desc(review.createdAt));
 
-  return rows.map((row) => ({
-    id: row.id,
-    rating: row.rating,
-    title: row.title,
-    body: row.body,
-    authorName: row.displayName?.trim() || row.authorName,
-    createdAt: new Date(row.createdAt as Date).toISOString(),
-    verifiedPurchase: Boolean(row.verifiedPurchase),
-  }));
+  return Promise.all(
+    rows.map(async (row) => ({
+      id: row.id,
+      rating: row.rating,
+      title: row.title,
+      body: row.body,
+      authorName: row.displayName?.trim() || row.authorName,
+      createdAt: new Date(row.createdAt as Date).toISOString(),
+      verifiedPurchase: await userHasVerifiedPurchase(row.userId, productId),
+    })),
+  );
 }
 
 export async function userHasVerifiedPurchase(userId: string, productId: string) {
@@ -135,34 +137,36 @@ export async function listModerationReviews(): Promise<ModerationReview[]> {
       title: review.title,
       body: review.body,
       status: review.status,
-      verifiedPurchase: review.verifiedPurchase,
       createdAt: review.createdAt,
       authorName: user.name,
       authorEmail: user.email,
       displayName: review.displayName,
+      userId: review.userId,
     })
     .from(review)
     .innerJoin(user, eq(review.userId, user.id))
     .orderBy(desc(review.createdAt));
 
-  return rows.map((row) => {
-    const product = findProductById(row.productId);
-    return {
-      id: row.id,
-      productId: row.productId,
-      productName: product?.name ?? row.productId,
-      productSlug: product?.slug ?? null,
-      authorName: row.authorName,
-      authorEmail: row.authorEmail,
-      displayName: row.displayName?.trim() || null,
-      rating: row.rating,
-      title: row.title,
-      body: row.body,
-      status: row.status as ReviewStatus,
-      verifiedPurchase: Boolean(row.verifiedPurchase),
-      createdAt: new Date(row.createdAt as Date).toISOString(),
-    };
-  });
+  return Promise.all(
+    rows.map(async (row) => {
+      const product = findProductById(row.productId);
+      return {
+        id: row.id,
+        productId: row.productId,
+        productName: product?.name ?? row.productId,
+        productSlug: product?.slug ?? null,
+        authorName: row.authorName,
+        authorEmail: row.authorEmail,
+        displayName: row.displayName?.trim() || null,
+        rating: row.rating,
+        title: row.title,
+        body: row.body,
+        status: row.status as ReviewStatus,
+        verifiedPurchase: await userHasVerifiedPurchase(row.userId, row.productId),
+        createdAt: new Date(row.createdAt as Date).toISOString(),
+      };
+    }),
+  );
 }
 
 export async function countPendingReviews() {
@@ -176,8 +180,5 @@ export async function countPendingReviews() {
 
 export async function setReviewStatus(id: string, status: ReviewStatus) {
   await ensureDatabase();
-  await db
-    .update(review)
-    .set(status === "approved" ? { status, verifiedPurchase: true } : { status })
-    .where(eq(review.id, id));
+  await db.update(review).set({ status }).where(eq(review.id, id));
 }

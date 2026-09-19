@@ -24,8 +24,9 @@ export default async function AdminActivityPage() {
       </p>
       <h1 className="mt-4 text-3xl font-semibold tracking-tight">Activité boutique</h1>
       <p className="mt-2 text-sm text-muted">
-        Vues produit, ajouts au panier, débuts de paiement et achats — totaux depuis le début du
-        suivi, mis à jour en direct.
+        Vues produit, ajouts au panier, ouvertures de la page Stripe et achats payés — totaux
+        depuis le début du suivi, mis à jour en direct. « Ouverture Stripe » compte un clic sur
+        Payer, pas seulement une visite de la page commande.
       </p>
       <div className="mt-8">
         <AdminActivityLive />

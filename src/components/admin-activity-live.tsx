@@ -30,7 +30,7 @@ function formatMoney(cents: number | null) {
 
 function actionLabel(type: ActivityEvent["type"]) {
   if (type === "purchase") return "Achat";
-  if (type === "begin_checkout") return "Paiement";
+  if (type === "begin_checkout") return "Ouverture Stripe";
   if (type === "product_view") return "Vue";
   return "Panier";
 }
@@ -100,7 +100,7 @@ export function AdminActivityLive() {
             <StatCard label="Vues produit" total={summary.productViews} last24h={summary.last24h.productViews} />
             <StatCard label="Ajouts au panier" total={summary.addToCart} last24h={summary.last24h.addToCart} />
             <StatCard
-              label="Débuts de paiement"
+              label="Ouvertures Stripe"
               total={summary.beginCheckout}
               last24h={summary.last24h.beginCheckout}
             />
@@ -149,7 +149,7 @@ export function AdminActivityLive() {
             {events.length === 0 ? (
               <tr>
                 <td colSpan={4} className="px-4 py-6 text-muted">
-                  Aucune activité pour le moment. Les paniers, débuts de paiement et achats apparaissent ici.
+                  Aucune activité pour le moment. Les paniers, ouvertures Stripe et achats apparaissent ici.
                 </td>
               </tr>
             ) : (

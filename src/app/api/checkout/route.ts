@@ -8,6 +8,7 @@ import {
   attachStripeSession,
   createPendingOrder,
   getAccountInvitePassword,
+  getLastDeliveryForEmail,
   getOrderAccessSecrets,
   getOrderById,
   isFirstPaidOrderForEmail,
@@ -17,7 +18,9 @@ import {
   orderAccessCookieOptions,
   priceCheckoutLines,
 } from "@/lib/orders";
+import { recordBeginCheckout } from "@/lib/activity";
 import {
+  ensureStripeCustomer,
   getSiteUrl,
   getStripe,
   isCheckoutEnabled,
@@ -70,7 +73,12 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const sessionId = searchParams.get("session_id");
   if (!sessionId) {
-    return NextResponse.json({ enabled: true, mode: stripeMode() });
+    await prepareAuth();
+    const sessionAuth = await auth.api.getSession({ headers: await headers() });
+    const lastDelivery = sessionAuth?.user?.email
+      ? await getLastDeliveryForEmail(sessionAuth.user.email)
+      : null;
+    return NextResponse.json({ enabled: true, mode: stripeMode(), lastDelivery });
   }
 
   try {
@@ -195,10 +203,27 @@ export async function POST(request: Request) {
 
     const siteUrl = getSiteUrl();
     const stripe = getStripe();
+    const email = parsed.data.email.trim().toLowerCase();
+    let customerId: string | undefined;
+    try {
+      customerId = await ensureStripeCustomer({
+        email,
+        name: parsed.data.name,
+        phone: parsed.data.phone,
+        line1: parsed.data.line1,
+        postalCode: parsed.data.postalCode,
+        city: parsed.data.city,
+        country: parsed.data.country,
+        orderId,
+      });
+    } catch (error) {
+      console.error("[checkout] stripe customer prefills skipped", error);
+    }
     const checkoutSession = await stripe.checkout.sessions.create({
       mode: "payment",
       locale: "fr",
-      customer_email: parsed.data.email.trim().toLowerCase(),
+      billing_address_collection: "auto",
+      ...(customerId ? { customer: customerId } : { customer_email: email }),
       client_reference_id: orderId,
       metadata: {
         orderId,
@@ -208,15 +233,17 @@ export async function POST(request: Request) {
       },
       success_url: `${siteUrl}/commande/confirmation?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/paiement`,
-      ...(proActive && companyName && siren
-        ? {
-            custom_text: {
-              submit: {
-                message: `Commande professionnelle — ${companyName} (SIREN ${siren}). Les prix restent TTC.`,
-              },
-            },
-          }
-        : {}),
+      after_expiration: {
+        recovery: { enabled: true },
+      },
+      custom_text: {
+        submit: {
+          message:
+            proActive && companyName && siren
+              ? `Commande professionnelle — ${companyName} (SIREN ${siren}). Les prix restent TTC.`
+              : "Paiement sécurisé. Livraison offerte. Si vous quittez cette page, un lien de reprise vous sera envoyé.",
+        },
+      },
       line_items: lines.map((line) => ({
         quantity: line.quantity,
         price_data: {
@@ -235,7 +262,7 @@ export async function POST(request: Request) {
           ...(companyName ? { companyName } : {}),
           ...(siren ? { siren } : {}),
         },
-        receipt_email: parsed.data.email.trim().toLowerCase(),
+        receipt_email: email,
         shipping: {
           name: parsed.data.name.trim(),
           phone: parsed.data.phone,
@@ -253,6 +280,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Impossible d’ouvrir Stripe." }, { status: 502 });
     }
     await attachStripeSession(orderId, checkoutSession.id);
+    try {
+      await recordBeginCheckout({
+        productName: lines.map((line) => `${line.name} × ${line.quantity}`).join(", ").slice(0, 240),
+        quantity: lines.reduce((sum, line) => sum + line.quantity, 0),
+        priceEur: amountCents / 100,
+        email,
+      });
+    } catch (error) {
+      console.error("[checkout] begin_checkout activity failed", error);
+    }
     return NextResponse.json({ url: checkoutSession.url, mode: stripeMode() });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Erreur";

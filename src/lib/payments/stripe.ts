@@ -59,3 +59,45 @@ export function getStripePublicStatus() {
   if (!isCheckoutEnabled()) return "PRE_LAUNCH" as const;
   return stripeMode() === "test" ? ("TEST" as const) : ("READY" as const);
 }
+
+export async function ensureStripeCustomer(input: {
+  email: string;
+  name: string;
+  phone: string;
+  line1: string;
+  postalCode: string;
+  city: string;
+  country: string;
+  orderId: string;
+}) {
+  const stripe = getStripe();
+  const email = input.email.trim().toLowerCase();
+  const shipping = {
+    name: input.name.trim(),
+    phone: input.phone,
+    address: {
+      line1: input.line1.trim(),
+      postal_code: input.postalCode.trim(),
+      city: input.city.trim(),
+      country: input.country,
+    },
+  };
+  const existing = await stripe.customers.list({ email, limit: 1 });
+  if (existing.data[0]) {
+    await stripe.customers.update(existing.data[0].id, {
+      name: input.name.trim(),
+      phone: input.phone,
+      shipping,
+      metadata: { lastOrderId: input.orderId },
+    });
+    return existing.data[0].id;
+  }
+  const created = await stripe.customers.create({
+    email,
+    name: input.name.trim(),
+    phone: input.phone,
+    shipping,
+    metadata: { lastOrderId: input.orderId },
+  });
+  return created.id;
+}

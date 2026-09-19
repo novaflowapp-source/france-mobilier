@@ -4,7 +4,7 @@ import { store } from "@/config/store";
 import { CookieManageButton } from "@/components/cookie-manage-button";
 import { IconLock, IconReturn, IconTruck } from "@/components/icons";
 import { PaymentMarks } from "@/components/payment-marks";
-import { getBusinessIdentity } from "@/lib/business/identity";
+import { formatPublicAddress, getBusinessIdentity } from "@/lib/business/identity";
 
 const groups = [
   {
@@ -123,7 +123,9 @@ export function SiteFooter() {
             © {new Date().getFullYear()} {store.storeName}. Tous droits réservés.
           </p>
           <p>
-            {store.companyName} — {store.companyCity}
+            {identity.legalName} ({identity.legalForm}) — {formatPublicAddress(identity)}
+            <br />
+            {identity.registration}
           </p>
         </div>
       </div>
