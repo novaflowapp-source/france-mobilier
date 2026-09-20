@@ -33,3 +33,12 @@ export function indexableMetadata(
     },
   };
 }
+
+/** Account and checkout surfaces: never index, even if Google ignores robots.txt. */
+export function privateMetadata(path: string, metadata: Metadata = {}): Metadata {
+  return {
+    ...metadata,
+    alternates: { canonical: canonicalUrl(path) },
+    robots: { index: false, follow: false },
+  };
+}
