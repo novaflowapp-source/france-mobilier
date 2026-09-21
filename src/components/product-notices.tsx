@@ -5,32 +5,31 @@ const COLLECTION_POINTS_URL =
 
 export function ProductNotices() {
   return (
-    <section className="border-t border-border">
-      <div className="container-page py-10 md:py-12">
-        <ul className="prose-narrow space-y-6">
-          <li className="flex gap-3.5 sm:gap-4">
-            <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center text-navy">
-              <IconSort className="h-10 w-10" />
+    <section className="product-notices">
+      <div className="container-page py-16 md:py-24">
+        <ul className="grid gap-12 md:grid-cols-2 md:gap-16 lg:gap-20">
+          <li className="product-notices-item">
+            <span className="product-notices-icon" aria-hidden>
+              <IconSort className="h-14 w-14" />
             </span>
-            <p className="text-sm leading-relaxed text-muted">
+            <p>
               Ce produit peut, au choix, être réemployé ou recyclé. Si vous souhaitez le recycler, vous
               pouvez vous rendre dans l’un des points de collecte dont la liste est disponible sur{" "}
               <a
                 href={COLLECTION_POINTS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium text-navy underline decoration-navy/40 underline-offset-[0.18em]"
               >
                 Maison du tri
               </a>
               .
             </p>
           </li>
-          <li className="flex gap-3.5 sm:gap-4">
-            <span className="mt-0.5 flex h-10 w-10 shrink-0 items-start justify-center pt-0.5 text-navy">
-              <IconCamera className="h-6 w-6" />
+          <li className="product-notices-item">
+            <span className="product-notices-icon product-notices-icon-outline" aria-hidden>
+              <IconCamera className="h-8 w-8" />
             </span>
-            <p className="text-sm leading-relaxed text-muted">
+            <p>
               Les équipes France Mobilier mettent tout en œuvre pour restituer l’aspect des produits à
               travers des visuels au plus près de la réalité. Toutefois, la prise de vue, la luminosité et
               la résolution des écrans peuvent entraîner de légères variations dans la perception des
