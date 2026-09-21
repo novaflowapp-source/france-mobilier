@@ -3,6 +3,7 @@ import { Geist, Newsreader } from "next/font/google";
 import { CartProvider } from "@/components/cart-provider";
 import { CookieConsent } from "@/components/cookie-consent";
 import { GoogleConsentSync } from "@/components/google-consent-sync";
+import { PullToRefresh } from "@/components/pull-to-refresh";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { store } from "@/config/store";
@@ -95,6 +96,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <SiteFooter />
           <CookieConsent />
           <GoogleConsentSync />
+          <PullToRefresh />
         </CartProvider>
       </body>
     </html>

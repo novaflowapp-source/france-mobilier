@@ -15,6 +15,45 @@ import { useProApproved } from "@/lib/use-pro-approved";
 const SHRINK_AFTER = 80;
 const EXPAND_BEFORE = 16;
 
+function HeaderTopNotices({
+  welcome,
+  showCountdown = false,
+}: {
+  welcome: { status: "idle" | "active" | "expired"; remainingMs: number };
+  showCountdown?: boolean;
+}) {
+  return (
+    <>
+      <Link href="/livraison" className="inline-flex shrink-0 items-center gap-1.5 hover:text-white">
+        <IconTruck className="h-3.5 w-3.5" aria-hidden />
+        Livraison gratuite
+      </Link>
+      <span className="text-white/40" aria-hidden>
+        •
+      </span>
+      <Link
+        href={WELCOME_PROMO.checkoutHref}
+        className="inline-flex shrink-0 items-center gap-1.5 hover:opacity-80"
+      >
+        <WelcomeCodeMark onDark />
+        {showCountdown && welcome.status === "active" ? (
+          <>
+            <span className="text-white/40">·</span>
+            <WelcomeRemaining remainingMs={welcome.remainingMs} />
+          </>
+        ) : null}
+      </Link>
+      <span className="text-white/40" aria-hidden>
+        •
+      </span>
+      <Link href="/retours" className="inline-flex shrink-0 items-center gap-1.5 hover:text-white">
+        <IconReturn className="h-3.5 w-3.5" aria-hidden />
+        Retours 14 jours
+      </Link>
+    </>
+  );
+}
+
 export function SiteHeader() {
   const { itemCount, welcome } = useCart();
   const { data: session } = authClient.useSession();
@@ -84,39 +123,26 @@ export function SiteHeader() {
         ref={headerRef}
         className="fixed inset-x-0 top-0 z-40 bg-white/95 pt-[env(safe-area-inset-top)] backdrop-blur-md"
       >
-        <p className="border-b border-border bg-navy text-center text-[11px] tracking-[0.04em] text-white/90 md:text-xs">
-          <span className="container-page flex h-8 items-center justify-center gap-x-3 overflow-hidden whitespace-nowrap">
-            <Link href="/livraison" className="inline-flex items-center gap-1.5 hover:text-white">
-              <IconTruck className="h-3.5 w-3.5" />
-              Livraison gratuite
-            </Link>
-            {welcome.status === "expired" ? null : (
-              <>
+        <p className="border-b border-border bg-navy text-[11px] tracking-[0.04em] text-white/90 md:text-xs">
+          <span className="site-header-ticker md:hidden">
+            <span className="site-header-ticker-track">
+              <span className="site-header-ticker-set">
+                <HeaderTopNotices welcome={welcome} />
+                <span className="text-white/40" aria-hidden>
+                  •
+                </span>
+              </span>
+              <span className="site-header-ticker-set" aria-hidden inert>
+                <HeaderTopNotices welcome={welcome} />
                 <span className="text-white/40">•</span>
-                <Link
-                  href={WELCOME_PROMO.checkoutHref}
-                  className="inline-flex items-center gap-1.5 hover:opacity-80"
-                >
-                  <WelcomeCodeMark onDark />
-                  {welcome.status === "active" ? (
-                    <>
-                      <span className="hidden text-white/40 sm:inline">·</span>
-                      <span className="hidden sm:inline">
-                        <WelcomeRemaining remainingMs={welcome.remainingMs} />
-                      </span>
-                    </>
-                  ) : null}
-                </Link>
-              </>
-            )}
-            <span className="hidden text-white/40 sm:inline">•</span>
-            <span className="hidden items-center gap-1.5 sm:inline-flex">
-              <IconReturn className="h-3.5 w-3.5" />
-              Retours 14 jours
+              </span>
             </span>
-            <span className="hidden text-white/40 md:inline">•</span>
-            <Link href="/contact" className="hidden items-center gap-1.5 hover:text-white md:inline-flex">
-              <IconHeadset className="h-3.5 w-3.5" />
+          </span>
+          <span className="container-page hidden h-8 items-center justify-center gap-x-3 overflow-hidden whitespace-nowrap md:flex">
+            <HeaderTopNotices welcome={welcome} showCountdown />
+            <span className="text-white/40">•</span>
+            <Link href="/contact" className="inline-flex items-center gap-1.5 hover:text-white">
+              <IconHeadset className="h-3.5 w-3.5" aria-hidden />
               SAV du lundi au vendredi, 10h–22h
             </Link>
           </span>
