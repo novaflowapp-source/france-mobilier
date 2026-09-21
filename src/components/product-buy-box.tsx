@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCart } from "@/components/cart-provider";
 import { ProQuoteActions } from "@/components/pro-quote-actions";
 import { ProductTrustBar } from "@/components/product-trust-bar";
@@ -49,6 +49,49 @@ export function ProductBuyBox({
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const [cartLinkEmerging, setCartLinkEmerging] = useState(false);
+  const [hideForFooter, setHideForFooter] = useState(false);
+
+  useEffect(() => {
+    const footer = document.querySelector("footer");
+    if (!footer) return;
+
+    let footerInView = false;
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    const apply = () => {
+      const y = window.scrollY;
+      const goingUp = y < lastY - 6;
+      const goingDown = y > lastY + 6;
+      if (goingUp) setHideForFooter(false);
+      else if (goingDown && footerInView) setHideForFooter(true);
+      else if (!footerInView) setHideForFooter(false);
+      lastY = y;
+      ticking = false;
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        footerInView = Boolean(entry?.isIntersecting);
+        if (footerInView && window.scrollY >= lastY) setHideForFooter(true);
+        else if (!footerInView) setHideForFooter(false);
+      },
+      { root: null, threshold: 0, rootMargin: "0px 0px -104px 0px" },
+    );
+    observer.observe(footer);
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(apply);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
   const price = variant?.price ?? product.price;
   const image = variant?.image ?? productHeroImage(product);
   const name = variant ? variantLineName(product, variant) : product.name;
@@ -96,7 +139,11 @@ export function ProductBuyBox({
           Une question ? {store.supportEmail} — {store.supportHoursShort}.
         </p>
       </div>
-      <div className="product-add-to-cart-stack fixed inset-x-0 bottom-0 z-30 border-t border-border bg-white/95 px-3 pt-3 backdrop-blur md:hidden pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+      <div
+        className={`product-sticky-cart product-add-to-cart-stack fixed inset-x-0 bottom-0 z-30 border-t border-border bg-white/95 px-3 pt-3 backdrop-blur md:hidden pb-[max(0.75rem,env(safe-area-inset-bottom))]${
+          hideForFooter ? " is-hidden" : ""
+        }`}
+      >
         <WelcomeOfferNote compact snake={false} className="mb-2" />
         <button type="button" className="btn btn-primary min-h-12 w-full" onClick={add}>
           {added ? "Ajouté au panier" : "Ajouter au panier"}

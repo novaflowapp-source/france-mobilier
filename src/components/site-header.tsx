@@ -124,7 +124,7 @@ export function SiteHeader() {
         className="fixed inset-x-0 top-0 z-40 bg-white/95 pt-[env(safe-area-inset-top)] backdrop-blur-md"
       >
         <p className="border-b border-border bg-navy text-[11px] tracking-[0.04em] text-white/90 md:text-xs">
-          <span className="site-header-ticker md:hidden">
+          <span className="site-header-ticker">
             <span className="site-header-ticker-track">
               <span className="site-header-ticker-set">
                 <HeaderTopNotices welcome={welcome} />
