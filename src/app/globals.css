@@ -585,6 +585,11 @@ button:disabled {
   animation: welcome-offer-spin 3.6s linear infinite;
 }
 
+.welcome-offer-card.is-static::before {
+  content: none;
+  animation: none;
+}
+
 .welcome-offer-card-inner {
   position: relative;
   z-index: 1;

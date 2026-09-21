@@ -32,9 +32,11 @@ export function WelcomeRemaining({ remainingMs }: { remainingMs: number }) {
 
 export function WelcomeOfferNote({
   compact = false,
+  snake = true,
   className = "",
 }: {
   compact?: boolean;
+  snake?: boolean;
   className?: string;
 }) {
   const { welcome } = useCart();
@@ -45,7 +47,7 @@ export function WelcomeOfferNote({
 
   return (
     <div className={`welcome-offer-lift ${className}`.trim()}>
-      <div className="welcome-offer-card">
+      <div className={`welcome-offer-card${snake ? "" : " is-static"}`}>
         <p className={`welcome-offer-card-inner${compact ? " is-compact" : ""}`}>
           {compact ? (
             <>

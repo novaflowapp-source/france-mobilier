@@ -83,7 +83,7 @@ export function ProductBuyBox({
             className="input max-w-24"
           />
         </label>
-        <WelcomeOfferNote />
+        <WelcomeOfferNote snake={false} />
         <div className="product-add-to-cart-stack">
           <button type="button" className="btn btn-primary min-h-12 w-full text-base" onClick={add}>
             {added ? "Ajouté au panier" : "Ajouter au panier"}
@@ -97,7 +97,7 @@ export function ProductBuyBox({
         </p>
       </div>
       <div className="product-add-to-cart-stack fixed inset-x-0 bottom-0 z-30 border-t border-border bg-white/95 px-3 pt-3 backdrop-blur md:hidden pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-        <WelcomeOfferNote compact className="mb-2" />
+        <WelcomeOfferNote compact snake={false} className="mb-2" />
         <button type="button" className="btn btn-primary min-h-12 w-full" onClick={add}>
           {added ? "Ajouté au panier" : "Ajouter au panier"}
         </button>

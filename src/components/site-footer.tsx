@@ -123,7 +123,7 @@ export function SiteFooter() {
             © {new Date().getFullYear()} {store.storeName}. Tous droits réservés.
           </p>
           <p>
-            {identity.legalName} ({identity.legalForm}) — {formatPublicAddress(identity)}
+            {identity.legalName} — {formatPublicAddress(identity)}
             <br />
             {identity.registration}
           </p>
