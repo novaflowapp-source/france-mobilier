@@ -7,6 +7,8 @@ import { authClient } from "@/lib/auth-client";
 import { trackBeginCheckout } from "@/lib/ads/gtag";
 import { normalizeZonePhone } from "@/lib/phone";
 import { formatPrice } from "@/lib/products/repository";
+import { WelcomeCodeMark, WelcomeOfferNote } from "@/components/welcome-offer-note";
+import { WELCOME_PROMO, isWelcomePromo, parsePromoCode } from "@/lib/promo";
 import {
   SHIPPING_COUNTRIES,
   SHIPPING_OFFERED_SENTENCE,
@@ -26,6 +28,7 @@ type Draft = {
   city: string;
   phone: string;
   country: ShippingCountryCode;
+  promoCode: string;
 };
 
 const emptyDraft: Draft = {
@@ -36,6 +39,7 @@ const emptyDraft: Draft = {
   city: "",
   phone: "",
   country: "FR",
+  promoCode: "",
 };
 
 function readDraft(): Partial<Draft> {
@@ -46,6 +50,7 @@ function readDraft(): Partial<Draft> {
     return {
       ...parsed,
       country: parsed.country && isShippingCountry(parsed.country) ? parsed.country : undefined,
+      promoCode: typeof parsed.promoCode === "string" ? parsed.promoCode : undefined,
     };
   } catch {
     return {};
@@ -53,7 +58,7 @@ function readDraft(): Partial<Draft> {
 }
 
 export function CheckoutForm() {
-  const { items, subtotal, itemCount, ready } = useCart();
+  const { items, subtotal, itemCount, ready, welcome } = useCart();
   const { data: session } = authClient.useSession();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -62,6 +67,17 @@ export function CheckoutForm() {
   const [pro, setPro] = useState<{ companyName: string; siren: string } | null>(null);
   const hydratedOnce = useRef(false);
   const hints = useMemo(() => shippingFieldHints(draft.country), [draft.country]);
+  const welcomePreview = Boolean(
+    !pro && welcome.status === "active" && isWelcomePromo(draft.promoCode),
+  );
+  const payable = useMemo(() => {
+    const subtotalCents = Math.round(subtotal * 100);
+    if (!welcomePreview) {
+      return { discountCents: 0, total: subtotal };
+    }
+    const discountCents = Math.round(subtotalCents * (WELCOME_PROMO.percent / 100));
+    return { discountCents, total: (subtotalCents - discountCents) / 100 };
+  }, [subtotal, welcomePreview]);
 
   useEffect(() => {
     if (!session?.user) {
@@ -85,11 +101,16 @@ export function CheckoutForm() {
     if (!ready || hydratedOnce.current) return;
     hydratedOnce.current = true;
     const saved = readDraft();
+    const fromUrl =
+      typeof window !== "undefined"
+        ? parsePromoCode(new URLSearchParams(window.location.search).get("code") || "")
+        : null;
     const next: Draft = {
       ...emptyDraft,
       name: session?.user?.name || "",
       email: session?.user?.email || "",
       ...saved,
+      promoCode: fromUrl || saved.promoCode || WELCOME_PROMO.code,
     };
     setDraft(next);
     if (next.line1 && next.phone && next.postalCode) {
@@ -127,6 +148,21 @@ export function CheckoutForm() {
       /* private mode */
     }
   }, [draft, hydrated]);
+
+  useEffect(() => {
+    if (!hydrated || pro) return;
+    if (welcome.status === "active") {
+      setDraft((current) =>
+        isWelcomePromo(current.promoCode) ? current : { ...current, promoCode: WELCOME_PROMO.code },
+      );
+      return;
+    }
+    if (welcome.status === "expired") {
+      setDraft((current) =>
+        isWelcomePromo(current.promoCode) ? { ...current, promoCode: "" } : current,
+      );
+    }
+  }, [hydrated, pro, welcome.status]);
 
   function update<K extends keyof Draft>(key: K, value: Draft[K]) {
     setDraft((current) => ({ ...current, [key]: value }));
@@ -178,11 +214,12 @@ export function CheckoutForm() {
           postalCode,
           city: draft.city,
           phone,
+          promoCode: pro || welcome.status !== "active" ? undefined : draft.promoCode.trim() || undefined,
         }),
       });
       const data = await res.json();
       if (!res.ok || !data.url) throw new Error(data.error || "Paiement impossible");
-      trackBeginCheckout({ valueEur: subtotal, itemCount });
+      trackBeginCheckout({ valueEur: payable.total, itemCount });
       window.location.href = data.url;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur");
@@ -298,6 +335,28 @@ export function CheckoutForm() {
             Pour la livraison. Exemple : {hints.phone}
           </span>
         </label>
+        {pro ? (
+          <p className="text-sm text-muted">
+            Les tarifs professionnels s’appliquent déjà. Le code BIENVENUE n’est pas cumulable.
+          </p>
+        ) : welcome.status === "expired" ? (
+          <p className="text-sm text-muted">Le délai du code BIENVENUE est écoulé.</p>
+        ) : (
+          <label className="block text-sm">
+            Code promo
+            <input
+              name="promoCode"
+              autoComplete="off"
+              spellCheck={false}
+              placeholder="BIENVENUE"
+              maxLength={20}
+              value={draft.promoCode}
+              onChange={(event) => update("promoCode", event.target.value.toUpperCase())}
+              className="input mt-1"
+            />
+            <WelcomeOfferNote className="mt-3" />
+          </label>
+        )}
         {draft.country === "CH" ? (
           <p className="text-sm text-muted">
             En Suisse, des droits ou taxes d’importation peuvent s’ajouter à la réception. Ils ne
@@ -321,9 +380,19 @@ export function CheckoutForm() {
           <span>Livraison</span>
           <span>0,00 €</span>
         </p>
+        {welcomePreview ? (
+          <p className="flex justify-between text-sm">
+            <span>
+              <WelcomeCodeMark />
+            </span>
+            <span className="text-[var(--promo-green)]">
+              −{formatPrice(payable.discountCents / 100)}
+            </span>
+          </p>
+        ) : null}
         <p className="flex justify-between border-t border-border pt-3 font-medium">
           <span>Total TTC</span>
-          <span>{formatPrice(subtotal)}</span>
+          <span>{formatPrice(payable.total)}</span>
         </p>
         <p className="text-sm text-muted">{SHIPPING_OFFERED_SENTENCE}</p>
         <p className="text-xs text-muted">
@@ -344,7 +413,7 @@ export function CheckoutForm() {
         </p>
         {error ? <p className="text-sm text-red-700">{error}</p> : null}
         <button type="submit" disabled={loading} className="btn btn-primary w-full">
-          {loading ? "Ouverture du paiement…" : `Payer ${formatPrice(subtotal)}`}
+          {loading ? "Ouverture du paiement…" : `Payer ${formatPrice(payable.total)}`}
         </button>
         <Link href="/panier" className="block text-center text-sm text-muted underline-offset-4 hover:underline">
           Retour au panier

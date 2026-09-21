@@ -69,6 +69,8 @@ export type PublicOrder = {
   companyName: string | null;
   siren: string | null;
   accountType: string | null;
+  promoCode: string | null;
+  promoDiscountCents: number;
   fulfillment: OrderFulfillment;
   fulfillmentLabel: string;
   items: { name: string; quantity: number; unitPriceCents: number }[];
@@ -142,6 +144,8 @@ function toPublic(order: OrderRow, items: ItemRow[]): PublicOrder {
     companyName: order.companyName,
     siren: order.siren,
     accountType: order.accountType,
+    promoCode: order.promoCode || null,
+    promoDiscountCents: order.promoDiscountCents ?? 0,
     fulfillment,
     fulfillmentLabel: fulfillmentCustomerLabel(fulfillment),
     items: items.map((item) => ({
@@ -186,7 +190,7 @@ export function priceCheckoutLines(
   }
   const applied = applyServerDiscount(priced, discount);
   if (applied.amountCents < 50) throw new Error("MONTANT_INVALIDE");
-  return { lines: applied.lines, amountCents: applied.amountCents };
+  return { lines: applied.lines, amountCents: applied.amountCents, discountCents: applied.discountCents };
 }
 
 async function uniqueReference() {
@@ -214,6 +218,8 @@ export async function createPendingOrder(input: {
   customer: CheckoutCustomer;
   lines: PricedLine[];
   amountCents: number;
+  promoCode?: string | null;
+  promoDiscountCents?: number;
 }) {
   await ensureDatabase();
   const id = crypto.randomUUID();
@@ -238,6 +244,8 @@ export async function createPendingOrder(input: {
     companyName: input.customer.companyName?.trim() || null,
     siren: input.customer.siren?.trim() || null,
     accountType: input.customer.accountType || null,
+    promoCode: input.promoCode || null,
+    promoDiscountCents: input.promoDiscountCents ?? 0,
     createdAt: now,
     paidAt: null,
   });

@@ -30,7 +30,9 @@ import { buildOrderFulfillment, fulfillmentCustomerLabel } from "@/lib/orders/fu
 import { normalizeZonePhone } from "@/lib/phone";
 import { getProAccessByUserId, isProApproved } from "@/lib/pro-access";
 import { b2bConfig } from "@/lib/b2b";
+import { PromoError, resolveCheckoutDiscount } from "@/lib/promo-guard";
 import { SHIPPING_COUNTRY_CODES, normalizeShippingPostal } from "@/lib/shipping-zone";
+import { WELCOME_STARTED_COOKIE, parseWelcomeStartedAt } from "@/lib/welcome-offer";
 
 const schema = z
   .object({
@@ -51,6 +53,7 @@ const schema = z
     postalCode: z.string().trim().min(2).max(12),
     city: z.string().trim().min(2).max(80),
     phone: z.string().trim().min(6).max(30),
+    promoCode: z.string().trim().max(20).optional(),
   })
   .transform((data, ctx) => {
     const postalCode = normalizeShippingPostal(data.country, data.postalCode);
@@ -119,6 +122,8 @@ export async function GET(request: Request) {
               confirmationSent: Boolean(order.confirmationSentAt),
               companyName: order.companyName,
               siren: order.siren,
+              promoCode: order.promoCode || null,
+              promoDiscountCents: order.promoDiscountCents ?? 0,
               fulfillment: buildOrderFulfillment(order),
               fulfillmentLabel: fulfillmentCustomerLabel(buildOrderFulfillment(order)),
               items: order.items.map((item) => ({
@@ -176,11 +181,29 @@ export async function POST(request: Request) {
     const pro =
       sessionAuth?.user?.id ? await getProAccessByUserId(sessionAuth.user.id) : null;
     const proActive = isProApproved(pro);
-    const discount =
+    const proDiscount =
       proActive && b2bConfig().discountsEnabled
         ? { type: pro?.discountType ?? null, value: pro?.discountValue ?? null }
         : null;
-    const { lines, amountCents } = priceCheckoutLines(parsed.data.items, discount);
+    let promo;
+    try {
+      promo = await resolveCheckoutDiscount({
+        promoCode: parsed.data.promoCode,
+        phone: parsed.data.phone,
+        email: parsed.data.email,
+        userId: sessionAuth?.user?.id ?? null,
+        proDiscount,
+        welcomeStartedAt: parseWelcomeStartedAt(
+          (await cookies()).get(WELCOME_STARTED_COOKIE)?.value,
+        ),
+      });
+    } catch (error) {
+      if (error instanceof PromoError) {
+        return NextResponse.json({ error: error.message }, { status: 400 });
+      }
+      throw error;
+    }
+    const { lines, amountCents, discountCents } = priceCheckoutLines(parsed.data.items, promo.discount);
     const companyName = proActive ? pro?.companyName || pro?.legalName || null : null;
     const siren = proActive ? pro?.siren || null : null;
     const orderId = await createPendingOrder({
@@ -199,6 +222,8 @@ export async function POST(request: Request) {
       },
       lines,
       amountCents,
+      promoCode: promo.promoCode,
+      promoDiscountCents: discountCents,
     });
 
     const siteUrl = getSiteUrl();
@@ -230,6 +255,7 @@ export async function POST(request: Request) {
         accountType: proActive ? "pro" : "personal",
         ...(companyName ? { companyName } : {}),
         ...(siren ? { siren } : {}),
+        ...(promo.promoCode ? { promoCode: promo.promoCode } : {}),
       },
       success_url: `${siteUrl}/commande/confirmation?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/paiement`,
@@ -241,7 +267,9 @@ export async function POST(request: Request) {
           message:
             proActive && companyName && siren
               ? `Commande professionnelle — ${companyName} (SIREN ${siren}). Les prix restent TTC.`
-              : "Paiement sécurisé. Livraison offerte. Si vous quittez cette page, un lien de reprise vous sera envoyé.",
+              : promo.promoCode
+                ? `Code ${promo.promoCode} appliqué sur toute la commande. Paiement sécurisé. Livraison offerte.`
+                : "Paiement sécurisé. Livraison offerte. Si vous quittez cette page, un lien de reprise vous sera envoyé.",
         },
       },
       line_items: lines.map((line) => ({
@@ -261,6 +289,7 @@ export async function POST(request: Request) {
           accountType: proActive ? "pro" : "personal",
           ...(companyName ? { companyName } : {}),
           ...(siren ? { siren } : {}),
+          ...(promo.promoCode ? { promoCode: promo.promoCode } : {}),
         },
         receipt_email: email,
         shipping: {
@@ -292,6 +321,9 @@ export async function POST(request: Request) {
     }
     return NextResponse.json({ url: checkoutSession.url, mode: stripeMode() });
   } catch (error) {
+    if (error instanceof PromoError) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
     const message = error instanceof Error ? error.message : "Erreur";
     const map: Record<string, string> = {
       PANIER_VIDE: "Votre panier est vide.",

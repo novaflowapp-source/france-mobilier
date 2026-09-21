@@ -167,6 +167,9 @@ export default async function AdminPage() {
                       style: "currency",
                       currency: "EUR",
                     })}
+                    {order.promoCode ? (
+                      <p className="text-xs font-normal text-muted">Code {order.promoCode}</p>
+                    ) : null}
                   </td>
                 </tr>
               ))}

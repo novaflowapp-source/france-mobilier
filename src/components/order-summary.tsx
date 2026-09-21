@@ -42,6 +42,12 @@ export function OrderSummary({
           </li>
         ))}
       </ul>
+      {order.promoDiscountCents > 0 ? (
+        <p className="mt-3 flex justify-between text-sm text-muted">
+          <span>{order.promoCode ? `Code ${order.promoCode}` : "Remise"}</span>
+          <span>−{formatPrice(order.promoDiscountCents / 100)}</span>
+        </p>
+      ) : null}
       <p className="mt-3 flex justify-between border-t border-border pt-3 text-sm font-medium">
         <span>Total TTC</span>
         <span>{formatPrice(order.amountCents / 100)}</span>

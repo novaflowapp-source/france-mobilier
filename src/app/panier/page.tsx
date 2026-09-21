@@ -1,14 +1,36 @@
 "use client";
 
+import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/components/cart-provider";
 import { cartLineKey, formatPrice } from "@/lib/products/repository";
 import { ProQuoteActions } from "@/components/pro-quote-actions";
+import { WelcomeOfferNote } from "@/components/welcome-offer-note";
+import { parsePromoCode } from "@/lib/promo";
 import { SHIPPING_OFFERED_SENTENCE } from "@/lib/shipping-zone";
+
+const DRAFT_KEY = "francemobilier-checkout-v1";
+
+function rememberPromoFromUrl() {
+  if (typeof window === "undefined") return;
+  const code = parsePromoCode(new URLSearchParams(window.location.search).get("code") || "");
+  if (!code) return;
+  try {
+    const raw = sessionStorage.getItem(DRAFT_KEY);
+    const draft = raw ? (JSON.parse(raw) as Record<string, unknown>) : {};
+    sessionStorage.setItem(DRAFT_KEY, JSON.stringify({ ...draft, promoCode: code }));
+  } catch {
+    /* private mode */
+  }
+}
 
 export default function CartPage() {
   const { items, removeItem, setQuantity, subtotal, itemCount, ready } = useCart();
+
+  useEffect(() => {
+    rememberPromoFromUrl();
+  }, []);
 
   return (
     <div className="container-page py-10 md:py-14">
@@ -108,6 +130,9 @@ export default function CartPage() {
             <p className="mt-4 text-sm leading-relaxed text-muted">
               {SHIPPING_OFFERED_SENTENCE}
             </p>
+            <div className="mt-3">
+              <WelcomeOfferNote />
+            </div>
             <Link href="/paiement" className="btn btn-primary mt-6 w-full">
               Commander
             </Link>

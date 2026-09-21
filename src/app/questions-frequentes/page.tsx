@@ -20,6 +20,10 @@ export default function FaqPage() {
       a: "Oui. Le montant total est confirmé au paiement.",
     },
     {
+      q: "Comment fonctionne le code BIENVENUE ?",
+      a: "Le code BIENVENUE offre 10 % sur toute la première commande, pas sur un seul article. Saisissez-le au paiement avec votre numéro de téléphone : un code ne peut servir qu’une fois par numéro. Il n’est pas cumulable avec les tarifs professionnels.",
+    },
+    {
       q: "Puis-je retourner un produit ?",
       a: "Vous disposez de 14 jours à compter de la réception pour exercer votre droit de rétractation, lorsque le droit français le prévoit.",
     },

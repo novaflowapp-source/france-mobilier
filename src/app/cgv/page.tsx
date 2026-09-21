@@ -51,6 +51,10 @@ export default function TermsPage() {
           <p className="mt-3">
             Les prix sont indiqués en euros TTC. Le montant dû est celui affiché au moment du
             paiement. Les éventuelles conditions professionnelles ne remplacent pas le prix public.
+            Le code BIENVENUE accorde 10 % de remise sur le montant TTC de la première commande
+            (panier entier, hors cumul avec un tarif professionnel). Il n’est valable qu’une fois
+            par personne, identifiée par le numéro de téléphone saisi à la commande ; un numéro déjà
+            associé à une commande ou à un compte ne peut pas le réutiliser.
           </p>
         </section>
         <section>

@@ -305,6 +305,10 @@ async function migrateDatabase() {
     !shopOrderCols.has("ship_email_sent_at")
       ? "ALTER TABLE shop_order ADD COLUMN ship_email_sent_at INTEGER"
       : null,
+    !shopOrderCols.has("promo_code") ? "ALTER TABLE shop_order ADD COLUMN promo_code TEXT" : null,
+    !shopOrderCols.has("promo_discount_cents")
+      ? "ALTER TABLE shop_order ADD COLUMN promo_discount_cents INTEGER"
+      : null,
   ].filter((sql): sql is string => Boolean(sql));
   const proInfo = await client.execute("PRAGMA table_info(pro_access_request)");
   const proCols = new Set(proInfo.rows.map((row) => String(row.name)));

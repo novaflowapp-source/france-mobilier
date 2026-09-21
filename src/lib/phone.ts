@@ -4,6 +4,25 @@ function compactPhone(raw: string) {
   return raw.trim().replace(/[.\s\-()/]/g, "");
 }
 
+/** Stable key so 06 12 34 56 78 and +33 6 12 34 56 78 count as the same person. */
+export function phoneIdentityKey(raw: string): string {
+  const digits = compactPhone(raw).replace(/\D/g, "");
+  if (!digits) return "";
+  if (digits.startsWith("0033")) return `33-${stripLeadingZero(digits.slice(4)).slice(-9)}`;
+  if (digits.startsWith("33") && digits.length >= 11) return `33-${digits.slice(-9)}`;
+  if (digits.startsWith("0032")) return `32-${stripLeadingZero(digits.slice(4)).slice(-8)}`;
+  if (digits.startsWith("32") && digits.length >= 10) return `32-${digits.slice(-9)}`;
+  if (digits.startsWith("0041")) return `41-${stripLeadingZero(digits.slice(4)).slice(-9)}`;
+  if (digits.startsWith("41") && digits.length >= 11) return `41-${digits.slice(-9)}`;
+  if (digits.startsWith("00352")) return `352-${digits.slice(-8)}`;
+  if (digits.startsWith("352") && digits.length >= 11) return `352-${digits.slice(-8)}`;
+  if (digits.startsWith("00377")) return `377-${digits.slice(-8)}`;
+  if (digits.startsWith("377") && digits.length >= 11) return `377-${digits.slice(-8)}`;
+  if (digits.length === 10 && digits.startsWith("0")) return `33-${digits.slice(-9)}`;
+  if (digits.length === 9) return `33-${digits}`;
+  return digits;
+}
+
 function stripLeadingZero(rest: string) {
   return rest.startsWith("0") ? rest.slice(1) : rest;
 }

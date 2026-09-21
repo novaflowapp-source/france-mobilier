@@ -191,6 +191,8 @@ export const shopOrder = sqliteTable("shop_order", {
   shippedAt: integer("shipped_at", { mode: "timestamp_ms" }),
   prepEmailSentAt: integer("prep_email_sent_at", { mode: "timestamp_ms" }),
   shipEmailSentAt: integer("ship_email_sent_at", { mode: "timestamp_ms" }),
+  promoCode: text("promo_code"),
+  promoDiscountCents: integer("promo_discount_cents"),
   createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull(),
   paidAt: integer("paid_at", { mode: "timestamp_ms" }),
 });

@@ -109,7 +109,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
   };
 
   return (
-    <div className="min-w-0 max-w-full overflow-x-hidden bg-white pb-[calc(5.75rem+env(safe-area-inset-bottom))] has-[.product-go-to-cart]:pb-[calc(9.5rem+env(safe-area-inset-bottom))] md:pb-0 md:has-[.product-go-to-cart]:pb-0">
+    <div className="min-w-0 max-w-full overflow-x-hidden bg-white pb-[calc(10rem+env(safe-area-inset-bottom))] has-[.product-go-to-cart]:pb-[calc(13.5rem+env(safe-area-inset-bottom))] md:pb-0 md:has-[.product-go-to-cart]:pb-0">
       <ProductViewTracker
         productId={product.id}
         productName={product.name}

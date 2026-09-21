@@ -8,13 +8,15 @@ import { navigationGroups, secondaryNavigation, store } from "@/config/store";
 import { useCart } from "@/components/cart-provider";
 import { IconBag, IconHeadset, IconReturn, IconSearch, IconTruck, IconUser } from "@/components/icons";
 import { authClient } from "@/lib/auth-client";
+import { WELCOME_PROMO } from "@/lib/promo";
+import { WelcomeCodeMark, WelcomeRemaining } from "@/components/welcome-offer-note";
 import { useProApproved } from "@/lib/use-pro-approved";
 
 const SHRINK_AFTER = 80;
 const EXPAND_BEFORE = 16;
 
 export function SiteHeader() {
-  const { itemCount } = useCart();
+  const { itemCount, welcome } = useCart();
   const { data: session } = authClient.useSession();
   const proApproved = useProApproved();
   const [open, setOpen] = useState(false);
@@ -88,16 +90,34 @@ export function SiteHeader() {
               <IconTruck className="h-3.5 w-3.5" />
               Livraison gratuite
             </Link>
-            <span className="text-white/40">•</span>
-            <span className="inline-flex items-center gap-1.5">
+            {welcome.status === "expired" ? null : (
+              <>
+                <span className="text-white/40">•</span>
+                <Link
+                  href={WELCOME_PROMO.checkoutHref}
+                  className="inline-flex items-center gap-1.5 hover:opacity-80"
+                >
+                  <WelcomeCodeMark onDark />
+                  {welcome.status === "active" ? (
+                    <>
+                      <span className="hidden text-white/40 sm:inline">·</span>
+                      <span className="hidden sm:inline">
+                        <WelcomeRemaining remainingMs={welcome.remainingMs} />
+                      </span>
+                    </>
+                  ) : null}
+                </Link>
+              </>
+            )}
+            <span className="hidden text-white/40 sm:inline">•</span>
+            <span className="hidden items-center gap-1.5 sm:inline-flex">
               <IconReturn className="h-3.5 w-3.5" />
               Retours 14 jours
             </span>
-            <span className="hidden text-white/40 sm:inline">•</span>
-            <Link href="/contact" className="hidden items-center gap-1.5 hover:text-white sm:inline-flex">
+            <span className="hidden text-white/40 md:inline">•</span>
+            <Link href="/contact" className="hidden items-center gap-1.5 hover:text-white md:inline-flex">
               <IconHeadset className="h-3.5 w-3.5" />
-              <span className="md:hidden">SAV {store.supportHoursShort}</span>
-              <span className="hidden md:inline">SAV du lundi au vendredi, 10h–22h</span>
+              SAV du lundi au vendredi, 10h–22h
             </Link>
           </span>
         </p>

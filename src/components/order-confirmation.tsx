@@ -26,6 +26,8 @@ type CheckoutOrder = {
   confirmationSent: boolean;
   companyName?: string | null;
   siren?: string | null;
+  promoCode?: string | null;
+  promoDiscountCents?: number;
   fulfillment?: PublicOrder["fulfillment"];
   fulfillmentLabel?: string;
   items: { name: string; quantity: number; unitPriceCents: number }[];
@@ -112,6 +114,8 @@ export function OrderConfirmation() {
         companyName: order.companyName || null,
         siren: order.siren || null,
         accountType: order.companyName ? "pro" : "personal",
+        promoCode: order.promoCode || null,
+        promoDiscountCents: order.promoDiscountCents ?? 0,
         fulfillment: order.fulfillment ?? buildOrderFulfillment({ paidAt: new Date(), createdAt: new Date() }),
         fulfillmentLabel:
           order.fulfillmentLabel ||

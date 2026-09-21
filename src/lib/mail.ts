@@ -398,6 +398,7 @@ export async function sendWelcomeEmail(input: { email: string; name?: string | n
     "",
     `Votre compte ${store.storeName} est créé.`,
     "Vous pouvez suivre vos commandes, enregistrer vos informations et parcourir nos meubles depuis votre espace.",
+    "Si vous n’avez pas encore commandé, le code BIENVENUE offre 10 % sur toute la première commande, une fois par numéro de téléphone.",
     `Mon compte : ${accountUrl}`,
     `Nos meubles : ${catalogUrl}`,
     "",
@@ -412,7 +413,7 @@ export async function sendWelcomeEmail(input: { email: string; name?: string | n
     <p style="margin:0 0 8px;font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.3;color:${NAVY}">Bienvenue</p>
     <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">${escapeHtml(greeting)}</p>
     <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">
-      Votre compte ${escapeHtml(store.storeName)} est créé. Vous pouvez suivre vos commandes, enregistrer vos informations et parcourir nos meubles depuis votre espace.
+      Votre compte ${escapeHtml(store.storeName)} est créé. Vous pouvez suivre vos commandes, enregistrer vos informations et parcourir nos meubles depuis votre espace. Si vous n’avez pas encore commandé, le code BIENVENUE offre 10 % sur toute la première commande, une fois par numéro de téléphone.
     </p>
     <p style="margin:0 0 8px">${emailButton(accountUrl, "Ouvrir mon compte")}</p>
     <p style="margin:0">${emailButton(catalogUrl, "Découvrir les meubles")}</p>
