@@ -66,6 +66,7 @@ export function CheckoutForm() {
   const [hydrated, setHydrated] = useState(false);
   const [pro, setPro] = useState<{ companyName: string; siren: string } | null>(null);
   const hydratedOnce = useRef(false);
+  const beginCheckoutSent = useRef(false);
   const hints = useMemo(() => shippingFieldHints(draft.country), [draft.country]);
   const welcomePreview = Boolean(
     !pro && welcome.status === "active" && isWelcomePromo(draft.promoCode),
@@ -163,6 +164,12 @@ export function CheckoutForm() {
       );
     }
   }, [hydrated, pro, welcome.status]);
+
+  useEffect(() => {
+    if (!ready || !hydrated || itemCount < 1 || beginCheckoutSent.current) return;
+    beginCheckoutSent.current = true;
+    trackBeginCheckout({ valueEur: payable.total, itemCount });
+  }, [ready, hydrated, itemCount, payable.total]);
 
   function update<K extends keyof Draft>(key: K, value: Draft[K]) {
     setDraft((current) => ({ ...current, [key]: value }));

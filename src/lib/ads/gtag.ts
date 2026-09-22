@@ -1,5 +1,6 @@
 export const GOOGLE_ADS_ID = "AW-17892406919";
 export const GOOGLE_ADS_PURCHASE_SEND_TO = "AW-17892406919/RYdXCMq7ydYcEIft4dNC";
+export const GOOGLE_ADS_BEGIN_CHECKOUT_SEND_TO = "AW-17892406919/XapeCOu1o4AdEIft4dNC";
 
 declare global {
   interface Window {
@@ -94,9 +95,23 @@ export function trackViewItem(input: { productId: string; productName: string; p
 
 export function trackBeginCheckout(input: { valueEur: number; itemCount: number }) {
   if (typeof window === "undefined" || typeof window.gtag !== "function") return;
+  if (input.itemCount < 1) return;
+  const value = Math.round(input.valueEur * 100) / 100;
   window.gtag("event", "begin_checkout", {
     currency: "EUR",
-    value: Math.round(input.valueEur * 100) / 100,
+    value,
     items: [{ quantity: input.itemCount }],
+  });
+  const key = "fm-ads-begin-checkout";
+  try {
+    if (sessionStorage.getItem(key)) return;
+    sessionStorage.setItem(key, "1");
+  } catch {
+    /* ignore quota / private mode */
+  }
+  window.gtag("event", "conversion", {
+    send_to: GOOGLE_ADS_BEGIN_CHECKOUT_SEND_TO,
+    value,
+    currency: "EUR",
   });
 }
