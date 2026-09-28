@@ -41,11 +41,11 @@ export function AdminQuotes({ initial }: { initial: Quote[] }) {
       <table className="w-full min-w-[640px] text-left text-sm">
         <thead className="border-b border-border bg-background/60">
           <tr>
-            <th className="px-4 py-3 font-medium">Référence</th>
-            <th className="px-4 py-3 font-medium">Entreprise</th>
+            <th className="px-4 py-3 font-medium">Reference</th>
+            <th className="px-4 py-3 font-medium">Company</th>
             <th className="px-4 py-3 font-medium">Date</th>
-            <th className="px-4 py-3 font-medium">Montant</th>
-            <th className="px-4 py-3 font-medium">Statut</th>
+            <th className="px-4 py-3 font-medium">Amount</th>
+            <th className="px-4 py-3 font-medium">Status</th>
           </tr>
         </thead>
         <tbody>
@@ -69,9 +69,9 @@ export function AdminQuotes({ initial }: { initial: Quote[] }) {
                 {row.companyName || "—"}
                 <p className="text-xs text-muted">{row.email}</p>
               </td>
-              <td className="px-4 py-3">{new Date(row.createdAt).toLocaleDateString("fr-FR")}</td>
+              <td className="px-4 py-3">{new Date(row.createdAt).toLocaleDateString("en-US")}</td>
               <td className="px-4 py-3">
-                {(row.amountCents / 100).toLocaleString("fr-FR", { style: "currency", currency: "EUR" })}
+                {(row.amountCents / 100).toLocaleString("en-US", { style: "currency", currency: "USD" })}
               </td>
               <td className="px-4 py-3">
                 <select

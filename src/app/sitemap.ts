@@ -12,23 +12,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
   const staticRoutes = [
     "/",
-    "/a-propos",
-    "/professionnels",
-    "/questions-frequentes",
+    "/about",
+    "/trade",
+    "/faq",
     "/contact",
-    "/nouveautes",
-    "/mentions-legales",
-    "/confidentialite",
-    "/cgv",
+    "/new",
+    "/legal",
+    "/privacy",
+    "/terms",
     PAYMENT_METHODS_PATH,
     ...paymentMethods.map((method) => paymentMethodHref(method.slug)),
-    "/retours",
-    "/livraison",
+    "/returns",
+    "/shipping",
     "/guides",
-    "/guides/meuble-chaussures-entree-etroite",
-    "/guides/amenager-un-studio",
-    "/guides/profondeur-table-de-chevet",
-    "/guides/quelle-table-petit-salon",
+    "/guides/shoe-cabinet-narrow-entry",
+    "/guides/furnishing-a-studio",
+    "/guides/nightstand-depth",
+    "/guides/coffee-table-small-living-room",
   ].map((path) => ({
     url: canonicalUrl(path),
     lastModified,
@@ -44,7 +44,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const productRoutes = listProducts()
     .filter(isSellable)
     .map((product) => ({
-      url: canonicalUrl(`/produits/${product.slug}`),
+      url: canonicalUrl(`/products/${product.slug}`),
       lastModified,
     }));
 

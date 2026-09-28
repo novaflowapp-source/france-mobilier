@@ -3,41 +3,41 @@ import Link from "next/link";
 import { indexableMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = indexableMetadata("/guides", {
-  title: "Conseils & inspiration",
+  title: "Guides & inspiration",
   description:
-    "Guides courts pour choisir un meuble selon la pièce, la profondeur et les petits espaces.",
+    "Short guides to choose furniture by room, depth, and small-space layouts.",
 });
 
 const guides = [
   {
-    href: "/guides/meuble-chaussures-entree-etroite",
-    title: "Quel meuble à chaussures pour une entrée étroite ?",
-    text: "Comment lire la profondeur et libérer le passage.",
+    href: "/guides/shoe-cabinet-narrow-entry",
+    title: "Shoe storage for a narrow entryway",
+    text: "How to read depth and keep the path clear.",
   },
   {
-    href: "/guides/profondeur-table-de-chevet",
-    title: "Quelle profondeur pour une table de chevet ?",
-    text: "Les mesures à vérifier avant d’acheter, surtout dans une petite chambre.",
+    href: "/guides/nightstand-depth",
+    title: "How deep should a nightstand be?",
+    text: "Measurements to check before you buy, especially in a small bedroom.",
   },
   {
-    href: "/guides/amenager-un-studio",
-    title: "Comment aménager un studio avec aisance ?",
-    text: "Extensible, peu profond, multifonction : le meuble qui rend la pièce plus belle.",
+    href: "/guides/furnishing-a-studio",
+    title: "Furnishing a studio comfortably",
+    text: "Extendable, shallow, multifunction pieces that make the room work harder.",
   },
   {
-    href: "/guides/quelle-table-petit-salon",
-    title: "Quelle table pour un petit salon ?",
-    text: "Table basse ou extensible : pour un salon plus fluide.",
+    href: "/guides/coffee-table-small-living-room",
+    title: "Tables for a small living room",
+    text: "Coffee or extendable dining tables for a smoother layout.",
   },
 ];
 
 export default function GuidesPage() {
   return (
     <div className="container-page py-10 md:py-16">
-      <p className="eyebrow">Conseils</p>
-      <h1 className="display mt-3 text-3xl text-navy md:text-4xl">Conseils & inspiration</h1>
+      <p className="eyebrow">Guides</p>
+      <h1 className="display mt-3 text-3xl text-navy md:text-4xl">Guides & inspiration</h1>
       <p className="mt-4 max-w-2xl text-lg text-muted">
-        Des articles utiles, liés aux meubles de la boutique.
+        Practical articles tied to pieces in the store.
       </p>
       <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {guides.map((guide) => (

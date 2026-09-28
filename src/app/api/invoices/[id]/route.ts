@@ -10,7 +10,7 @@ export async function GET(
 ) {
   await prepareAuth();
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user) return NextResponse.json({ error: "Connexion requise" }, { status: 401 });
+  if (!session?.user) return NextResponse.json({ error: "Sign in required" }, { status: 401 });
   const { id } = await params;
   const invoice = await getInvoiceByIdForUser(id, session.user.id);
   if (!invoice) return NextResponse.json({ error: "Facture introuvable" }, { status: 404 });

@@ -18,7 +18,7 @@ function fallbackCopy(text: string) {
 
 export function CopyTextButton({
   text,
-  label = "Copier",
+  label = "Copy",
 }: {
   text: string;
   label?: string;
@@ -50,10 +50,10 @@ export function CopyTextButton({
       type="button"
       onClick={copy}
       className="inline-flex h-7 shrink-0 items-center gap-1 rounded-md border border-border bg-white px-2 text-xs font-medium text-navy hover:bg-cream"
-      aria-label={copied ? "Mot de passe copié" : "Copier le mot de passe"}
+      aria-label={copied ? "Password copied" : "Copy password"}
     >
       {copied ? <IconCheck className="h-3.5 w-3.5" /> : <IconCopy className="h-3.5 w-3.5" />}
-      {copied ? "Copié" : label}
+      {copied ? "Copied" : label}
     </button>
   );
 }

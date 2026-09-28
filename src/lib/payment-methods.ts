@@ -1,4 +1,4 @@
-export const PAYMENT_METHODS_PATH = "/cgv/moyens-de-paiement";
+export const PAYMENT_METHODS_PATH = "/terms/payment-methods";
 
 export type PaymentMethodSlug = "visa" | "mastercard" | "cartes-bancaires" | "apple-pay" | "google-pay";
 
@@ -17,67 +17,64 @@ export const paymentMethods: PaymentMethod[] = [
   {
     slug: "visa",
     name: "Visa",
-    title: "Paiement Visa",
-    description:
-      "Comment payer une commande France Mobilier avec une carte Visa, via Stripe.",
+    title: "Pay with Visa",
+    description: "How to pay for a France Mobilier order with a Visa card through Stripe.",
     summary:
-      "Les cartes Visa éligibles au paiement en ligne permettent de régler une commande sur France Mobilier, en euros TTC.",
-    how: "Au paiement, vous êtes redirigé vers la page sécurisée de Stripe. Vous saisissez les informations de la carte Visa ou sélectionnez une carte déjà enregistrée dans un portefeuille compatible. Une authentification forte (3-D Secure) peut être demandée par votre banque.",
+      "Eligible Visa cards can be used to pay for France Mobilier orders in USD; the total is confirmed at checkout.",
+    how: "At checkout you are redirected to Stripe’s secure payment page. Enter your Visa details or choose a saved card in a compatible wallet. Your bank may require strong authentication (3-D Secure).",
     availability:
-      "Une carte Visa de débit ou de crédit peut être utilisée si l’émetteur autorise le paiement à distance. Le moyen apparaît sur la page de paiement lorsque Stripe le propose pour votre commande.",
+      "Debit or credit Visa cards work when the issuer allows online payments. The option appears on Stripe checkout when it is available for your order and device.",
     extraTerms: null,
   },
   {
     slug: "mastercard",
     name: "Mastercard",
-    title: "Paiement Mastercard",
-    description:
-      "Comment payer une commande France Mobilier avec une carte Mastercard, via Stripe.",
+    title: "Pay with Mastercard",
+    description: "How to pay for a France Mobilier order with a Mastercard through Stripe.",
     summary:
-      "Les cartes Mastercard éligibles au paiement en ligne permettent de régler une commande sur France Mobilier, en euros TTC.",
-    how: "Au paiement, vous êtes redirigé vers la page sécurisée de Stripe. Vous saisissez les informations de la carte Mastercard ou sélectionnez une carte déjà enregistrée dans un portefeuille compatible. Une authentification forte (3-D Secure) peut être demandée par votre banque.",
+      "Eligible Mastercard cards can be used to pay for France Mobilier orders in USD; the total is confirmed at checkout.",
+    how: "At checkout you are redirected to Stripe’s secure payment page. Enter your Mastercard details or choose a saved card in a compatible wallet. Your bank may require strong authentication (3-D Secure).",
     availability:
-      "Une carte Mastercard de débit ou de crédit peut être utilisée si l’émetteur autorise le paiement à distance. Le moyen apparaît sur la page de paiement lorsque Stripe le propose pour votre commande.",
+      "Debit or credit Mastercard cards work when the issuer allows online payments. The option appears on Stripe checkout when it is available for your order and device.",
     extraTerms: null,
   },
   {
     slug: "cartes-bancaires",
     name: "Cartes Bancaires",
-    title: "Paiement Cartes Bancaires (CB)",
-    description:
-      "Comment payer une commande France Mobilier avec une carte Bancaire (CB), via Stripe.",
+    title: "Pay with Cartes Bancaires (CB)",
+    description: "How French Cartes Bancaires (CB) cards work on France Mobilier checkout via Stripe.",
     summary:
-      "Le schéma Cartes Bancaires (CB) est le réseau interbancaire français. Beaucoup de cartes émises en France sont co-badgées CB et Visa ou Mastercard.",
-    how: "Au paiement, vous êtes redirigé vers la page sécurisée de Stripe. Une carte CB éligible au paiement en ligne se règle comme une carte bancaire habituelle. Une authentification forte (3-D Secure) peut être demandée par votre banque.",
+      "Cartes Bancaires is the French interbank network. Many cards issued in France are co-badged CB with Visa or Mastercard and may appear at checkout when Stripe supports them.",
+    how: "At checkout you are redirected to Stripe’s secure payment page. An eligible CB card is charged like any other card. Your bank may require strong authentication (3-D Secure).",
     availability:
-      "Le paiement CB est proposé lorsque Stripe le rend disponible pour votre carte et votre appareil. Une carte uniquement utilisable en magasin, ou dont l’émetteur refuse le paiement à distance, ne pourra pas aboutir.",
+      "CB is shown only when Stripe makes it available for your card and device. Cards that cannot be used online, or issuers that block remote payment, will not succeed.",
     extraTerms: null,
   },
   {
     slug: "apple-pay",
     name: "Apple Pay",
-    title: "Paiement Apple Pay",
-    description:
-      "Comment payer une commande France Mobilier avec Apple Pay, via Stripe.",
+    title: "Pay with Apple Pay",
+    description: "How to pay for a France Mobilier order with Apple Pay through Stripe.",
     summary:
-      "Apple Pay est un portefeuille de paiement d’Apple. Il permet de régler sans resaisir le numéro de carte, à partir d’un appareil Apple compatible.",
-    how: "Au paiement, si Apple Pay est disponible, le bouton correspondant s’affiche sur la page Stripe. Vous confirmez avec Face ID, Touch ID ou le code de l’appareil. Le paiement utilise un numéro de carte tokenisé, et non le numéro imprimé sur la carte.",
+      "Apple Pay lets you pay without re-entering your card number on a compatible Apple device.",
+    how: "If Apple Pay is available, the button appears on Stripe checkout. Confirm with Face ID, Touch ID, or your device passcode. Payment uses a tokenized card number, not the number printed on the card.",
     availability:
-      "Apple Pay n’apparaît que sur un appareil et un navigateur compatibles, avec une carte enregistrée dans Wallet. Sur un autre appareil, un autre moyen (carte Visa, Mastercard ou CB, ou Google Pay) reste proposé lorsqu’il est disponible.",
-    extraTerms: "Apple Pay est un service fourni par Apple. Les conditions d’Apple s’appliquent en plus des présentes CGV.",
+      "Apple Pay appears only on supported Apple devices and browsers with a card in Wallet. Otherwise Visa, Mastercard, CB (when offered), or Google Pay may be available.",
+    extraTerms:
+      "Apple Pay is provided by Apple. Apple’s terms apply in addition to our store terms.",
   },
   {
     slug: "google-pay",
     name: "Google Pay",
-    title: "Paiement Google Pay",
-    description:
-      "Comment payer une commande France Mobilier avec Google Pay, via Stripe.",
+    title: "Pay with Google Pay",
+    description: "How to pay for a France Mobilier order with Google Pay through Stripe.",
     summary:
-      "Google Pay est un portefeuille de paiement de Google. Il permet de régler sans resaisir le numéro de carte, à partir d’un compte Google et d’un appareil compatible.",
-    how: "Au paiement, si Google Pay est disponible, le bouton correspondant s’affiche sur la page Stripe. Vous confirmez le paiement dans Google Pay. Le paiement utilise un numéro de carte tokenisé, et non le numéro imprimé sur la carte.",
+      "Google Pay lets you pay without re-entering your card number on a compatible device and Google account.",
+    how: "If Google Pay is available, the button appears on Stripe checkout. Confirm the payment in Google Pay. Payment uses a tokenized card number, not the number printed on the card.",
     availability:
-      "Google Pay n’apparaît que lorsqu’un compte Google, un appareil et un navigateur compatibles sont détectés, avec un moyen de paiement enregistré. Sinon, un autre moyen (carte Visa, Mastercard ou CB, ou Apple Pay) reste proposé lorsqu’il est disponible.",
-    extraTerms: "Google Pay est un service fourni par Google. Les conditions de Google s’appliquent en plus des présentes CGV.",
+      "Google Pay appears when a compatible Google account, device, and browser are detected with a saved payment method. Otherwise other card or wallet options may be offered.",
+    extraTerms:
+      "Google Pay is provided by Google. Google’s terms apply in addition to our store terms.",
   },
 ];
 

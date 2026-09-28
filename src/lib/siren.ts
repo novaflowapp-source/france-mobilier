@@ -61,7 +61,7 @@ export async function lookupSiren(siren: string): Promise<SirenLookup | null> {
   const id = normalizeSiren(siren);
   if (!isValidSiren(id)) return null;
 
-  const url = `https://recherche-entreprises.api.gouv.fr/search?q=${encodeURIComponent(id)}&page=1&per_page=5`;
+  const url = `https://search-entreprises.api.gouv.fr/search?q=${encodeURIComponent(id)}&page=1&per_page=5`;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 8000);
 
@@ -70,7 +70,7 @@ export async function lookupSiren(siren: string): Promise<SirenLookup | null> {
       signal: controller.signal,
       headers: {
         Accept: "application/json",
-        "User-Agent": "FranceMobilier/1.0 (contact@francemobilier.org)",
+        "User-Agent": "FranceMobilier/1.0 (contact@francemobilier.com)",
       },
       next: { revalidate: 0 },
     });

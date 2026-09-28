@@ -33,7 +33,7 @@ export function AddToCartButton({
         setAdded(true);
       }}
     >
-      {added ? "Ajouté au panier" : "Ajouter au panier"}
+      {added ? "Added to cart" : "Add to cart"}
     </button>
   );
 }

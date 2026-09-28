@@ -9,51 +9,49 @@ export function ProductShippingReturns({ product }: { product: Product }) {
   return (
     <section className="section">
       <div className="container-page">
-        <h2 className="display text-3xl text-navy">Livraison et retours</h2>
+        <h2 className="display text-3xl text-navy">Shipping & returns</h2>
         <div className="prose-narrow mt-8 grid gap-8 md:grid-cols-2">
           <div className="space-y-3 text-[0.95rem] leading-relaxed text-muted">
             <p>
-              <span className="font-medium text-navy">Zones desservies. </span>
-              {SHIPPING_OFFERED_SENTENCE} Pas de livraison vers les DOM-TOM ni hors de cette zone.
+              <span className="font-medium text-navy">Where we ship. </span>
+              {SHIPPING_OFFERED_SENTENCE} We do not ship outside {SHIPPING_ZONE_LABEL}.
             </p>
             <p>
-              <span className="font-medium text-navy">Coût. </span>
-              Livraison offerte. Pour la Suisse, des droits ou taxes d’importation peuvent être demandés à la
-              réception ; ils ne sont pas inclus dans le prix payé sur le site.
+              <span className="font-medium text-navy">Cost. </span>
+              Shipping is free at checkout for eligible addresses.
             </p>
             {delivery ? (
               <p>
-                <span className="font-medium text-navy">Livraison. </span>
+                <span className="font-medium text-navy">Delivery. </span>
                 {product.madeToOrder
-                  ? `Article fabriqué après commande. ${delivery.charAt(0).toUpperCase()}${delivery.slice(1)}. La date de réception n’est pas connue à l’avance.`
+                  ? `Made to order after you buy. ${delivery.charAt(0).toUpperCase()}${delivery.slice(1)}. Exact arrival date is not known in advance.`
                   : `${delivery.charAt(0).toUpperCase()}${delivery.slice(1)}.`}
               </p>
             ) : (
               <p>
-                <span className="font-medium text-navy">Délais. </span>
-                Les délais estimés figurent au moment de la commande lorsque nous les connaissons. Nous
-                n’affichons pas de date de réception si elle n’est pas établie.
+                <span className="font-medium text-navy">Timing. </span>
+                Estimated timelines appear at checkout when we have them. We do not show a delivery
+                date unless it is confirmed.
               </p>
             )}
           </div>
           <div className="space-y-3 text-[0.95rem] leading-relaxed text-muted">
             <p>
-              <span className="font-medium text-navy">Suivi. </span>
-              Un numéro de suivi est communiqué par e-mail après l’expédition.
+              <span className="font-medium text-navy">Tracking. </span>
+              A tracking number is emailed after your order ships.
             </p>
             <p>
-              <span className="font-medium text-navy">Retours. </span>
-              14 jours à compter de la réception pour exercer le droit de rétractation, lorsque le droit
-              français de la consommation s’applique. Le produit doit être renvoyé dans un état permettant sa
-              revente.
+              <span className="font-medium text-navy">Returns. </span>
+              14 days from delivery to request a return when applicable. Items must be sent back in
+              resalable condition.
             </p>
             <p>
-              <Link href="/livraison" className="text-navy underline-offset-4 hover:underline">
-                Livraison
+              <Link href="/shipping" className="text-navy underline-offset-4 hover:underline">
+                Shipping
               </Link>
               {" · "}
-              <Link href="/retours" className="text-navy underline-offset-4 hover:underline">
-                Retours et remboursements
+              <Link href="/returns" className="text-navy underline-offset-4 hover:underline">
+                Returns & refunds
               </Link>
             </p>
           </div>

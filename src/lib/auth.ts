@@ -66,8 +66,6 @@ export const auth = betterAuth({
   trustedOrigins: [
     ...new Set([
       baseURL,
-      "https://francemobilier.org",
-      "https://www.francemobilier.org",
       "https://francemobilier.com",
       "https://www.francemobilier.com",
       "http://localhost:3000",

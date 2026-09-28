@@ -3,17 +3,17 @@ import { store } from "@/config/store";
 
 const items = [
   {
-    title: "Boutique française",
-    text: `Éditée à ${store.companyCity}`,
+    title: "Online furniture store",
+    text: `Operated from ${store.companyCity}`,
   },
   {
-    title: "Prix TTC",
-    text: "Le montant est confirmé au paiement.",
+    title: "Tax-inclusive pricing",
+    text: "Your total is confirmed at checkout.",
   },
   {
-    title: "Retours 14 jours",
-    text: "Droit de rétractation après réception.",
-    href: "/retours",
+    title: "14-day returns",
+    text: "Return window starts when your order arrives.",
+    href: "/returns",
   },
   {
     title: "Contact",

@@ -40,7 +40,7 @@ export async function GET() {
   await prepareAuth();
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) {
-    return NextResponse.json({ error: "Connexion requise" }, { status: 401 });
+    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
   }
   const row = await getProAccessByUserId(session.user.id);
   return NextResponse.json({ request: row ? publicProRow(row) : null });
@@ -50,7 +50,7 @@ export async function POST(request: Request) {
   await prepareAuth();
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) {
-    return NextResponse.json({ error: "Connexion requise" }, { status: 401 });
+    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
   }
 
   const existing = await getProAccessByUserId(session.user.id);
@@ -67,20 +67,21 @@ export async function POST(request: Request) {
 
   const parsed = schema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: "Vérifiez les champs du formulaire." }, { status: 400 });
+    return NextResponse.json({ error: "Check the form fields." }, { status: 400 });
   }
 
   const data = parsed.data;
   const postalCode = normalizeShippingPostal(data.country, data.postalCode);
   const phone = normalizeZonePhone(data.phone, data.country);
   if (!postalCode) {
-    return NextResponse.json({ error: "Code postal invalide pour le pays choisi." }, { status: 400 });
+    return NextResponse.json({ error: "Invalid ZIP code for the selected country." }, { status: 400 });
   }
   if (!phone) {
-    return NextResponse.json({ error: "Téléphone invalide pour le pays choisi." }, { status: 400 });
+    return NextResponse.json({ error: "Invalid phone number for the selected country." }, { status: 400 });
   }
 
-  const french = data.country === "FR" || data.country === "MC";
+  // Contiguous U.S. shipping only — trade accounts are reviewed manually (no FR auto-approve).
+  const french = Boolean(data.siren && isValidSiren(normalizeSiren(data.siren)));
   let siren = data.siren ? normalizeSiren(data.siren) : "";
   let legalName = data.companyName;
   let city = data.city;
@@ -89,15 +90,9 @@ export async function POST(request: Request) {
   let status: "approved" | "pending" = "pending";
 
   if (french) {
-    if (!isValidSiren(siren)) {
-      return NextResponse.json(
-        { error: "Ce SIREN n’est pas valide. Saisissez les 9 chiffres de l’entreprise." },
-        { status: 400 },
-      );
-    }
     if (siret && !isValidSiret(siret, siren)) {
       return NextResponse.json(
-        { error: "Ce SIRET n’est pas valide, ou ne correspond pas au SIREN." },
+        { error: "This SIRET is not valid, or does not match the SIREN." },
         { status: 400 },
       );
     }
@@ -106,14 +101,14 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error:
-            "Nous n’avons pas trouvé cette entreprise dans le répertoire Sirene. Vérifiez le SIREN.",
+            "We could not find this company in the Sirene directory. Check the SIREN.",
         },
         { status: 422 },
       );
     }
     if (!company.active) {
       return NextResponse.json(
-        { error: "Cette entreprise n’est plus active. L’accès pro n’est pas ouvert sur ce SIREN." },
+        { error: "This company is no longer active. Trade access is not available for this SIREN." },
         { status: 422 },
       );
     }
@@ -122,7 +117,7 @@ export async function POST(request: Request) {
     city = company.city || data.city;
     activityFromRegistry = company.activity;
     siret = siret || company.siret;
-    status = "approved";
+    // Still pending for U.S. storefront — admin confirms trade pricing.
   }
 
   const row = await upsertProAccessRequest({

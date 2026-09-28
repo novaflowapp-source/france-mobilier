@@ -22,7 +22,7 @@ export function getReturnPolicy() {
     returnWindowDays: 14,
     buyerRemorseAccepted: true,
     defectiveProductsAccepted: true,
-    legalConformityYears: 2,
+    legalConformityYears: null as number | null,
     returnMethod: "after_contact" as const,
     returnShippingCostResponsibility: returnShippingPayer(),
     restockingFee: null as number | null,
@@ -39,10 +39,11 @@ export function getShippingPolicy() {
     countries: SHIPPING_COUNTRIES,
     zoneLabel: SHIPPING_ZONE_LABEL,
     freeShipping: true,
-    shippingCostEur: 0,
+    shippingCostUsd: 0,
     trackingAfterShipment: true,
     merchantTargetCountries: SHIPPING_COUNTRY_CODES,
-    excludesOverseasFrance: true,
+    excludesOverseasFrance: false,
+    excludesAlaskaHawaiiTerritories: true,
   };
 }
 

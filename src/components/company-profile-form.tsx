@@ -43,14 +43,14 @@ export function CompanyProfileForm({ initial }: { initial: Profile }) {
         body: JSON.stringify(form),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Enregistrement impossible");
+      if (!res.ok) throw new Error(data.error || "Could not save");
       if (data.request?.status && data.request.status !== "approved") {
         window.location.reload();
         return;
       }
       setOk(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur");
+      setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -59,11 +59,11 @@ export function CompanyProfileForm({ initial }: { initial: Profile }) {
   return (
     <form onSubmit={onSubmit} className="space-y-4 rounded-2xl border border-border bg-white p-6">
       <p className="text-sm text-muted">
-        Un changement de SIREN français est revérifié automatiquement. Hors France, l’accès passe en
-        vérification manuelle.
+        Changing a French SIREN is re-verified automatically. Outside France, access goes through
+        manual review.
       </p>
       <label className="block text-sm">
-        Raison sociale
+        Legal business name
         <input className="input mt-1" value={form.companyName} onChange={(e) => set("companyName", e.target.value)} />
       </label>
       <label className="block text-sm">
@@ -78,41 +78,41 @@ export function CompanyProfileForm({ initial }: { initial: Profile }) {
       </label>
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block text-sm">
-          Prénom
+          First name
           <input className="input mt-1" value={form.firstName || ""} onChange={(e) => set("firstName", e.target.value)} />
         </label>
         <label className="block text-sm">
-          Nom
+          Last name
           <input className="input mt-1" value={form.lastName || ""} onChange={(e) => set("lastName", e.target.value)} />
         </label>
       </div>
       <label className="block text-sm">
-        Téléphone
+        Phone
         <input className="input mt-1" value={form.phone || ""} onChange={(e) => set("phone", e.target.value)} />
       </label>
       <label className="block text-sm">
-        TVA
+        VAT
         <input className="input mt-1" value={form.vatNumber || ""} onChange={(e) => set("vatNumber", e.target.value)} />
       </label>
       <label className="block text-sm">
-        Adresse
+        Address
         <input className="input mt-1" value={form.billingLine1 || ""} onChange={(e) => set("billingLine1", e.target.value)} />
       </label>
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block text-sm">
-          Code postal
+          ZIP code
           <input className="input mt-1" value={form.postalCode || ""} onChange={(e) => set("postalCode", e.target.value)} />
         </label>
         <label className="block text-sm">
-          Ville
+          City
           <input className="input mt-1" value={form.city || ""} onChange={(e) => set("city", e.target.value)} />
         </label>
       </div>
       <label className="block text-sm">
-        Pays
+        Country
         <select
           className="input mt-1"
-          value={form.country || "FR"}
+          value={form.country || "US"}
           onChange={(e) => set("country", e.target.value as ShippingCountryCode)}
         >
           {SHIPPING_COUNTRIES.map((item) => (
@@ -123,9 +123,9 @@ export function CompanyProfileForm({ initial }: { initial: Profile }) {
         </select>
       </label>
       {error ? <p className="text-sm text-red-700">{error}</p> : null}
-      {ok ? <p className="text-sm text-navy">Informations enregistrées.</p> : null}
+      {ok ? <p className="text-sm text-navy">Saved.</p> : null}
       <button type="submit" disabled={loading} className="btn btn-primary">
-        {loading ? "Enregistrement…" : "Enregistrer"}
+        {loading ? "Saving…" : "Save"}
       </button>
     </form>
   );

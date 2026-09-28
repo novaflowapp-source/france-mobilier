@@ -54,7 +54,7 @@ export function ProductFAQ({ product }: { product: Product }) {
   return (
     <section className="section section-cream">
       <div className="container-page">
-        <h2 className="display text-3xl text-navy">Questions fréquentes</h2>
+        <h2 className="display text-3xl text-navy">FAQ</h2>
         <div className="prose-narrow mt-8 divide-y divide-border border-y border-border">
           {items.map((item) => (
             <ProductFaqItem key={item.question} question={item.question} answer={item.answer} />

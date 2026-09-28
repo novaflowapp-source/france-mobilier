@@ -14,48 +14,48 @@ const rooms = [
   {
     slug: "salon",
     image: "/lifestyle/maison.jpg",
-    title: "Salon",
-    text: "Tables, meubles TV, pièces compactes.",
+    title: "Living room",
+    text: "Tables, TV stands, compact pieces.",
   },
   {
     slug: "chambre",
     image: "/lifestyle/marque.jpg",
-    title: "Chambre",
-    text: "Chevets et petits meubles utiles.",
+    title: "Bedroom",
+    text: "Nightstands and useful small furniture.",
   },
   {
     slug: "entree-rangement",
     image: "/lifestyle/rangement.jpg",
-    title: "Entrée",
-    text: "Rangements étroits et meubles à chaussures.",
+    title: "Entryway",
+    text: "Slim storage and shoe cabinets.",
   },
   {
     slug: "bureau",
     image: "/lifestyle/bureau.jpg",
-    title: "Bureau",
-    text: "Travailler chez soi, avec aisance.",
+    title: "Office",
+    text: "Work from home, comfortably.",
   },
 ] as const;
 
 const guarantees = [
   {
-    title: "Pensé pour les petits espaces",
-    text: "Des meubles sélectionnés pour optimiser votre intérieur.",
+    title: "Built for smaller spaces",
+    text: "Furniture chosen to make the most of your layout.",
     icon: IconSofa,
   },
   {
-    title: "Dimensions détaillées",
-    text: "Pour savoir immédiatement si le meuble convient à votre pièce.",
+    title: "Detailed dimensions",
+    text: "See right away whether a piece fits your room.",
     icon: IconRuler,
   },
   {
-    title: "Livraison suivie",
-    text: "Un suivi clair, de l’expédition à la réception.",
+    title: "Tracked shipping",
+    text: "Clear updates from dispatch to delivery.",
     icon: IconTruck,
   },
   {
-    title: "Service client",
-    text: `SAV ${store.supportHoursShort}.`,
+    title: "Customer support",
+    text: `Support ${store.supportHoursShort}.`,
     icon: IconHeadset,
   },
 ];
@@ -72,7 +72,7 @@ export default function HomePage() {
       <section className="relative min-h-[70svh] overflow-hidden bg-navy text-white md:min-h-[84vh]">
         <Image
           src="/lifestyle/hero.jpg"
-          alt="Intérieur contemporain avec mobilier clair et lumineux"
+          alt="Contemporary interior with light, airy furniture"
           fill
           priority
           className="object-cover"
@@ -82,21 +82,20 @@ export default function HomePage() {
         <div className="container-page relative flex min-h-[70svh] items-end py-12 md:min-h-[84vh] md:items-center md:py-24">
           <div className="max-w-xl pb-2">
             <p className="eyebrow text-white">
-              <span className="text-white">Une sélection exigeante</span>
+              <span className="text-white">A considered selection</span>
             </p>
             <h1 className="display mt-4 text-[1.85rem] text-white sm:text-4xl md:text-6xl">
-              Le mobilier qui simplifie votre intérieur.
+              Furniture that simplifies your home.
             </h1>
             <p className="mt-4 max-w-md text-[0.95rem] leading-relaxed text-white/85 md:mt-5 md:text-lg">
-              Des meubles sélectionnés pour gagner en confort, en espace et en simplicité au
-              quotidien.
+              Pieces chosen for everyday comfort, space, and simplicity.
             </p>
             <div className="mt-6 flex w-full flex-col gap-3 sm:mt-8 sm:w-auto sm:flex-row sm:flex-wrap">
               <Link href="/collections/meubles" className="btn btn-inverse w-full sm:w-auto">
-                Découvrir les meubles
+                Shop furniture
               </Link>
               <Link href="/collections/petits-espaces" className="btn btn-on-dark w-full sm:w-auto">
-                Voir les petits espaces
+                Small spaces
               </Link>
             </div>
           </div>
@@ -119,8 +118,8 @@ export default function HomePage() {
 
       <section className="section">
         <div className="container-page">
-          <p className="eyebrow">Pièces</p>
-          <h2 className="display mt-3 text-[1.75rem] text-navy md:text-4xl">Acheter par pièce</h2>
+          <p className="eyebrow">Rooms</p>
+          <h2 className="display mt-3 text-[1.75rem] text-navy md:text-4xl">Shop by room</h2>
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {rooms.map((item) => (
               <Link
@@ -139,7 +138,7 @@ export default function HomePage() {
                 <div className="absolute inset-x-0 bottom-0 px-6 py-5 text-white">
                   <h3 className="display text-2xl">{item.title}</h3>
                   <p className="mt-1 text-sm text-white/85">{item.text}</p>
-                  <p className="mt-3 text-sm text-white/90">Voir la sélection →</p>
+                  <p className="mt-3 text-sm text-white/90">View selection →</p>
                 </div>
               </Link>
             ))}
@@ -151,14 +150,14 @@ export default function HomePage() {
         <div className="container-page">
           <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="eyebrow">Sélection</p>
-              <h2 className="display mt-3 text-3xl text-navy md:text-4xl">Les essentiels France Mobilier</h2>
+              <p className="eyebrow">Selection</p>
+              <h2 className="display mt-3 text-3xl text-navy md:text-4xl">France Mobilier essentials</h2>
               <p className="mt-3 max-w-xl text-muted">
-                Une sélection courte de meubles, choisis pour leur usage et leurs dimensions.
+                A short list of furniture chosen for everyday use and clear dimensions.
               </p>
             </div>
             <Link href="/collections/meubles" className="btn btn-secondary w-full sm:w-auto">
-              Tous les meubles
+              All furniture
             </Link>
           </div>
           <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
@@ -175,7 +174,7 @@ export default function HomePage() {
             <div className="relative aspect-[4/3] overflow-hidden rounded-[var(--radius)]">
               <Image
                 src="/lifestyle/petits-espaces.jpg"
-                alt="Intérieur compact, lumineux, avec du mobilier peu encombrant"
+                alt="Compact, bright interior with space-saving furniture"
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -183,14 +182,13 @@ export default function HomePage() {
             </div>
           </div>
           <div>
-            <p className="eyebrow">Petits espaces</p>
-            <h2 className="display mt-3 text-3xl text-navy md:text-4xl">Petits espaces, grand confort.</h2>
+            <p className="eyebrow">Small spaces</p>
+            <h2 className="display mt-3 text-3xl text-navy md:text-4xl">Small spaces, real comfort.</h2>
             <p className="mt-5 leading-relaxed text-muted">
-              Découvrez des meubles pensés pour les appartements, studios et pièces où chaque
-              centimètre compte.
+              Furniture for apartments, studios, and rooms where every inch counts.
             </p>
             <Link href="/collections/petits-espaces" className="btn btn-primary mt-8 w-full sm:w-auto">
-              Découvrir les petits espaces
+              Shop small spaces
             </Link>
           </div>
         </div>
@@ -199,10 +197,10 @@ export default function HomePage() {
       {entryUniverse.length > 1 ? (
         <section className="section section-cream">
           <div className="container-page">
-            <p className="eyebrow">Univers</p>
-            <h2 className="display mt-3 text-3xl text-navy md:text-4xl">Pour l’entrée</h2>
+            <p className="eyebrow">Focus</p>
+            <h2 className="display mt-3 text-3xl text-navy md:text-4xl">For the entryway</h2>
             <p className="mt-3 max-w-xl text-muted">
-              Des meubles qui se glissent dans un couloir et libèrent le passage.
+              Pieces that sit along a hallway and keep the path clear.
             </p>
             <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
               {entryUniverse.map((product) => (
@@ -216,20 +214,19 @@ export default function HomePage() {
       <section className="section">
         <div className="container-page grid items-center gap-10 md:grid-cols-2">
           <div>
-            <p className="eyebrow">Conseils</p>
-            <h2 className="display mt-3 text-3xl text-navy md:text-4xl">Mieux choisir, pièce par pièce</h2>
+            <p className="eyebrow">Guides</p>
+            <h2 className="display mt-3 text-3xl text-navy md:text-4xl">Choose better, room by room</h2>
             <p className="mt-5 leading-relaxed text-muted">
-              Des guides courts pour lire les dimensions, aménager un studio ou choisir un meuble
-              d’entrée étroit.
+              Short guides on dimensions, studio layouts, and narrow entryway furniture.
             </p>
             <Link href="/guides" className="btn btn-secondary mt-8 w-full sm:w-auto">
-              Conseils & inspiration
+              Guides & inspiration
             </Link>
           </div>
           <div className="relative aspect-[4/3] overflow-hidden rounded-[var(--radius)]">
             <Image
               src="/lifestyle/rangement.jpg"
-              alt="Rangements alignés le long d’un mur clair"
+              alt="Storage along a light wall"
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"
@@ -243,22 +240,21 @@ export default function HomePage() {
           <div className="relative aspect-[4/3] overflow-hidden rounded-[var(--radius)]">
             <Image
               src="/lifestyle/marque.jpg"
-              alt="Détail de mobilier contemporain en bois clair"
+              alt="Detail of contemporary light wood furniture"
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>
           <div>
-            <p className="eyebrow">La marque</p>
-            <h2 className="display mt-3 text-3xl text-navy md:text-4xl">Une sélection qui a du sens.</h2>
+            <p className="eyebrow">The brand</p>
+            <h2 className="display mt-3 text-3xl text-navy md:text-4xl">A selection with purpose.</h2>
             <p className="mt-5 leading-relaxed text-muted">
-              Chez {store.storeName}, chaque meuble apporte du confort, de l’ordre et de la clarté.
-              Une sélection pensée pour les logements d’aujourd’hui — appartements, studios, bureaux
-              à la maison.
+              At {store.storeName}, every piece adds comfort, order, and clarity — for today’s homes:
+              apartments, studios, and work-from-home setups.
             </p>
-            <Link href="/a-propos" className="btn btn-primary mt-8 w-full sm:w-auto">
-              Lire notre histoire
+            <Link href="/about" className="btn btn-primary mt-8 w-full sm:w-auto">
+              Our story
             </Link>
           </div>
         </div>
@@ -267,21 +263,19 @@ export default function HomePage() {
       <section className="bg-navy text-white">
         <div className="container-page flex flex-col gap-8 py-12 md:flex-row md:items-center md:justify-between md:py-16">
           <div className="max-w-2xl">
-            <p className="eyebrow text-white">Professionnels</p>
+            <p className="eyebrow text-white">Trade</p>
             <h2 className="display mt-3 text-[1.85rem] text-white sm:text-4xl md:text-5xl">
               France Mobilier Pro
             </h2>
             <p className="mt-4 max-w-xl text-[0.95rem] leading-relaxed text-white/85 md:text-lg">
-              Vous aménagez des bureaux, logements ou espaces professionnels ? Demandez un devis
-              pour vos commandes en volume.
+              Furnishing offices, rentals, or commercial spaces? Request a quote for volume orders.
             </p>
             <p className="mt-3 text-sm text-white/55">
-              Des conditions adaptées peuvent être proposées selon les produits et volumes
-              commandés.
+              Tailored terms may be available depending on products and volumes.
             </p>
           </div>
-          <Link href="/professionnels" className="btn btn-inverse w-full shrink-0 text-base sm:w-auto md:min-h-12 md:px-8">
-            Découvrir l’espace Pro
+          <Link href="/trade" className="btn btn-inverse w-full shrink-0 text-base sm:w-auto md:min-h-12 md:px-8">
+            Explore Pro
           </Link>
         </div>
       </section>
@@ -289,32 +283,32 @@ export default function HomePage() {
       <section className="section section-cream">
         <div className="container-page grid gap-12 md:grid-cols-2">
           <div>
-            <h2 className="display text-3xl text-navy">Livraison et retours</h2>
+            <h2 className="display text-3xl text-navy">Shipping & returns</h2>
             <p className="mt-4 leading-relaxed text-muted">
-              {SHIPPING_OFFERED_SENTENCE} Vous disposez de 14 jours pour vous rétracter après
-              réception, lorsque le droit français le prévoit.
+              {SHIPPING_OFFERED_SENTENCE} You have 14 days from delivery to request a store return
+              (see our returns policy).
             </p>
             <div className="mt-5 flex gap-4 text-sm">
-              <Link href="/livraison" className="text-navy underline-offset-4 hover:underline">
-                Livraison
+              <Link href="/shipping" className="text-navy underline-offset-4 hover:underline">
+                Shipping
               </Link>
-              <Link href="/retours" className="text-navy underline-offset-4 hover:underline">
-                Retours
+              <Link href="/returns" className="text-navy underline-offset-4 hover:underline">
+                Returns
               </Link>
             </div>
           </div>
           <div>
-            <h2 className="display text-3xl text-navy">Questions fréquentes</h2>
+            <h2 className="display text-3xl text-navy">FAQ</h2>
             <div className="mt-5 space-y-4">
               <div>
-                <p className="font-medium text-navy">Où livrez-vous ?</p>
+                <p className="font-medium text-navy">Where do you ship?</p>
                 <p className="mt-1 text-sm text-muted">
-                  {SHIPPING_OFFERED_SENTENCE} Un suivi est communiqué après l’expédition.
+                  {SHIPPING_OFFERED_SENTENCE} Tracking is shared when your order ships.
                 </p>
               </div>
               <div>
-                <p className="font-medium text-navy">Les prix sont-ils TTC ?</p>
-                <p className="mt-1 text-sm text-muted">Oui. Le total est confirmé au paiement.</p>
+                <p className="font-medium text-navy">Are prices in USD?</p>
+                <p className="mt-1 text-sm text-muted">Yes. Your total is confirmed at checkout.</p>
               </div>
             </div>
           </div>

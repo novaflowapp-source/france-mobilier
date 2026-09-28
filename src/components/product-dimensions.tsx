@@ -23,7 +23,7 @@ export function ProductDimensions({ product }: { product: Product }) {
               <div>
                 <p className="text-sm text-muted">Dimensions</p>
                 <p className="mt-1 text-xl font-medium text-navy">{lph}</p>
-                <p className="mt-1 text-sm text-muted">Largeur × profondeur × hauteur</p>
+                <p className="mt-1 text-sm text-muted">Width × depth × height</p>
               </div>
             ) : null}
             {sizes.length > 1 ? (
@@ -42,7 +42,7 @@ export function ProductDimensions({ product }: { product: Product }) {
                 </dl>
                 {showDiagram && measures.widthCm != null ? (
                   <p className="mt-3 text-sm text-muted">
-                    Le schéma représente le format {measures.widthCm} cm.
+                    Diagram shows the {measures.widthCm} cm size.
                   </p>
                 ) : null}
               </div>
@@ -56,7 +56,7 @@ export function ProductDimensions({ product }: { product: Product }) {
                 ))}
                 {product.weight ? (
                   <div>
-                    <dt className="text-sm text-muted">Poids</dt>
+                    <dt className="text-sm text-muted">Weight</dt>
                     <dd className="mt-1 text-xl font-medium text-navy">{product.weight} kg</dd>
                   </div>
                 ) : null}

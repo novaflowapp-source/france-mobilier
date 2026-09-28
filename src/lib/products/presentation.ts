@@ -7,8 +7,14 @@ import type {
 import { deliveryCustomerLabel } from "@/lib/merchant/delivery";
 import { SHIPPING_ZONE_LABEL } from "@/lib/shipping-zone";
 
-const PARSED_DIMENSION_KEYS = /^(largeur|hauteur|profondeur|pieds|caisson|traverse|hauteur des pieds|hauteur utile)$/i;
-const EXTRA_DIMENSION_KEYS = /^(hauteur min\/max|plateau|module)$/i;
+const PARSED_DIMENSION_KEYS =
+  /^(largeur|width|hauteur|height|profondeur|depth|pieds|legs|caisson|cabinet|traverse|crossbar|hauteur des pieds|leg height|hauteur utile|useful height)$/i;
+const EXTRA_DIMENSION_KEYS = /^(hauteur min\/max|min\/max height|plateau|top|module)$/i;
+
+function formatLengthCm(cm: number) {
+  const inches = Math.round((cm / 2.54) * 10) / 10;
+  return `${inches} in (${cm} cm)`;
+}
 
 export function getImageAsset(product: Product, src: string): ProductImageAsset | undefined {
   return product.imageAssets?.find((asset) => asset.src === src);
@@ -37,13 +43,19 @@ export function getProductMeasures(product: Product): ProductMeasures {
     const cm = parseCmValue(value);
     if (cm == null) continue;
     const normalized = key.toLowerCase();
-    if (normalized === "largeur") fromSpecs.widthCm = cm;
-    else if (normalized === "profondeur") fromSpecs.depthCm = cm;
-    else if (normalized === "hauteur") fromSpecs.heightCm = cm;
-    else if (normalized === "pieds" || normalized === "hauteur des pieds") fromSpecs.legHeightCm = cm;
-    else if (normalized === "caisson") fromSpecs.cabinetHeightCm = cm;
-    else if (normalized === "traverse") fromSpecs.crossbarFromFloorCm = cm;
-    else if (normalized === "hauteur utile") fromSpecs.usefulHeightCm = cm;
+    if (normalized === "largeur" || normalized === "width") fromSpecs.widthCm = cm;
+    else if (normalized === "profondeur" || normalized === "depth") fromSpecs.depthCm = cm;
+    else if (normalized === "hauteur" || normalized === "height") fromSpecs.heightCm = cm;
+    else if (
+      normalized === "pieds" ||
+      normalized === "hauteur des pieds" ||
+      normalized === "legs" ||
+      normalized === "leg height"
+    ) {
+      fromSpecs.legHeightCm = cm;
+    } else if (normalized === "caisson" || normalized === "cabinet") fromSpecs.cabinetHeightCm = cm;
+    else if (normalized === "traverse" || normalized === "crossbar") fromSpecs.crossbarFromFloorCm = cm;
+    else if (normalized === "hauteur utile" || normalized === "useful height") fromSpecs.usefulHeightCm = cm;
   }
   return { ...fromSpecs, ...product.measures };
 }
@@ -51,14 +63,18 @@ export function getProductMeasures(product: Product): ProductMeasures {
 export function measureEntries(product: Product): { label: string; value: string }[] {
   const measures = getProductMeasures(product);
   const rows: { label: string; value: string }[] = [];
-  if (measures.widthCm != null) rows.push({ label: "Largeur", value: `${measures.widthCm} cm` });
-  if (measures.depthCm != null) rows.push({ label: "Profondeur", value: `${measures.depthCm} cm` });
-  if (measures.heightCm != null) rows.push({ label: "Hauteur", value: `${measures.heightCm} cm` });
-  if (measures.usefulHeightCm != null) rows.push({ label: "Hauteur utile", value: `${measures.usefulHeightCm} cm` });
-  if (measures.cabinetHeightCm != null) rows.push({ label: "Hauteur du caisson", value: `${measures.cabinetHeightCm} cm` });
-  if (measures.legHeightCm != null) rows.push({ label: "Hauteur des pieds", value: `${measures.legHeightCm} cm` });
+  if (measures.widthCm != null) rows.push({ label: "Width", value: formatLengthCm(measures.widthCm) });
+  if (measures.depthCm != null) rows.push({ label: "Depth", value: formatLengthCm(measures.depthCm) });
+  if (measures.heightCm != null) rows.push({ label: "Height", value: formatLengthCm(measures.heightCm) });
+  if (measures.usefulHeightCm != null) {
+    rows.push({ label: "Useful height", value: formatLengthCm(measures.usefulHeightCm) });
+  }
+  if (measures.cabinetHeightCm != null) {
+    rows.push({ label: "Cabinet height", value: formatLengthCm(measures.cabinetHeightCm) });
+  }
+  if (measures.legHeightCm != null) rows.push({ label: "Leg height", value: formatLengthCm(measures.legHeightCm) });
   if (measures.crossbarFromFloorCm != null) {
-    rows.push({ label: "Traverse (du sol)", value: `${measures.crossbarFromFloorCm} cm` });
+    rows.push({ label: "Crossbar (from floor)", value: formatLengthCm(measures.crossbarFromFloorCm) });
   }
   for (const [key, value] of Object.entries(product.specifications)) {
     if (!value.trim()) continue;
@@ -104,7 +120,7 @@ export function deliveryLabel(product: Product): string | null {
 export function specificationRows(product: Product): [string, string][] {
   const dimsShown = measureEntries(product).length > 0;
   return Object.entries(product.specifications).filter(([key, value]) => {
-    if (!value.trim() || /^non renseigné$/i.test(value)) return false;
+    if (!value.trim() || /^(non renseigné|not specified)$/i.test(value)) return false;
     if (dimsShown && (PARSED_DIMENSION_KEYS.test(key) || EXTRA_DIMENSION_KEYS.test(key))) return false;
     return true;
   });
@@ -121,36 +137,30 @@ export function productFaqItems(product: Product): ProductFaqItem[] {
 
   const dims = measureEntries(product);
   if (dims.length > 0) {
-    add(
-      "Quelles sont ses dimensions ?",
-      dims.map((row) => `${row.label} : ${row.value}`).join(" · "),
-    );
+    add("What are the dimensions?", dims.map((row) => `${row.label}: ${row.value}`).join(" · "));
   } else if (product.dimensions) {
-    add("Quelles sont ses dimensions ?", product.dimensions);
+    add("What are the dimensions?", product.dimensions);
   }
 
   const delivery = deliveryLabel(product);
   if (delivery) {
     add(
-      "Quel est le délai de livraison ?",
+      "How long does shipping take?",
       product.madeToOrder
-        ? `L’article est fabriqué après commande. ${delivery.charAt(0).toUpperCase()}${delivery.slice(1)}. La date de réception n’est pas connue à l’avance.`
+        ? `This piece is made after you order. ${delivery.charAt(0).toUpperCase()}${delivery.slice(1)}. We do not give a fixed delivery date.`
         : `${delivery.charAt(0).toUpperCase()}${delivery.slice(1)}.`,
     );
   }
 
-  if (product.features.some((feature) => /montage/i.test(feature))) {
-    add("Le meuble est-il livré monté ?", "Un montage est prévu. Le détail figure dans les caractéristiques.");
+  if (product.features.some((feature) => /montage|assembl/i.test(feature))) {
+    add("Does it ship assembled?", "Some assembly is required. Details are listed in the specifications.");
   }
 
-  add("Où est-il livré ?", `En ${SHIPPING_ZONE_LABEL}, avec suivi de colis.`);
+  add("Where do you ship?", `We ship to ${SHIPPING_ZONE_LABEL}, with tracking.`);
+  add("How do I track my order?", "A tracking number is emailed after the package ships, when the carrier provides one.");
   add(
-    "Comment suivre ma commande ?",
-    "Un numéro de suivi est communiqué par e-mail après l’expédition.",
-  );
-  add(
-    "Puis-je retourner l’article ?",
-    "Vous disposez de 14 jours à compter de la réception pour vous rétracter, lorsque le droit français de la consommation s’applique.",
+    "Can I return it?",
+    "You can return unused items within 14 days of delivery. See the Returns page for how to start a return.",
   );
 
   return items;

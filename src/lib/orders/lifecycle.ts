@@ -22,7 +22,7 @@ const globalForLifecycle = globalThis as unknown as {
 
 function viewUrl(order: { id: string; viewToken: string | null }) {
   const token = order.viewToken ? `?t=${order.viewToken}` : "";
-  return `${getSiteUrl()}/commande/${order.id}${token}`;
+  return `${getSiteUrl()}/order/${order.id}${token}`;
 }
 
 function emailPayload(order: {

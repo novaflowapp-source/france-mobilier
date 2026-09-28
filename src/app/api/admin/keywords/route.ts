@@ -20,13 +20,13 @@ const bodySchema = z.object({
 export async function GET() {
   const session = await getAdminSession();
   if (!session) {
-    return NextResponse.json({ error: "Accès administrateur requis" }, { status: 401 });
+    return NextResponse.json({ error: "Admin access required" }, { status: 401 });
   }
   return NextResponse.json({
     configured: isKeywordPlannerConfigured(),
     missing: listMissingKeywordPlannerEnv(),
     geo: "France",
-    language: "Français",
+    language: "English",
     network: "Google",
   });
 }
@@ -34,12 +34,12 @@ export async function GET() {
 export async function POST(request: Request) {
   const session = await getAdminSession();
   if (!session) {
-    return NextResponse.json({ error: "Accès administrateur requis" }, { status: 401 });
+    return NextResponse.json({ error: "Admin access required" }, { status: 401 });
   }
   if (!isKeywordPlannerConfigured()) {
     return NextResponse.json(
       {
-        error: "Google Ads n’est pas encore branché. Ajoutez les variables GOOGLE_ADS_* puis relancez.",
+        error: "Google Ads is not connected yet. Add the GOOGLE_ADS_* variables and try again.",
         missing: listMissingKeywordPlannerEnv(),
       },
       { status: 503 },
@@ -48,18 +48,18 @@ export async function POST(request: Request) {
 
   const parsed = bodySchema.safeParse(await request.json());
   if (!parsed.success) {
-    return NextResponse.json({ error: "Données invalides" }, { status: 400 });
+    return NextResponse.json({ error: "Invalid data" }, { status: 400 });
   }
 
   const keywords = parseKeywordList(parsed.data.keywords);
   const mode = parsed.data.mode || "metrics";
   const max = mode === "ideas" ? 10 : 40;
   if (keywords.length === 0) {
-    return NextResponse.json({ error: "Saisissez au moins un mot-clé." }, { status: 400 });
+    return NextResponse.json({ error: "Enter at least one keyword." }, { status: 400 });
   }
   if (keywords.length > max) {
     return NextResponse.json(
-      { error: `Maximum ${max} mots-clés pour ce mode.` },
+      { error: `Maximum ${max} keywords for this mode.` },
       { status: 400 },
     );
   }
@@ -75,12 +75,12 @@ export async function POST(request: Request) {
       requested: keywords,
       results,
       geo: "France",
-      language: "Français",
+      language: "English",
       network: "Google",
     });
   } catch (error) {
     const message =
-      error instanceof Error ? error.message : "La requête Keyword Planner a échoué.";
+      error instanceof Error ? error.message : "The Keyword Planner request failed.";
     return NextResponse.json({ error: message }, { status: 502 });
   }
 }

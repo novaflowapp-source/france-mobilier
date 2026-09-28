@@ -1,19 +1,20 @@
 import { IconLock, IconReturn, IconTruck } from "@/components/icons";
+import { SHIPPING_ZONE_LABEL } from "@/lib/shipping-zone";
 
 const items = [
   {
-    title: "Livraison offerte",
-    text: "France métropolitaine et destinations éligibles.",
+    title: "Free shipping",
+    text: `To ${SHIPPING_ZONE_LABEL}.`,
     icon: IconTruck,
   },
   {
-    title: "Paiement sécurisé",
-    text: "Carte bancaire, Apple Pay, Google Pay et autres moyens selon l’appareil.",
+    title: "Secure payment",
+    text: "Credit card, Apple Pay, Google Pay, and more depending on your device.",
     icon: IconLock,
   },
   {
-    title: "Retours sous 14 jours",
-    text: "À compter de la réception.",
+    title: "14-day returns",
+    text: "From the day your order arrives.",
     icon: IconReturn,
   },
 ];

@@ -28,8 +28,8 @@ function merchantReturnPolicy() {
     merchantReturnDays: policy.returnWindowDays,
     returnMethod: "https://schema.org/ReturnByMail",
     ...(returnFees ? { returnFees } : {}),
-    url: canonicalUrl("/retours"),
-    merchantReturnLink: canonicalUrl("/retours"),
+    url: canonicalUrl("/returns"),
+    merchantReturnLink: canonicalUrl("/returns"),
   };
 }
 
@@ -62,7 +62,7 @@ function shippingDetails(product: Product) {
     "@type": "OfferShippingDetails",
     shippingRate: {
       "@type": "MonetaryAmount",
-      value: shipping.shippingCostEur.toFixed(2),
+      value: shipping.shippingCostUsd.toFixed(2),
       currency: store.currency,
     },
     shippingDestination: {
@@ -76,7 +76,7 @@ function shippingDetails(product: Product) {
 function offerShared(product: Product) {
   const identity = getBusinessIdentity();
   return {
-    url: canonicalUrl(`/produits/${product.slug}`),
+    url: canonicalUrl(`/products/${product.slug}`),
     priceCurrency: store.currency,
     availability: schemaAvailability(product),
     itemCondition: "https://schema.org/NewCondition",
@@ -151,7 +151,7 @@ export function productJsonLd(
     ...(product.alternateNames?.length ? { alternateName: product.alternateNames } : {}),
     description: product.description,
     sku: product.id,
-    url: canonicalUrl(`/produits/${product.slug}`),
+    url: canonicalUrl(`/products/${product.slug}`),
     image: images.map(imageUrl),
     brand: { "@type": "Brand", name: brandName },
     ...(product.gtin ? { gtin: product.gtin } : {}),

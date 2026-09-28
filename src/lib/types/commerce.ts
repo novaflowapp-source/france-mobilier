@@ -211,7 +211,7 @@ export type Order = {
   customer: Customer;
   shippingAddress: ShippingAddress;
   items: OrderItem[];
-  currency: "EUR";
+  currency: "USD";
   subtotal: number;
   shippingTotal: number;
   total: number;

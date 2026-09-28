@@ -14,12 +14,12 @@ export type KeywordMetric = {
 };
 
 export const KEYWORD_PLANNER_PRESETS = [
-  "meuble chaussures",
-  "table de chevet",
-  "chariot cuisine",
-  "meuble colonne",
-  "meuble d'entrée",
-  "chevet",
-  "étagère salle de bain",
-  "bureau assis debout",
+  "shoe cabinet",
+  "nightstand",
+  "kitchen cart",
+  "tall storage cabinet",
+  "entryway furniture",
+  "bedside table",
+  "bathroom shelf",
+  "standing desk",
 ];

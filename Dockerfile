@@ -11,9 +11,9 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN echo "=== APP ROUTES IN CONTEXT ===" \
   && ls -la src/app \
-  && test -d src/app/connexion \
-  && test -d src/app/compte \
-  && test -d src/app/inscription \
+  && test -d src/app/login \
+  && test -d src/app/account \
+  && test -d src/app/signup \
   && test -f public/logo-france-mobilier.png \
   && test -f data/products.ts \
   && test -d src/app/api/auth \
@@ -22,11 +22,11 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 # Public URL must be known at build: sitemap.xml and robots.txt are generated then.
 # BETTER_AUTH_URL stays localhost so the auth adapter can compile without the live host.
-ENV NEXT_PUBLIC_SITE_URL=https://francemobilier.org
+ENV NEXT_PUBLIC_SITE_URL=https://francemobilier.com
 RUN DATABASE_URL=:memory: \
   BETTER_AUTH_SECRET=build-time-placeholder-not-for-runtime \
   BETTER_AUTH_URL=http://localhost:3000 \
-  NEXT_PUBLIC_SITE_URL=https://francemobilier.org \
+  NEXT_PUBLIC_SITE_URL=https://francemobilier.com \
   npm run build \
   && test -f .next/standalone/server.js \
   && test -d .next/static

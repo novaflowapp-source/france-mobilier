@@ -22,15 +22,15 @@ type Row = {
 };
 
 const filters = [
-  { id: "all", label: "Tous" },
-  { id: "pending", label: "En attente" },
-  { id: "approved", label: "Approuvés" },
-  { id: "rejected", label: "Refusés" },
-  { id: "suspended", label: "Suspendus" },
+  { id: "all", label: "All" },
+  { id: "pending", label: "Pending" },
+  { id: "approved", label: "Approved" },
+  { id: "rejected", label: "Rejected" },
+  { id: "suspended", label: "Suspended" },
 ];
 
 function euros(cents: number) {
-  return (cents / 100).toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
+  return (cents / 100).toLocaleString("en-US", { style: "currency", currency: "USD" });
 }
 
 export function AdminProfessionals({ initial }: { initial: Row[] }) {
@@ -44,23 +44,23 @@ export function AdminProfessionals({ initial }: { initial: Row[] }) {
   );
 
   async function patch(id: string, action: string, extra?: Record<string, unknown>) {
-    if (action !== "discount" && !confirm("Confirmer cette action ?")) return;
+    if (action !== "discount" && !confirm("Confirm this action?")) return;
     setBusy(id);
     try {
-      const res = await fetch("/api/admin/professionnels", {
+      const res = await fetch("/api/admin/professionals", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, action, ...extra }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Action impossible");
+      if (!res.ok) throw new Error(data.error || "Action failed");
       if (data.request) {
         setRows((current) =>
           current.map((row) => (row.id === id ? { ...row, ...data.request } : row)),
         );
       }
     } catch (error) {
-      alert(error instanceof Error ? error.message : "Erreur");
+      alert(error instanceof Error ? error.message : "Error");
     } finally {
       setBusy(null);
     }
@@ -88,15 +88,15 @@ export function AdminProfessionals({ initial }: { initial: Row[] }) {
               <th className="px-4 py-3 font-medium">Contact</th>
               <th className="px-4 py-3 font-medium">SIREN</th>
               <th className="px-4 py-3 font-medium">Statut</th>
-              <th className="px-4 py-3 font-medium">Commandes</th>
-              <th className="px-4 py-3 font-medium">Remise</th>
+              <th className="px-4 py-3 font-medium">Orders</th>
+              <th className="px-4 py-3 font-medium">Discount</th>
             </tr>
           </thead>
           <tbody>
             {visible.map((row) => (
               <tr key={row.id} className="border-b border-border last:border-0">
                 <td className="px-4 py-3">
-                  <Link href={`/admin/professionnels/${row.id}`} className="font-medium hover:underline">
+                  <Link href={`/admin/professionals/${row.id}`} className="font-medium hover:underline">
                     {row.companyName || row.legalName}
                   </Link>
                   <p className="text-xs text-muted">{row.country || "FR"}</p>
@@ -112,21 +112,21 @@ export function AdminProfessionals({ initial }: { initial: Row[] }) {
                     {row.status === "pending" ? (
                       <>
                         <button type="button" className="btn btn-primary px-2 py-1 text-xs" disabled={busy === row.id} onClick={() => patch(row.id, "approve")}>
-                          Approuver
+                          Approve
                         </button>
                         <button type="button" className="btn btn-secondary px-2 py-1 text-xs" disabled={busy === row.id} onClick={() => patch(row.id, "reject")}>
-                          Refuser
+                          Reject
                         </button>
                       </>
                     ) : null}
                     {row.status === "approved" ? (
                       <button type="button" className="btn btn-secondary px-2 py-1 text-xs" disabled={busy === row.id} onClick={() => patch(row.id, "suspend")}>
-                        Suspendre
+                        Suspend
                       </button>
                     ) : null}
                     {row.status === "suspended" ? (
                       <button type="button" className="btn btn-primary px-2 py-1 text-xs" disabled={busy === row.id} onClick={() => patch(row.id, "reactivate")}>
-                        Réactiver
+                        Reactivate
                       </button>
                     ) : null}
                   </div>
@@ -137,7 +137,7 @@ export function AdminProfessionals({ initial }: { initial: Row[] }) {
                 <td className="px-4 py-3">
                   {row.discountType === "percentage" && row.discountValue
                     ? `${row.discountValue} %`
-                    : "Aucune"}
+                    : "None"}
                 </td>
               </tr>
             ))}

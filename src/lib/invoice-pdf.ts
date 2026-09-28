@@ -8,12 +8,14 @@ const NAVY = rgb(11 / 255, 43 / 255, 85 / 255);
 const MUTED = rgb(92 / 255, 97 / 255, 112 / 255);
 const LINE = rgb(228 / 255, 224 / 255, 216 / 255);
 
-function euros(cents: number) {
-  return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(cents / 100);
+function formatMoney(cents: number) {
+  return new Intl.NumberFormat(store.locale, { style: "currency", currency: store.currency }).format(
+    cents / 100,
+  );
 }
 
 function formatDate(value: Date) {
-  return new Intl.DateTimeFormat("fr-FR", { dateStyle: "long" }).format(value);
+  return new Intl.DateTimeFormat(store.locale, { dateStyle: "long" }).format(value);
 }
 
 export async function buildInvoicePdf(invoice: InvoiceRow) {
@@ -38,18 +40,18 @@ export async function buildInvoicePdf(invoice: InvoiceRow) {
     y -= 28;
   }
 
-  page.drawText("Facture", { x: 48, y, size: 22, font: bold, color: NAVY });
+  page.drawText("Invoice", { x: 48, y, size: 22, font: bold, color: NAVY });
   y -= 22;
   page.drawText(invoice.number, { x: 48, y, size: 12, font, color: MUTED });
   y -= 16;
-  page.drawText(`Date : ${formatDate(invoice.issuedAt)}`, { x: 48, y, size: 10, font, color: MUTED });
+  page.drawText(`Date: ${formatDate(invoice.issuedAt)}`, { x: 48, y, size: 10, font, color: MUTED });
   if (invoice.orderReference) {
     y -= 14;
-    page.drawText(`Commande : ${invoice.orderReference}`, { x: 48, y, size: 10, font, color: MUTED });
+    page.drawText(`Order: ${invoice.orderReference}`, { x: 48, y, size: 10, font, color: MUTED });
   }
 
   y -= 28;
-  page.drawText("Vendeur", { x: 48, y, size: 11, font: bold, color: NAVY });
+  page.drawText("Seller", { x: 48, y, size: 11, font: bold, color: NAVY });
   y -= 16;
   const seller = [
     store.companyName,
@@ -58,7 +60,7 @@ export async function buildInvoicePdf(invoice: InvoiceRow) {
       ? `${store.companyPostalCode} ${store.companyCity}`
       : store.companyCity,
     store.companyRegistration,
-    "Montants exprimés TTC. Aucun taux de TVA n’est indiqué.",
+    "Amounts in USD. Tax is included where applicable; no separate VAT rate is shown.",
   ].filter(Boolean);
   for (const line of seller) {
     page.drawText(String(line), { x: 48, y, size: 10, font, color: MUTED });
@@ -66,12 +68,12 @@ export async function buildInvoicePdf(invoice: InvoiceRow) {
   }
 
   y -= 10;
-  page.drawText("Client", { x: 48, y, size: 11, font: bold, color: NAVY });
+  page.drawText("Customer", { x: 48, y, size: 11, font: bold, color: NAVY });
   y -= 16;
   const buyer = [
     invoice.companyName,
     invoice.siren ? `SIREN ${invoice.siren}` : null,
-    invoice.vatNumber ? `TVA ${invoice.vatNumber}` : null,
+    invoice.vatNumber ? `VAT ${invoice.vatNumber}` : null,
     invoice.billingLine1,
     [invoice.postalCode, invoice.city].filter(Boolean).join(" "),
     invoice.country,
@@ -84,9 +86,9 @@ export async function buildInvoicePdf(invoice: InvoiceRow) {
   y -= 18;
   page.drawLine({ start: { x: 48, y }, end: { x: 547, y }, thickness: 1, color: LINE });
   y -= 18;
-  page.drawText("Désignation", { x: 48, y, size: 10, font: bold, color: NAVY });
-  page.drawText("Qté", { x: 360, y, size: 10, font: bold, color: NAVY });
-  page.drawText("Total TTC", { x: 470, y, size: 10, font: bold, color: NAVY });
+  page.drawText("Description", { x: 48, y, size: 10, font: bold, color: NAVY });
+  page.drawText("Qty", { x: 360, y, size: 10, font: bold, color: NAVY });
+  page.drawText("Total", { x: 470, y, size: 10, font: bold, color: NAVY });
   y -= 8;
   page.drawLine({ start: { x: 48, y }, end: { x: 547, y }, thickness: 1, color: LINE });
   y -= 16;
@@ -95,7 +97,7 @@ export async function buildInvoicePdf(invoice: InvoiceRow) {
     const name = item.name.length > 48 ? `${item.name.slice(0, 46)}…` : item.name;
     page.drawText(name, { x: 48, y, size: 10, font, color: rgb(0.13, 0.13, 0.13) });
     page.drawText(String(item.quantity), { x: 368, y, size: 10, font, color: MUTED });
-    page.drawText(euros(item.unitPriceCents * item.quantity), {
+    page.drawText(formatMoney(item.unitPriceCents * item.quantity), {
       x: 470,
       y,
       size: 10,
@@ -108,8 +110,8 @@ export async function buildInvoicePdf(invoice: InvoiceRow) {
   y -= 8;
   page.drawLine({ start: { x: 48, y }, end: { x: 547, y }, thickness: 1, color: LINE });
   y -= 22;
-  page.drawText("Total TTC", { x: 360, y, size: 12, font: bold, color: NAVY });
-  page.drawText(euros(invoice.amountCents), { x: 450, y, size: 12, font: bold, color: NAVY });
+  page.drawText("Total", { x: 360, y, size: 12, font: bold, color: NAVY });
+  page.drawText(formatMoney(invoice.amountCents), { x: 450, y, size: 12, font: bold, color: NAVY });
 
   y -= 36;
   page.drawText(`${store.storeName} — ${store.supportEmail}`, {

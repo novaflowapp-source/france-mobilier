@@ -2,24 +2,24 @@ import { store } from "@/config/store";
 
 export const PRO_ACTIVITY_TYPES = [
   { value: "architecture", label: "Architecture" },
-  { value: "decoration", label: "Décoration intérieure" },
-  { value: "hotellerie", label: "Hôtellerie" },
-  { value: "restauration", label: "Restauration" },
-  { value: "immobilier", label: "Immobilier" },
-  { value: "commerce", label: "Commerce" },
-  { value: "bureaux", label: "Bureaux / entreprise" },
-  { value: "collectivite", label: "Collectivité" },
-  { value: "artisan", label: "Artisan" },
-  { value: "autre", label: "Autre" },
+  { value: "decoration", label: "Interior design" },
+  { value: "hotellerie", label: "Hospitality" },
+  { value: "restauration", label: "Food & beverage" },
+  { value: "immobilier", label: "Real estate" },
+  { value: "commerce", label: "Retail" },
+  { value: "bureaux", label: "Office / corporate" },
+  { value: "collectivite", label: "Public / institutional" },
+  { value: "artisan", label: "Trade / craft" },
+  { value: "autre", label: "Other" },
 ] as const;
 
 export const PRO_VOLUME_OPTIONS = [
-  { value: "under_1000", label: "Moins de 1 000 €" },
-  { value: "1000_5000", label: "1 000 à 5 000 €" },
-  { value: "5000_20000", label: "5 000 à 20 000 €" },
-  { value: "over_20000", label: "Plus de 20 000 €" },
-  { value: "one_off", label: "Projet ponctuel" },
-  { value: "unknown", label: "Je ne sais pas encore" },
+  { value: "under_1000", label: "Under $1,000" },
+  { value: "1000_5000", label: "$1,000 to $5,000" },
+  { value: "5000_20000", label: "$5,000 to $20,000" },
+  { value: "over_20000", label: "Over $20,000" },
+  { value: "one_off", label: "One-off project" },
+  { value: "unknown", label: "Not sure yet" },
 ] as const;
 
 export type ProActivityValue = (typeof PRO_ACTIVITY_TYPES)[number]["value"];
@@ -59,7 +59,7 @@ export function isProfessionalEligible(product?: { professionalEligible?: boolea
   return product?.professionalEligible !== false;
 }
 
-/** Apply an admin-set discount to TTC unit prices. Never trust a client-sent rate. */
+/** Apply an admin-set discount to unit prices. Never trust a client-sent rate. */
 export function applyServerDiscount<T extends { unitPriceCents: number; quantity: number }>(
   lines: T[],
   discount: { type: "percentage" | "fixed" | null; value: number | null } | null | undefined,

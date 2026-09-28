@@ -1,12 +1,12 @@
 export const WELCOME_PROMO = {
-  code: "BIENVENUE",
+  code: "WELCOME",
   percent: 10,
-  headline: "Code BIENVENUE −10 %",
-  shortLabel: "BIENVENUE −10 % sur la 1re commande",
-  barLabel: "Code BIENVENUE −10 %",
-  cartHint: "Code BIENVENUE : −10 % sur toute la première commande, une fois par numéro de téléphone.",
-  checkoutLine: "Code BIENVENUE : -10% sur votre première commande",
-  checkoutHref: "/paiement?code=BIENVENUE",
+  headline: "Code WELCOME −10%",
+  shortLabel: "WELCOME −10% off your first order",
+  barLabel: "Code WELCOME −10%",
+  cartHint: "Code WELCOME: 10% off your entire first order, once per phone number.",
+  checkoutLine: "Code WELCOME: 10% off your first order",
+  checkoutHref: "/checkout?code=WELCOME",
   windowMinutes: 30,
 } as const;
 
@@ -18,7 +18,8 @@ export function parsePromoCode(raw: string | null | undefined) {
 }
 
 export function isWelcomePromo(code: string | null | undefined) {
-  return parsePromoCode(code) === WELCOME_PROMO.code;
+  const parsed = parsePromoCode(code);
+  return parsed === WELCOME_PROMO.code || parsed === "BIENVENUE";
 }
 
 export function welcomeDiscount() {

@@ -20,7 +20,7 @@ const EMAIL_DOMAINS = [
 type Mode = "login" | "register";
 
 function safeNext(value: string | null) {
-  if (!value || !value.startsWith("/") || value.startsWith("//")) return "/compte";
+  if (!value || !value.startsWith("/") || value.startsWith("//")) return "/account";
   return value;
 }
 
@@ -30,22 +30,22 @@ function authErrorMessage(
 ) {
   const raw = `${error.code || ""} ${error.message || ""}`.toLowerCase();
   if (raw.includes("already_exists") || raw.includes("already exists")) {
-    return "Un compte existe déjà avec cet e-mail. Connectez-vous avec le même mot de passe.";
+    return "An account already exists with this email. Sign in with the same password.";
   }
   if (raw.includes("invalid_email_or_password") || raw.includes("invalid email or password")) {
-    return "E-mail ou mot de passe incorrect.";
+    return "Incorrect email or password.";
   }
   if (raw.includes("password_too_short") || raw.includes("too short")) {
-    return "Le mot de passe doit contenir au moins 8 caractères.";
+    return "Password must be at least 8 characters.";
   }
-  return error.message || (mode === "login" ? "Identifiants incorrects" : "Inscription impossible");
+  return error.message || (mode === "login" ? "Incorrect sign-in details" : "Could not create account");
 }
 
 function AuthFormFields({ mode }: { mode: Mode }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = safeNext(searchParams.get("next"));
-  const nextQuery = next !== "/compte" ? `?next=${encodeURIComponent(next)}` : "";
+  const nextQuery = next !== "/account" ? `?next=${encodeURIComponent(next)}` : "";
   const resetDone = searchParams.get("reset") === "1";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -89,7 +89,7 @@ function AuthFormFields({ mode }: { mode: Mode }) {
       router.push(next);
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Une erreur est survenue");
+      setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -98,20 +98,20 @@ function AuthFormFields({ mode }: { mode: Mode }) {
   return (
     <form onSubmit={onSubmit} className="mx-auto max-w-md space-y-4 rounded-2xl border border-border bg-white p-6 shadow-sm">
       <h1 className="text-2xl font-semibold tracking-tight">
-        {mode === "login" ? "Connexion" : "Créer un compte"}
+        {mode === "login" ? "Sign in" : "Create account"}
       </h1>
       <p className="text-sm text-muted">
-        Les avis produits sont réservés aux clients avec un achat vérifié. Identifiant : votre
-        e-mail.
+        Product reviews are for customers with a verified purchase. Your sign-in is your email
+        address.
       </p>
       {mode === "login" && resetDone ? (
         <p className="rounded-xl bg-cream px-4 py-3 text-sm leading-relaxed text-navy">
-          Mot de passe mis à jour. Connectez-vous avec le nouveau mot de passe.
+          Password updated. Sign in with your new password.
         </p>
       ) : null}
       {mode === "register" && (
         <label className="block text-sm">
-          <span className="mb-1 block text-muted">Nom Prénom</span>
+          <span className="mb-1 block text-muted">Full name</span>
           <input
             required
             value={name}
@@ -122,7 +122,7 @@ function AuthFormFields({ mode }: { mode: Mode }) {
         </label>
       )}
       <label className="block text-sm">
-        <span className="mb-1 block text-muted">E-mail</span>
+        <span className="mb-1 block text-muted">Email</span>
         <input
           ref={emailRef}
           required
@@ -134,7 +134,7 @@ function AuthFormFields({ mode }: { mode: Mode }) {
           className="input"
         />
       </label>
-      <div className="-mt-1 flex flex-wrap gap-2" role="group" aria-label="Domaines e-mail courants">
+      <div className="-mt-1 flex flex-wrap gap-2" role="group" aria-label="Common email domains">
         {EMAIL_DOMAINS.map((domain) => {
           const selected = email.toLowerCase().endsWith(`@${domain}`);
           return (
@@ -155,7 +155,7 @@ function AuthFormFields({ mode }: { mode: Mode }) {
         })}
       </div>
       <label className="block text-sm">
-        <span className="mb-1 block text-muted">Mot de passe</span>
+        <span className="mb-1 block text-muted">Password</span>
         <PasswordInput
           required
           minLength={8}
@@ -166,31 +166,31 @@ function AuthFormFields({ mode }: { mode: Mode }) {
       </label>
       {mode === "login" ? (
         <p className="text-sm">
-          <Link href="/mot-de-passe-oublie" className="text-accent underline-offset-2 hover:underline">
-            Mot de passe oublié ?
+          <Link href="/forgot-password" className="text-accent underline-offset-2 hover:underline">
+            Forgot password?
           </Link>
         </p>
       ) : null}
       {error && <p className="text-sm text-red-700">{error}</p>}
       <button type="submit" disabled={loading} className="btn btn-primary w-full">
-        {loading ? "Patientez…" : mode === "login" ? "Se connecter" : "Créer mon compte"}
+        {loading ? "Please wait…" : mode === "login" ? "Sign in" : "Create my account"}
       </button>
       <p className="text-center text-sm text-muted">
         {mode === "login" ? (
           <>
-            Pas encore de compte ?{" "}
+            No account yet?{" "}
             <Link
-              href={`/inscription${nextQuery}`}
+              href={`/signup${nextQuery}`}
               className="font-semibold text-navy underline underline-offset-2 decoration-navy/40 hover:decoration-navy"
             >
-              S’inscrire
+              Sign up
             </Link>
           </>
         ) : (
           <>
-            Déjà inscrit ?{" "}
-            <Link href={`/connexion${nextQuery}`} className="text-accent underline-offset-2 hover:underline">
-              Se connecter
+            Already have an account?{" "}
+            <Link href={`/login${nextQuery}`} className="text-accent underline-offset-2 hover:underline">
+              Sign in
             </Link>
           </>
         )}

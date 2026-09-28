@@ -11,12 +11,12 @@ type PlannerStatus = {
 
 function formatCount(value: number | null) {
   if (value === null) return "—";
-  return value.toLocaleString("fr-FR");
+  return value.toLocaleString("en-US");
 }
 
 function formatEur(value: number | null) {
   if (value === null) return "—";
-  return value.toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
+  return value.toLocaleString("en-US", { style: "currency", currency: "USD" });
 }
 
 function formatPct(value: number | null) {
@@ -26,9 +26,9 @@ function formatPct(value: number | null) {
 }
 
 function competitionLabel(value: KeywordMetric["competition"]) {
-  if (value === "HIGH") return "Élevée";
-  if (value === "MEDIUM") return "Moyenne";
-  if (value === "LOW") return "Faible";
+  if (value === "HIGH") return "High";
+  if (value === "MEDIUM") return "Medium";
+  if (value === "LOW") return "Low";
   return "—";
 }
 
@@ -88,13 +88,13 @@ export function AdminKeywordPlanner({
       const payload = (await response.json()) as { error?: string; results?: KeywordMetric[] };
       if (!response.ok) {
         setResults(null);
-        setError(payload.error || "La recherche a échoué.");
+        setError(payload.error || "Search failed.");
         return;
       }
       setResults(payload.results || []);
     } catch {
       setResults(null);
-      setError("Impossible de joindre l’API.");
+      setError("Could not reach the API.");
     } finally {
       setBusy(false);
     }
@@ -104,41 +104,40 @@ export function AdminKeywordPlanner({
     <div className="mt-8 space-y-6">
       {!status.configured ? (
         <section className="rounded-2xl border border-border bg-white p-5">
-          <h2 className="text-xl font-semibold tracking-tight">Brancher Google Ads</h2>
+          <h2 className="text-xl font-semibold tracking-tight">Connect Google Ads</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted">
-            Les volumes mensuels viennent du Keyword Planner officiel (même source que l’écran Google Ads).
-            Il faut un jeton développeur + OAuth, une seule fois.
+            Monthly volumes come from the official Keyword Planner (same source as the Google Ads UI).
+            You need a developer token and OAuth once.
           </p>
           <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm leading-relaxed">
             <li>
-              Ouvrez{" "}
+              Open the{" "}
               <a
                 href="https://ads.google.com/aw/apicenter"
                 className="text-navy underline-offset-2 hover:underline"
                 target="_blank"
                 rel="noreferrer"
               >
-                le centre API Google Ads
+                Google Ads API center
               </a>{" "}
-              et créez un jeton développeur (accès de base suffit pour votre compte).
+              and create a developer token (basic access is enough for your account).
             </li>
             <li>
-              Dans Google Cloud, activez « Google Ads API », créez un client OAuth de type{" "}
-              <span className="font-medium text-navy">application de bureau</span>, et ajoutez
-              l’URI <code className="rounded bg-cream px-1.5 py-0.5 text-xs">http://127.0.0.1:8765/oauth2callback</code>.
+              In Google Cloud, enable Google Ads API, create a desktop OAuth client, and add redirect URI{" "}
+              <code className="rounded bg-cream px-1.5 py-0.5 text-xs">http://127.0.0.1:8765/oauth2callback</code>.
             </li>
             <li>
-              En local : <code className="rounded bg-cream px-1.5 py-0.5 text-xs">npm run ads:oauth</code>
-              — le script affiche le refresh token.
+              Locally: <code className="rounded bg-cream px-1.5 py-0.5 text-xs">npm run ads:oauth</code>
+              — the script prints the refresh token.
             </li>
             <li>
-              Ajoutez les variables <code className="rounded bg-cream px-1.5 py-0.5 text-xs">GOOGLE_ADS_*</code>{" "}
-              en local et sur Railway. L’ID client Ads est en haut à droite du compte (xxx-xxx-xxxx).
+              Add <code className="rounded bg-cream px-1.5 py-0.5 text-xs">GOOGLE_ADS_*</code> variables locally
+              and on Railway. The Ads customer ID is at the top right of the account (xxx-xxx-xxxx).
             </li>
           </ol>
           {status.missing.length > 0 ? (
             <p className="mt-4 text-sm text-muted">
-              Variables manquantes : {status.missing.join(", ")}.
+              Missing variables: {status.missing.join(", ")}.
             </p>
           ) : null}
         </section>
@@ -148,9 +147,9 @@ export function AdminKeywordPlanner({
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <label htmlFor="keyword-list" className="text-sm font-medium text-navy">
-              Mots-clés (France, français, réseau Google)
+              Keywords (France, French, Google Search)
             </label>
-            <p className="mt-1 text-xs text-muted">Un par ligne. {count} saisi{count > 1 ? "s" : ""}.</p>
+            <p className="mt-1 text-xs text-muted">One per line. {count} entered.</p>
           </div>
           <div className="flex gap-2">
             <button
@@ -165,7 +164,7 @@ export function AdminKeywordPlanner({
               className={`btn ${mode === "ideas" ? "btn-primary" : "btn-secondary"}`}
               onClick={() => setMode("ideas")}
             >
-              Idées proches
+              Related ideas
             </button>
           </div>
         </div>
@@ -196,13 +195,13 @@ export function AdminKeywordPlanner({
         </div>
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <button type="submit" className="btn btn-primary" disabled={busy || !status.configured}>
-            {busy ? "Recherche…" : mode === "ideas" ? "Chercher des idées" : "Voir les volumes"}
+            {busy ? "Searching…" : mode === "ideas" ? "Find ideas" : "Show volumes"}
           </button>
           {!status.configured ? (
-            <p className="text-sm text-muted">La recherche s’active dès que Google Ads est configuré.</p>
+            <p className="text-sm text-muted">Search unlocks once Google Ads is configured.</p>
           ) : (
             <p className="text-sm text-muted">
-              {mode === "ideas" ? "Jusqu’à 10 graines." : "Jusqu’à 40 mots-clés exacts."}
+              {mode === "ideas" ? "Up to 10 seed keywords." : "Up to 40 exact keywords."}
             </p>
           )}
         </div>
@@ -213,25 +212,25 @@ export function AdminKeywordPlanner({
         <section className="overflow-hidden rounded-2xl border border-border bg-card">
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-5 py-3">
             <h2 className="text-sm font-medium">
-              {results.length} résultat{results.length > 1 ? "s" : ""} · 12 derniers mois complets
+              {results.length} result{results.length > 1 ? "s" : ""} · last 12 full months
             </h2>
-            <p className="text-xs text-muted">France · français · Google</p>
+            <p className="text-xs text-muted">France · French · Google</p>
           </div>
           {results.length === 0 ? (
-            <p className="px-5 py-6 text-sm text-muted">Aucun volume renvoyé pour ces termes.</p>
+            <p className="px-5 py-6 text-sm text-muted">No volume returned for these terms.</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full min-w-[52rem] text-left text-sm">
                 <thead className="border-b border-border bg-background/60">
                   <tr>
-                    <th className="px-5 py-3 font-medium">Mot-clé</th>
-                    <th className="px-5 py-3 font-medium">Recherches / mois</th>
-                    <th className="px-5 py-3 font-medium">12 mois</th>
-                    <th className="px-5 py-3 font-medium">3 mois</th>
-                    <th className="px-5 py-3 font-medium">N-1</th>
-                    <th className="px-5 py-3 font-medium">Concurrence</th>
-                    <th className="px-5 py-3 font-medium">Enchère bas</th>
-                    <th className="px-5 py-3 font-medium">Enchère haut</th>
+                    <th className="px-5 py-3 font-medium">Keyword</th>
+                    <th className="px-5 py-3 font-medium">Searches / month</th>
+                    <th className="px-5 py-3 font-medium">12 months</th>
+                    <th className="px-5 py-3 font-medium">3 months</th>
+                    <th className="px-5 py-3 font-medium">YoY</th>
+                    <th className="px-5 py-3 font-medium">Competition</th>
+                    <th className="px-5 py-3 font-medium">Low bid</th>
+                    <th className="px-5 py-3 font-medium">High bid</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -240,7 +239,7 @@ export function AdminKeywordPlanner({
                       <td className="px-5 py-3">
                         <p className="font-medium">{row.keyword}</p>
                         {row.closeVariants.length > 0 ? (
-                          <p className="text-xs text-muted">dont {row.closeVariants.join(", ")}</p>
+                          <p className="text-xs text-muted">incl. {row.closeVariants.join(", ")}</p>
                         ) : null}
                       </td>
                       <td className="px-5 py-3 font-medium">{formatCount(row.avgMonthlySearches)}</td>
@@ -271,7 +270,7 @@ export function AdminKeywordPlanner({
       ) : null}
 
       <p className="text-sm text-muted">
-        Retour : <Link href="/admin" className="underline">admin</Link>
+        Back: <Link href="/admin" className="underline">admin</Link>
       </p>
     </div>
   );

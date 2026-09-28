@@ -24,7 +24,7 @@ const schema = z.object({
 export async function GET() {
   await prepareAuth();
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user) return NextResponse.json({ error: "Connexion requise" }, { status: 401 });
+  if (!session?.user) return NextResponse.json({ error: "Sign in required" }, { status: 401 });
   const quotes = await listQuotesForUser(session.user.id);
   return NextResponse.json({ quotes });
 }
@@ -32,14 +32,14 @@ export async function GET() {
 export async function POST(request: Request) {
   await prepareAuth();
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user) return NextResponse.json({ error: "Connexion requise" }, { status: 401 });
+  if (!session?.user) return NextResponse.json({ error: "Sign in required" }, { status: 401 });
   const pro = await getProAccessByUserId(session.user.id);
   if (!isProApproved(pro)) {
-    return NextResponse.json({ error: "L’accès professionnel doit être activé pour demander un devis." }, { status: 403 });
+    return NextResponse.json({ error: "Trade access must be approved before requesting a quote." }, { status: 403 });
   }
   const parsed = schema.safeParse(await request.json());
   if (!parsed.success) {
-    return NextResponse.json({ error: "Vérifiez la demande de devis." }, { status: 400 });
+    return NextResponse.json({ error: "Check your quote request." }, { status: 400 });
   }
   try {
     const quote = await createQuoteRequest({

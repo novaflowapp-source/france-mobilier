@@ -25,23 +25,23 @@ export default async function MerchantReadinessPage() {
           Admin
         </Link>
       </p>
-      <h1 className="mt-3 text-3xl font-semibold tracking-tight">Préparation Merchant Center</h1>
+      <h1 className="mt-3 text-3xl font-semibold tracking-tight">Merchant Center readiness</h1>
       <p className="mt-2 max-w-2xl text-sm text-muted">
-        Contrôles internes. Merchant-ready selon ces contrôles — pas une garantie d’approbation
-        Google. {admin ? "" : "Connectez-vous pour le détail commandes ; ce diagnostic n’expose aucun secret."}
+        Internal checks. “Merchant-ready” here does not guarantee Google approval.{" "}
+        {admin ? "" : "Sign in for order detail; this report exposes no secrets."}
       </p>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
         <div className="rounded-2xl border border-border bg-card p-5">
-          <p className="text-sm text-muted">Global</p>
-          <p className="mt-1 text-2xl font-semibold">{report.globalReady ? "Prêt" : "Bloqué"}</p>
+          <p className="text-sm text-muted">Overall</p>
+          <p className="mt-1 text-2xl font-semibold">{report.globalReady ? "Ready" : "Blocked"}</p>
         </div>
         <div className="rounded-2xl border border-border bg-card p-5">
-          <p className="text-sm text-muted">Produits vendables</p>
+          <p className="text-sm text-muted">Sellable products</p>
           <p className="mt-1 text-2xl font-semibold">{report.sellableCount}</p>
         </div>
         <div className="rounded-2xl border border-border bg-card p-5">
-          <p className="text-sm text-muted">Offres merchant-ready</p>
+          <p className="text-sm text-muted">Merchant-ready offers</p>
           <p className="mt-1 text-2xl font-semibold">{report.merchantReadyCount}</p>
         </div>
       </div>
@@ -62,7 +62,7 @@ export default async function MerchantReadinessPage() {
       </section>
 
       <section className="mt-10">
-        <h2 className="text-xl font-semibold">Produits vendables</h2>
+        <h2 className="text-xl font-semibold">Sellable products</h2>
         <div className="mt-4 space-y-6">
           {report.products
             .filter((row) => row.purchasable)
@@ -70,7 +70,7 @@ export default async function MerchantReadinessPage() {
               <article key={row.id} className="rounded-2xl border border-border bg-white p-5">
                 <h3 className="font-medium text-navy">{row.name}</h3>
                 <p className="text-sm text-muted">
-                  {row.slug} · {row.offers} offre{row.offers > 1 ? "s" : ""} ·{" "}
+                  {row.slug} · {row.offers} offer{row.offers > 1 ? "s" : ""} ·{" "}
                   {row.ready ? "MERCHANT READY" : "NOT MERCHANT READY"}
                 </p>
                 <ul className="mt-3 space-y-1 text-sm">

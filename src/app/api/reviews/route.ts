@@ -17,7 +17,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const productId = searchParams.get("productId");
   if (!productId) {
-    return NextResponse.json({ error: "productId requis" }, { status: 400 });
+    return NextResponse.json({ error: "productId required" }, { status: 400 });
   }
   const reviews = await listApprovedReviews(productId);
   return NextResponse.json({ reviews });
@@ -27,12 +27,12 @@ export async function POST(request: Request) {
   await prepareAuth();
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) {
-    return NextResponse.json({ error: "Connexion requise" }, { status: 401 });
+    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
   }
 
   const parsed = createSchema.safeParse(await request.json());
   if (!parsed.success) {
-    return NextResponse.json({ error: "Données invalides" }, { status: 400 });
+    return NextResponse.json({ error: "Invalid data" }, { status: 400 });
   }
 
   try {
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
     const message = error instanceof Error ? error.message : "Erreur";
     if (message === "AVIS_NOM_REQUIS") {
       return NextResponse.json(
-        { error: "Indiquez le nom sous lequel publier l’avis." },
+        { error: "Enter the name to show with your review." },
         { status: 400 },
       );
     }
@@ -57,23 +57,23 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error:
-            "Les avis sont réservés aux achats vérifiés. Après votre commande livrée, vous pourrez laisser un commentaire.",
+            "Reviews are limited to verified purchases. After your order is delivered, you can leave a comment.",
         },
         { status: 403 },
       );
     }
     if (message === "AVIS_EN_ATTENTE") {
       return NextResponse.json(
-        { error: "Votre avis est déjà en attente de validation." },
+        { error: "Your review is already awaiting approval." },
         { status: 409 },
       );
     }
     if (message === "AVIS_DEJA_PUBLIE") {
       return NextResponse.json(
-        { error: "Vous avez déjà un avis en ligne pour ce produit." },
+        { error: "You already have a published review for this product." },
         { status: 409 },
       );
     }
-    return NextResponse.json({ error: "Impossible d’enregistrer l’avis" }, { status: 500 });
+    return NextResponse.json({ error: "Could not save the review" }, { status: 500 });
   }
 }

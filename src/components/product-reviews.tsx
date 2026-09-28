@@ -16,7 +16,7 @@ export type ReviewItem = {
 
 function Stars({ value }: { value: number }) {
   return (
-    <span className="product-review-stars" aria-label={`${value} sur 5`}>
+    <span className="product-review-stars" aria-label={`${value} out of 5`}>
       {"★".repeat(value)}
       <span className="text-border">{"★".repeat(5 - value)}</span>
     </span>
@@ -32,7 +32,7 @@ function VerifiedPurchaseMark() {
         alt=""
         aria-hidden="true"
       />
-      <span>Achat vérifié</span>
+      <span>Verified purchase</span>
     </div>
   );
 }
@@ -80,12 +80,12 @@ export function ProductReviews({
         body: JSON.stringify({ productId, rating, title, body, displayName }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Envoi impossible");
-      setMessage("Merci — votre avis a bien été envoyé. Il sera publié après validation.");
+      if (!res.ok) throw new Error(data.error || "Could not submit review");
+      setMessage("Thanks — your review was sent. It will appear after moderation.");
       setTitle("");
       setBody("");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur");
+      setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -95,13 +95,13 @@ export function ProductReviews({
     <section id="avis" className="section product-reviews border-t border-border">
       <div className="container-page">
       <div className="product-reviews-header">
-        <h2 className="display text-3xl text-navy">Avis clients</h2>
+        <h2 className="display text-3xl text-navy">Customer reviews</h2>
         {average !== null && (
           <p className="product-reviews-summary">
             <Stars value={Math.round(average)} />
             <span>
-              {average.toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} / 5 ·{" "}
-              {reviews.length} avis
+              {average.toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} / 5 ·{" "}
+              {reviews.length} {reviews.length === 1 ? "review" : "reviews"}
             </span>
           </p>
         )}
@@ -109,7 +109,7 @@ export function ProductReviews({
 
       {reviews.length === 0 ? (
         <p className="text-sm text-muted">
-          Aucun avis pour le moment.
+          No reviews yet.
         </p>
       ) : (
         <ul className="product-reviews-list">
@@ -122,7 +122,7 @@ export function ProductReviews({
                 <p className="product-review-meta">
                   <span className="product-review-author">{item.authorName}</span>
                   {" · "}
-                  {new Date(item.createdAt).toLocaleDateString("fr-FR", {
+                  {new Date(item.createdAt).toLocaleDateString("en-US", {
                     day: "numeric",
                     month: "long",
                     year: "numeric",
@@ -141,16 +141,16 @@ export function ProductReviews({
       )}
 
       <div className="product-review-compose">
-        <h3>Laisser un avis</h3>
+        <h3>Write a review</h3>
         {!session?.user ? (
           <div className="product-review-compose-copy">
-            <p>Connectez-vous pour partager votre expérience. Le badge « Achat vérifié » n’apparaît qu’après une commande de ce produit.</p>
-            <Link href="/connexion">Se connecter →</Link>
+            <p>Sign in to share your experience. The “Verified purchase” badge appears only after you buy this product.</p>
+            <Link href="/login">Sign in →</Link>
           </div>
         ) : (
           <form onSubmit={onSubmit} className="mt-4 space-y-3">
             <label className="block text-sm">
-              <span className="mb-1 block text-muted">Nom affiché</span>
+              <span className="mb-1 block text-muted">Display name</span>
               <input
                 required
                 minLength={2}
@@ -159,11 +159,11 @@ export function ProductReviews({
                 onChange={(e) => setDisplayName(e.target.value)}
                 className="input"
                 autoComplete="nickname"
-                placeholder="Prénom ou pseudo"
+                placeholder="First name or nickname"
               />
             </label>
             <label className="block text-sm">
-              <span className="mb-1 block text-muted">Note</span>
+              <span className="mb-1 block text-muted">Rating</span>
               <select
                 value={rating}
                 onChange={(e) => setRating(Number(e.target.value))}
@@ -177,7 +177,7 @@ export function ProductReviews({
               </select>
             </label>
             <label className="block text-sm">
-              <span className="mb-1 block text-muted">Titre (optionnel)</span>
+              <span className="mb-1 block text-muted">Title (optional)</span>
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -185,7 +185,7 @@ export function ProductReviews({
               />
             </label>
             <label className="block text-sm">
-              <span className="mb-1 block text-muted">Votre commentaire</span>
+              <span className="mb-1 block text-muted">Your review</span>
               <textarea
                 required
                 minLength={10}
@@ -198,7 +198,7 @@ export function ProductReviews({
             {error && <p className="text-sm text-red-700">{error}</p>}
             {message && <p className="text-sm text-accent">{message}</p>}
             <button type="submit" disabled={loading} className="btn btn-primary w-full sm:w-auto">
-              {loading ? "Envoi…" : "Envoyer mon avis"}
+              {loading ? "Sending…" : "Submit review"}
             </button>
           </form>
         )}

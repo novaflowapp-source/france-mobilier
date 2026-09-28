@@ -59,11 +59,11 @@ const schema = z
     const postalCode = normalizeShippingPostal(data.country, data.postalCode);
     const phone = normalizeZonePhone(data.phone, data.country);
     if (!postalCode) {
-      ctx.addIssue({ code: "custom", path: ["postalCode"], message: "Code postal invalide" });
+      ctx.addIssue({ code: "custom", path: ["postalCode"], message: "Invalid ZIP code" });
       return z.NEVER;
     }
     if (!phone) {
-      ctx.addIssue({ code: "custom", path: ["phone"], message: "Téléphone invalide" });
+      ctx.addIssue({ code: "custom", path: ["phone"], message: "Invalid phone number" });
       return z.NEVER;
     }
     return { ...data, postalCode, phone };
@@ -154,7 +154,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   if (!isCheckoutEnabled()) {
     return NextResponse.json(
-      { error: "Le paiement n’est pas encore ouvert." },
+      { error: "Checkout is not open yet." },
       { status: 503 },
     );
   }
@@ -162,15 +162,13 @@ export async function POST(request: Request) {
   const parsed = schema.safeParse(await request.json());
   if (!parsed.success) {
     const paths = new Set(parsed.error.issues.flatMap((issue) => issue.path.map(String)));
-    let error = "Vérifiez les informations de livraison.";
+    let error = "Check your shipping details.";
     if (paths.has("phone")) {
-      error =
-        "Indiquez un numéro valide de la zone de livraison (France, Belgique, Luxembourg, Monaco ou Suisse).";
+      error = "Enter a valid U.S. phone number.";
     } else if (paths.has("postalCode")) {
-      error = "Code postal invalide pour le pays choisi.";
+      error = "Enter a valid ZIP code in the contiguous United States.";
     } else if (paths.has("country")) {
-      error =
-        "Livraison uniquement en France métropolitaine, Belgique, Luxembourg, Monaco et Suisse.";
+      error = "We only ship to the contiguous United States.";
     }
     return NextResponse.json({ error }, { status: 400 });
   }
@@ -246,7 +244,7 @@ export async function POST(request: Request) {
     }
     const checkoutSession = await stripe.checkout.sessions.create({
       mode: "payment",
-      locale: "fr",
+      locale: "en",
       billing_address_collection: "auto",
       ...(customerId ? { customer: customerId } : { customer_email: email }),
       client_reference_id: orderId,
@@ -257,8 +255,8 @@ export async function POST(request: Request) {
         ...(siren ? { siren } : {}),
         ...(promo.promoCode ? { promoCode: promo.promoCode } : {}),
       },
-      success_url: `${siteUrl}/commande/confirmation?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${siteUrl}/paiement`,
+      success_url: `${siteUrl}/order/confirmation?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${siteUrl}/checkout`,
       after_expiration: {
         recovery: { enabled: true },
       },
@@ -266,16 +264,16 @@ export async function POST(request: Request) {
         submit: {
           message:
             proActive && companyName && siren
-              ? `Commande professionnelle — ${companyName} (SIREN ${siren}). Les prix restent TTC.`
-              : promo.promoCode
-                ? `Code ${promo.promoCode} appliqué sur toute la commande. Paiement sécurisé. Livraison offerte.`
-                : "Paiement sécurisé. Livraison offerte. Si vous quittez cette page, un lien de reprise vous sera envoyé.",
+              ? `Trade order — ${companyName} (SIREN ${siren}). Prices are in USD.`
+                : promo.promoCode
+                ? `Code ${promo.promoCode} applied to the whole order. Secure payment. Free shipping.`
+                : "Secure payment. Free shipping. If you leave this page, a recovery link will be emailed to you.",
         },
       },
       line_items: lines.map((line) => ({
         quantity: line.quantity,
         price_data: {
-          currency: "eur",
+          currency: "usd",
           unit_amount: line.unitPriceCents,
           product_data: {
             name: line.name,
@@ -306,7 +304,7 @@ export async function POST(request: Request) {
     });
 
     if (!checkoutSession.url) {
-      return NextResponse.json({ error: "Impossible d’ouvrir Stripe." }, { status: 502 });
+      return NextResponse.json({ error: "Could not open Stripe." }, { status: 502 });
     }
     await attachStripeSession(orderId, checkoutSession.id);
     try {
@@ -324,17 +322,17 @@ export async function POST(request: Request) {
     if (error instanceof PromoError) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
-    const message = error instanceof Error ? error.message : "Erreur";
+    const message = error instanceof Error ? error.message : "Error";
     const map: Record<string, string> = {
-      PANIER_VIDE: "Votre panier est vide.",
-      QUANTITE_INVALIDE: "Quantité invalide.",
-      PRODUIT_INTROUVABLE: "Un article du panier n’est plus disponible.",
-      PRODUIT_INDISPONIBLE: "Un article du panier n’est plus en vente.",
-      VARIANTE_INTROUVABLE: "Une variante du panier n’est plus disponible.",
-      MONTANT_INVALIDE: "Le montant de la commande est invalide.",
+      PANIER_VIDE: "Your cart is empty.",
+      QUANTITE_INVALIDE: "Invalid quantity.",
+      PRODUIT_INTROUVABLE: "An item in your cart is no longer available.",
+      PRODUIT_INDISPONIBLE: "An item in your cart is no longer for sale.",
+      VARIANTE_INTROUVABLE: "A variant in your cart is no longer available.",
+      MONTANT_INVALIDE: "The order amount is invalid.",
     };
     return NextResponse.json(
-      { error: map[message] || "Impossible de préparer le paiement." },
+      { error: map[message] || "Could not prepare payment." },
       { status: 400 },
     );
   }

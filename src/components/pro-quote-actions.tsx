@@ -44,11 +44,10 @@ export function ProQuoteActions({
     <div className="space-y-3">
       {cartTotalEuros && cartTotalEuros >= threshold ? (
         <p className="text-sm text-navy">
-          Vous préparez une commande importante ? Demandez un devis personnalisé à France Mobilier
-          Pro.
+          Placing a large order? Request a custom quote from France Mobilier Pro.
         </p>
       ) : (
-        <p className="text-sm text-muted">Besoin de plusieurs unités ? Demandez un devis.</p>
+        <p className="text-sm text-muted">Need several units? Request a quote.</p>
       )}
       <QuoteRequestForm
         source={product ? "product" : "cart"}

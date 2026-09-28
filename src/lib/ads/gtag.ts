@@ -52,7 +52,7 @@ export function trackPurchaseConversion(input: {
     send_to: GOOGLE_ADS_PURCHASE_SEND_TO,
     transaction_id: transactionId,
     value: Math.round(input.valueEur * 100) / 100,
-    currency: "EUR",
+    currency: "USD",
     ...(typeof input.newCustomer === "boolean" ? { new_customer: input.newCustomer } : {}),
   });
 }
@@ -65,7 +65,7 @@ export function trackAddToCart(input: {
 }) {
   if (typeof window === "undefined" || typeof window.gtag !== "function") return;
   window.gtag("event", "add_to_cart", {
-    currency: "EUR",
+    currency: "USD",
     value: Math.round(input.priceEur * input.quantity * 100) / 100,
     items: [
       {
@@ -81,7 +81,7 @@ export function trackAddToCart(input: {
 export function trackViewItem(input: { productId: string; productName: string; priceEur: number }) {
   if (typeof window === "undefined" || typeof window.gtag !== "function") return;
   window.gtag("event", "view_item", {
-    currency: "EUR",
+    currency: "USD",
     value: Math.round(input.priceEur * 100) / 100,
     items: [
       {
@@ -98,7 +98,7 @@ export function trackBeginCheckout(input: { valueEur: number; itemCount: number 
   if (input.itemCount < 1) return;
   const value = Math.round(input.valueEur * 100) / 100;
   window.gtag("event", "begin_checkout", {
-    currency: "EUR",
+    currency: "USD",
     value,
     items: [{ quantity: input.itemCount }],
   });
@@ -112,6 +112,6 @@ export function trackBeginCheckout(input: { valueEur: number; itemCount: number 
   window.gtag("event", "conversion", {
     send_to: GOOGLE_ADS_BEGIN_CHECKOUT_SEND_TO,
     value,
-    currency: "EUR",
+    currency: "USD",
   });
 }

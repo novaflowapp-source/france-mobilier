@@ -1,3 +1,4 @@
+import { store } from "@/config/store";
 import { formatPublicAddress, getBusinessIdentity } from "@/lib/business/identity";
 import { getReturnPolicy, getShippingPolicy, merchantFeedEnabled, merchantLaunchMode } from "@/lib/business/policies";
 import {
@@ -29,30 +30,30 @@ function check(id: string, level: CheckLevel, label: string, detail: string): Me
 export function businessChecks(): MerchantCheck[] {
   const identity = getBusinessIdentity();
   const checks: MerchantCheck[] = [
-    check("BUSINESS_NAME", "PASS", "Enseigne", identity.storeName),
-    check("BUSINESS_LEGAL_NAME", "PASS", "Raison sociale", `${identity.legalName} (${identity.legalForm})`),
-    check("BUSINESS_RELATIONSHIP", "PASS", "Lien enseigne / société", identity.relationship),
-    check("BUSINESS_SIRET", "PASS", "Immatriculation", identity.registration),
-    check("BUSINESS_EMAIL", "PASS", "E-mail", identity.email),
+    check("BUSINESS_NAME", "PASS", "Store name", identity.storeName),
+    check("BUSINESS_LEGAL_NAME", "PASS", "Legal name", `${identity.legalName} (${identity.legalForm})`),
+    check("BUSINESS_RELATIONSHIP", "PASS", "Store / company link", identity.relationship),
+    check("BUSINESS_SIRET", "PASS", "Registration", identity.registration),
+    check("BUSINESS_EMAIL", "PASS", "Email", identity.email),
     identity.streetAddress
-      ? check("BUSINESS_STREET_ADDRESS", "PASS", "Adresse", formatPublicAddress(identity))
+      ? check("BUSINESS_STREET_ADDRESS", "PASS", "Address", formatPublicAddress(identity))
       : check(
           "BUSINESS_STREET_ADDRESS_MISSING",
           "BLOCKER",
-          "Adresse",
-          "Rue manquante. Renseigner BUSINESS_STREET_ADDRESS (adresse légale exacte).",
+          "Address",
+          "Street missing. Set BUSINESS_STREET_ADDRESS (exact legal address).",
         ),
     identity.phone
-      ? check("BUSINESS_PHONE", "PASS", "Téléphone", identity.phone)
+      ? check("BUSINESS_PHONE", "PASS", "Phone", identity.phone)
       : check(
           "BUSINESS_PHONE_MISSING",
           "BLOCKER",
-          "Téléphone",
-          "Numéro manquant. Renseigner BUSINESS_PHONE.",
+          "Phone",
+          "Number missing. Set BUSINESS_PHONE.",
         ),
     identity.vatNumber
-      ? check("BUSINESS_VAT", "PASS", "TVA", identity.vatNumber)
-      : check("BUSINESS_VAT", "WARNING", "TVA", "Numéro de TVA non renseigné — normal si non assujetti, à confirmer."),
+      ? check("BUSINESS_VAT", "PASS", "VAT", identity.vatNumber)
+      : check("BUSINESS_VAT", "WARNING", "VAT", "VAT number not set — OK if not registered; confirm."),
   ];
   return checks;
 }
@@ -60,36 +61,36 @@ export function businessChecks(): MerchantCheck[] {
 export function returnChecks(): MerchantCheck[] {
   const policy = getReturnPolicy();
   return [
-    check("RETURN_WINDOW", "PASS", "Délai de rétractation", `${policy.returnWindowDays} jours après réception`),
-    check("RETURN_METHOD", "PASS", "Méthode", "Demande par e-mail, puis instructions de renvoi"),
+    check("RETURN_WINDOW", "PASS", "Return window", `${policy.returnWindowDays} days after delivery`),
+    check("RETURN_METHOD", "PASS", "Method", "Request by email, then return instructions"),
     check(
       "REFUND_PROCESSING",
       "PASS",
-      "Remboursement",
-      `${policy.refundProcessingMinDays}–${policy.refundProcessingMaxDays} jours après réception du retour ou preuve d’expédition (délai légal)`,
+      "Refunds",
+      `${policy.refundProcessingMinDays}–${policy.refundProcessingMaxDays} days after we receive the return or proof of shipment`,
     ),
     policy.returnShippingCostResponsibility
       ? check(
           "RETURN_COST",
           "PASS",
-          "Frais de retour",
+          "Return shipping",
           policy.returnShippingCostResponsibility === "seller"
-            ? "À la charge de France Mobilier"
-            : "À la charge du client, sauf produit défectueux ou erreur de livraison",
+            ? "Paid by France Mobilier"
+            : "Paid by customer except defective items or delivery errors",
         )
       : check(
           "RETURN_COST_POLICY_MISSING",
           "BLOCKER",
-          "Frais de retour",
-          "Renseigner RETURN_SHIPPING_PAID_BY=customer ou seller.",
+          "Return shipping",
+          "Set RETURN_SHIPPING_PAID_BY=customer or seller.",
         ),
     policy.returnAddress
-      ? check("RETURN_ADDRESS", "PASS", "Adresse de retour", policy.returnAddress)
+      ? check("RETURN_ADDRESS", "PASS", "Return address", policy.returnAddress)
       : check(
           "RETURN_ADDRESS_MISSING",
           "WARNING",
-          "Adresse de retour",
-          "Les retours sont organisés après contact. Ajouter RETURN_ADDRESS si une adresse fixe existe.",
+          "Return address",
+          "Returns are arranged after contact. Add RETURN_ADDRESS if a fixed address exists.",
         ),
   ];
 }
@@ -98,19 +99,19 @@ export function shippingChecks(): MerchantCheck[] {
   const shipping = getShippingPolicy();
   const profile = getDefaultDeliveryProfile();
   return [
-    check("SHIPPING_ZONE", "PASS", "Zones site", shipping.zoneLabel),
-    check("SHIPPING_FR_COST", "PASS", "Frais France", `${shipping.shippingCostEur.toFixed(2)} EUR`),
+    check("SHIPPING_ZONE", "PASS", "Site zones", shipping.zoneLabel),
+    check("SHIPPING_FR_COST", "PASS", "Shipping cost", `${shipping.shippingCostUsd.toFixed(2)} ${store.currency}`),
     check(
       "MERCHANT_COUNTRIES",
       "PASS",
-      "Cible Merchant",
-      `Frais 0 € et délais pour ${shipping.merchantTargetCountries.join(", ")}`,
+      "Merchant target",
+      `$0 shipping and lead times for ${shipping.merchantTargetCountries.join(", ")}`,
     ),
     check(
       "HANDLING_TRANSIT_SPLIT",
       "PASS",
-      "Délais structurés",
-      `Préparation ${profile.handlingMinBusinessDays} j ouvrés (1 semaine), acheminement ${profile.transitMinBusinessDays} j ouvrés`,
+      "Structured lead times",
+      `Handling ${profile.handlingMinBusinessDays} business days (~1 week), transit ${profile.transitMinBusinessDays} business days`,
     ),
   ];
 }
@@ -118,17 +119,17 @@ export function shippingChecks(): MerchantCheck[] {
 export function checkoutChecks(): MerchantCheck[] {
   return [
     isCheckoutEnabled()
-      ? check("CHECKOUT", "PASS", "Checkout", stripeMode() === "live" ? "Stripe live ouvert" : "Stripe test ouvert")
+      ? check("CHECKOUT", "PASS", "Checkout", stripeMode() === "live" ? "Stripe live enabled" : "Stripe test enabled")
       : merchantLaunchMode()
         ? check(
             "CHECKOUT_DISABLED",
             "WARNING",
             "Checkout",
-            "Paiement non ouvert — le flux Merchant reste publié en pré-lancement.",
+            "Checkout closed — Merchant feed may still publish in pre-launch mode.",
           )
-        : check("CHECKOUT_DISABLED", "BLOCKER", "Checkout", "Le paiement n’est pas ouvert."),
-    check("GUEST_CHECKOUT", "PASS", "Compte", "Aucun compte obligatoire avant le paiement"),
-    check("CHECKOUT_CURRENCY", "PASS", "Prix", "EUR TTC, livraison offerte dans la zone"),
+        : check("CHECKOUT_DISABLED", "BLOCKER", "Checkout", "Checkout is not open."),
+    check("GUEST_CHECKOUT", "PASS", "Account", "No account required before payment"),
+    check("CHECKOUT_CURRENCY", "PASS", "Pricing", `${store.currency}, free shipping in zone`),
   ];
 }
 
@@ -140,50 +141,50 @@ export function productChecks(product: Product): MerchantCheck[] {
   const flagged = product.imageAssets?.some((asset) => asset.issues?.length);
   const checks: MerchantCheck[] = [
     product.availabilityStatus === "available"
-      ? check("PURCHASABLE", "PASS", "Achat", "Disponible à la commande")
-      : check("NOT_PURCHASABLE", "BLOCKER", "Achat", "Non achetable — exclu du feed"),
+      ? check("PURCHASABLE", "PASS", "Purchase", "Available to order")
+      : check("NOT_PURCHASABLE", "BLOCKER", "Purchase", "Not purchasable — excluded from feed"),
     price.amount > 0
-      ? check("PRICE", "PASS", "Prix", `${price.amount.toFixed(2)} EUR TTC`)
-      : check("PRICE_MISSING", "BLOCKER", "Prix", "Prix public manquant"),
+      ? check("PRICE", "PASS", "Price", `${price.amount.toFixed(2)} ${store.currency}`)
+      : check("PRICE_MISSING", "BLOCKER", "Price", "Public price missing"),
     !isMerchantSaleEligible(product)
-      ? check("SALE", "PASS", "Promotion", "Aucun prix barré publié (pas d’historique 30 jours)")
-      : check("SALE_HISTORY", "WARNING", "Promotion", "Promo affichée — vérifier l’historique"),
+      ? check("SALE", "PASS", "Promotion", "No strikethrough price (no 30-day history)")
+      : check("SALE_HISTORY", "WARNING", "Promotion", "Sale shown — verify price history"),
     image
       ? check("IMAGE", "PASS", "Image", image)
-      : check("IMAGE_MISSING", "BLOCKER", "Image", "Image principale manquante"),
+      : check("IMAGE_MISSING", "BLOCKER", "Image", "Primary image missing"),
     flagged
-      ? check("IMAGE_ISSUES", "WARNING", "Qualité image", "Au moins une image a un signal fournisseur (filigrane, texte, etc.)")
-      : check("IMAGE_CLEAN", "PASS", "Qualité image", "Pas de signal d’image marqué"),
+      ? check("IMAGE_ISSUES", "WARNING", "Image quality", "At least one image has a supplier flag (watermark, text, etc.)")
+      : check("IMAGE_CLEAN", "PASS", "Image quality", "No flagged image issues"),
     identifiers.identifierExists
       ? check(
           "IDENTIFIERS",
           identifiers.gtin || identifiers.mpn ? "PASS" : "WARNING",
-          "Identifiants",
-          [identifiers.brand, identifiers.gtin, identifiers.mpn].filter(Boolean).join(" · ") || "Marque seule",
+          "Identifiers",
+          [identifiers.brand, identifiers.gtin, identifiers.mpn].filter(Boolean).join(" · ") || "Brand only",
         )
       : check(
           "IDENTIFIER_EXISTS_NO",
           "WARNING",
-          "Identifiants",
-          "identifier_exists=no — aucun GTIN/MPN/marque fabricant connu. Ne pas inventer.",
+          "Identifiers",
+          "identifier_exists=no — no known GTIN/MPN/manufacturer brand. Do not invent.",
         ),
     delivery.structured
-      ? check("SHIPPING_PROFILE", "PASS", "Délais", "Préparation et acheminement renseignés")
+      ? check("SHIPPING_PROFILE", "PASS", "Lead times", "Handling and transit set")
       : check(
           "HANDLING_MAX_MISSING",
           "BLOCKER",
-          "Délais Merchant",
+          "Merchant lead times",
           delivery.overallMinDays
-            ? `Délai global connu (${delivery.overallMinDays} j) mais handling/transit non séparés.`
-            : "Aucun délai structuré.",
+            ? `Overall lead time known (${delivery.overallMinDays} d) but handling/transit not split.`
+            : "No structured lead times.",
         ),
     delivery.madeToOrder && !delivery.customizedForCustomer
-      ? check("MADE_TO_ORDER", "PASS", "Fabrication", "Fabriqué à la commande, modèle standard, retour possible")
-      : check("CUSTOM", delivery.customizedForCustomer ? "WARNING" : "PASS", "Personnalisation", "Non personnalisé"),
+      ? check("MADE_TO_ORDER", "PASS", "Production", "Made to order, standard model, returnable")
+      : check("CUSTOM", delivery.customizedForCustomer ? "WARNING" : "PASS", "Customization", "Not customized"),
     schemaAvailability(product) === "https://schema.org/InStock" ||
     product.availabilityStatus !== "available"
-      ? check("AVAILABILITY", "PASS", "Disponibilité schema", feedAvailability(product))
-      : check("AVAILABILITY_MISMATCH", "BLOCKER", "Disponibilité", "Incohérence schema / stock"),
+      ? check("AVAILABILITY", "PASS", "Schema availability", feedAvailability(product))
+      : check("AVAILABILITY_MISMATCH", "BLOCKER", "Availability", "Schema / stock mismatch"),
   ];
   return checks;
 }

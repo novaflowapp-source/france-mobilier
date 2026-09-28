@@ -13,8 +13,8 @@ import type { Product, ProductVariant } from "@/lib/types/commerce";
 
 function GoToCartButton() {
   return (
-    <Link href="/panier" className="product-go-to-cart btn btn-secondary min-h-12 w-full text-base">
-      Aller au panier
+    <Link href="/cart" className="product-go-to-cart btn btn-secondary min-h-12 w-full text-base">
+      Go to cart
     </Link>
   );
 }
@@ -117,7 +117,7 @@ export function ProductBuyBox({
     <>
       <div className="space-y-4">
         <label className="flex items-center gap-3 text-sm text-muted">
-          Quantité
+          Quantity
           <input
             type="number"
             min={1}
@@ -129,14 +129,14 @@ export function ProductBuyBox({
         <WelcomeOfferNote snake={false} />
         <div className="product-add-to-cart-stack">
           <button type="button" className="btn btn-primary min-h-12 w-full text-base" onClick={add}>
-            {added ? "Ajouté au panier" : "Ajouter au panier"}
+            {added ? "Added to cart" : "Add to cart"}
           </button>
           <GoToCartSlot visible={cartLinkVisible} emerging={cartLinkEmerging} gapClassName="pt-4" />
         </div>
         <ProQuoteActions product={product} variant={variant} quantity={quantity} />
         <ProductTrustBar />
         <p className="text-xs text-muted">
-          Une question ? {store.supportEmail} — {store.supportHoursShort}.
+          Questions? {store.supportEmail} — {store.supportHoursShort}.
         </p>
       </div>
       <div
@@ -146,7 +146,7 @@ export function ProductBuyBox({
       >
         <WelcomeOfferNote compact snake={false} className="mb-2" />
         <button type="button" className="btn btn-primary min-h-12 w-full" onClick={add}>
-          {added ? "Ajouté au panier" : "Ajouter au panier"}
+          {added ? "Added to cart" : "Add to cart"}
         </button>
         <GoToCartSlot visible={cartLinkVisible} emerging={cartLinkEmerging} gapClassName="pt-2" />
       </div>

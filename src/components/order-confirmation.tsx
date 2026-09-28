@@ -80,15 +80,15 @@ export function OrderConfirmation() {
   }, [searchParams, clear]);
 
   if (state === "loading") {
-    return <p className="text-muted">Confirmation du paiement…</p>;
+    return <p className="text-muted">Confirming payment…</p>;
   }
 
   if (state === "error") {
     return (
       <div>
-        <p className="text-muted">Nous n’avons pas pu confirmer ce paiement.</p>
-        <Link href="/paiement" className="btn btn-primary mt-6 inline-flex">
-          Retour à la commande
+        <p className="text-muted">We couldn’t confirm this payment.</p>
+        <Link href="/checkout" className="btn btn-primary mt-6 inline-flex">
+          Back to checkout
         </Link>
       </div>
     );
@@ -105,9 +105,9 @@ export function OrderConfirmation() {
         line1: order.line1,
         postalCode: order.postalCode,
         city: order.city,
-        country: order.country || "FR",
+        country: order.country || "US",
         amountCents: order.amountCents,
-        currency: "eur",
+        currency: "usd",
         paidAt: new Date(),
         createdAt: new Date(),
         confirmationSent,
@@ -129,49 +129,48 @@ export function OrderConfirmation() {
   return (
     <div className="max-w-xl space-y-6">
       <p className="leading-relaxed text-muted">
-        Le règlement a bien été enregistré
+        Payment received
         {amountCents != null ? ` (${formatPrice(amountCents / 100)})` : ""}.
         {confirmationSent && email
-          ? ` Un e-mail de confirmation a été envoyé à ${email}.`
+          ? ` A confirmation email was sent to ${email}.`
           : email
-            ? ` Conservez cet e-mail (${email}) : il sert à retrouver la commande dans Mon compte, avec le code postal de livraison.`
+            ? ` Keep this email (${email}) — use it with your shipping ZIP to find the order in My account.`
             : ""}
       </p>
-      {summary ? <OrderSummary order={summary} href={`/commande/${summary.id}`} /> : null}
+      {summary ? <OrderSummary order={summary} href={`/order/${summary.id}`} /> : null}
       {accountPassword && email ? (
         <div className="rounded-2xl border border-navy/20 bg-cream p-4 sm:p-5">
-          <p className="font-medium text-navy">Votre compte a été créé</p>
+          <p className="font-medium text-navy">Your account was created</p>
           <p className="mt-2 text-sm leading-relaxed text-muted">
-            Identifiant : <span className="font-medium text-navy">{email}</span>
+            Sign-in email: <span className="font-medium text-navy">{email}</span>
             <br />
             <span className="mt-1 inline-flex flex-wrap items-center gap-2">
-              Mot de passe provisoire :{" "}
+              Temporary password:{" "}
               <span className="font-medium text-navy">{accountPassword}</span>
               <CopyTextButton text={accountPassword} />
             </span>
           </p>
           <p className="mt-2 text-sm text-muted">
-            Après connexion, changez-le dans Mon compte. Il permet de retrouver vos commandes.
+            After signing in, change your password in My account to keep access to your orders.
           </p>
           <Link
-            href="/connexion?next=%2Fcompte%23mot-de-passe"
+            href="/login?next=%2Fcompte%23password"
             className="btn btn-secondary mt-4 inline-flex"
           >
-            Se connecter
+            Sign in
           </Link>
         </div>
       ) : null}
       <p className="text-sm leading-relaxed text-muted">
-        {SHIPPING_OFFERED_SENTENCE} Nous vous écrirons à la fin de la préparation, puis à
-        l’expédition. Un numéro de suivi n’est envoyé que lorsqu’il est disponible. Retrouvez vos
-        commandes à tout moment dans{" "}
-        <Link href="/compte" className="text-navy underline-offset-2 hover:underline">
-          Mon compte
+        {SHIPPING_OFFERED_SENTENCE} We’ll email you when your order is ready, then again when it
+        ships. Tracking is sent only when available. View orders anytime in{" "}
+        <Link href="/account" className="text-navy underline-offset-2 hover:underline">
+          My account
         </Link>
         .
       </p>
       <Link href="/collections/maison" className="btn btn-primary inline-flex">
-        Continuer vos achats
+        Continue shopping
       </Link>
     </div>
   );

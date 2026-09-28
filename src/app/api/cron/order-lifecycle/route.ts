@@ -13,7 +13,7 @@ function authorized(request: Request) {
 
 export async function GET(request: Request) {
   if (!authorized(request)) {
-    return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const result = await processDueOrderEmails();
   return NextResponse.json(result);

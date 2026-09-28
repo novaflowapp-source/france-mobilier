@@ -58,12 +58,12 @@ export function buildOrderFulfillment(order: {
 
 export function fulfillmentCustomerLabel(fulfillment: OrderFulfillment) {
   if (fulfillment.phase === "shipped") {
-    const when = fulfillment.shippedAt ? ` le ${formatParisDate(fulfillment.shippedAt)}` : "";
-    return `Colis expédié${when} — acheminement ${fulfillment.transitBusinessDays} jours ouvrés`;
+    const when = fulfillment.shippedAt ? ` on ${formatParisDate(fulfillment.shippedAt)}` : "";
+    return `Shipped${when} — transit about ${fulfillment.transitBusinessDays} business days`;
   }
   if (fulfillment.phase === "prepared") {
-    const when = fulfillment.preparedAt ? ` le ${formatParisDate(fulfillment.preparedAt)}` : "";
-    return `Préparation terminée${when} — expédition en cours`;
+    const when = fulfillment.preparedAt ? ` on ${formatParisDate(fulfillment.preparedAt)}` : "";
+    return `Ready to ship${when} — shipping in progress`;
   }
-  return `En préparation — fin prévue le ${formatParisYmd(fulfillment.expectedPreparedOn)}`;
+  return `In preparation — expected ready by ${formatParisYmd(fulfillment.expectedPreparedOn)}`;
 }

@@ -68,9 +68,9 @@ export function getDeliveryEstimate(product: Product): DeliveryEstimate {
 }
 
 function businessDaysPhrase(min: number, max: number | null) {
-  if (max != null && max > min) return `${min}–${max} jours ouvrés`;
-  if (min === 5) return "1 semaine (5 jours ouvrés)";
-  return `${min} jours ouvrés`;
+  if (max != null && max > min) return `${min}–${max} business days`;
+  if (min === 5) return "1 week (5 business days)";
+  return `${min} business days`;
 }
 
 export function deliveryCustomerLabel(product: Product): string | null {
@@ -78,13 +78,13 @@ export function deliveryCustomerLabel(product: Product): string | null {
   if (estimate.structured && estimate.handlingMinBusinessDays != null && estimate.transitMinBusinessDays != null) {
     const prep = businessDaysPhrase(estimate.handlingMinBusinessDays, estimate.handlingMaxBusinessDays);
     const transit = businessDaysPhrase(estimate.transitMinBusinessDays, estimate.transitMaxBusinessDays);
-    return `préparation ${prep}, acheminement ${transit}`;
+    return `preparation ${prep}, transit ${transit}`;
   }
   const min = estimate.overallMinDays;
   if (!min) return null;
   const max = estimate.overallMaxDays;
-  if (max && max > min) return `${min}–${max} jours après la commande`;
-  return `à partir de ${min} jours après la commande`;
+  if (max && max > min) return `${min}–${max} days after you order`;
+  return `from ${min} days after you order`;
 }
 
 export function schemaAvailability(product: Product) {

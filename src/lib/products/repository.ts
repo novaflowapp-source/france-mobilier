@@ -1,5 +1,5 @@
 import { products as catalog } from "@/data/products";
-import { collections } from "@/config/store";
+import { collections, store } from "@/config/store";
 import {
   applyAvailabilityVisibility,
   collectionSlugForProduct,
@@ -256,7 +256,7 @@ export function filterAndSortProducts(items: Product[], options: ProductFilterOp
       result.sort((a, b) => b.price - a.price);
       break;
     case "name":
-      result.sort((a, b) => a.name.localeCompare(b.name, "fr"));
+      result.sort((a, b) => a.name.localeCompare(b.name, "en"));
       break;
     case "newest":
       result = sortSellableFirst(result);
@@ -277,19 +277,19 @@ export function listSellableProducts(): Product[] {
 }
 
 export function formatPrice(amount: number) {
-  return new Intl.NumberFormat("fr-FR", {
+  return new Intl.NumberFormat(store.locale, {
     style: "currency",
-    currency: "EUR",
+    currency: store.currency,
   }).format(amount);
 }
 
 export function availabilityLabel(status: Product["availabilityStatus"]) {
   switch (status) {
     case "coming_soon":
-      return "Bientôt disponible";
+      return "Coming soon";
     case "available":
-      return "Disponible";
+      return "Available";
     case "out_of_stock":
-      return "Rupture temporaire";
+      return "Temporarily out of stock";
   }
 }

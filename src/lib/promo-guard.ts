@@ -22,7 +22,7 @@ export async function resolveCheckoutDiscount(input: {
 }) {
   if (input.proDiscount?.type && input.proDiscount.value) {
     if (parsePromoCode(input.promoCode)) {
-      throw new PromoError("Les codes promo particuliers ne s’appliquent pas aux commandes professionnelles.");
+      throw new PromoError("Personal promo codes do not apply to trade orders.");
     }
     return {
       discount: input.proDiscount,
@@ -35,11 +35,11 @@ export async function resolveCheckoutDiscount(input: {
     return { discount: null, promoCode: null as string | null };
   }
   if (!isWelcomePromo(code)) {
-    throw new PromoError("Ce code n’est pas reconnu.");
+    throw new PromoError("This code is not recognized.");
   }
   const offer = welcomeOfferAt(parseWelcomeStartedAt(input.welcomeStartedAt));
   if (offer.status !== "active") {
-    throw new PromoError("Le délai du code BIENVENUE est écoulé.");
+    throw new PromoError("The WELCOME code window has expired.");
   }
   await assertWelcomePromoAllowed(input);
   return { discount: welcomeDiscount(), promoCode: code };
@@ -54,7 +54,7 @@ export async function assertWelcomePromoAllowed(input: {
   const email = input.email.trim().toLowerCase();
   const phoneKey = phoneIdentityKey(input.phone);
   if (!phoneKey) {
-    throw new PromoError("Indiquez un numéro de téléphone valide pour utiliser un code.");
+    throw new PromoError("Enter a valid phone number to use a promo code.");
   }
 
   const paid = await db
@@ -68,11 +68,11 @@ export async function assertWelcomePromoAllowed(input: {
 
   for (const row of paid) {
     if (row.email === email || (input.userId && row.userId === input.userId)) {
-      throw new PromoError("BIENVENUE s’applique uniquement à la première commande.");
+      throw new PromoError("WELCOME applies only to your first order.");
     }
     if (row.phone && phoneIdentityKey(row.phone) === phoneKey) {
       throw new PromoError(
-        "Ce numéro est déjà associé à une commande ou à un compte. Un code promo ne peut servir qu’une fois par personne.",
+        "This phone number is already linked to an order or account. A promo code can only be used once per person.",
       );
     }
   }

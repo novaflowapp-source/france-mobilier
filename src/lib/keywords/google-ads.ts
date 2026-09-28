@@ -225,7 +225,7 @@ async function getAccessToken(config: KeywordPlannerConfig) {
   };
   if (!response.ok || !payload.access_token) {
     throw new Error(
-      payload.error_description || payload.error || "Impossible de renouveler le jeton Google Ads.",
+      payload.error_description || payload.error || "Could not refresh the Google Ads token.",
     );
   }
   tokenCache = {
@@ -268,7 +268,7 @@ async function adsPost<T>(config: KeywordPlannerConfig, method: string, body: Re
   );
   const payload = (await response.json()) as T & { error?: unknown };
   if (!response.ok) {
-    throw new Error(adsErrorMessage(payload, `Google Ads a refusé ${method}.`));
+    throw new Error(adsErrorMessage(payload, `Google Ads rejected ${method}.`));
   }
   return payload;
 }
@@ -282,7 +282,7 @@ const targeting = {
 export async function fetchKeywordHistoricalMetrics(keywords: string[]) {
   const config = getKeywordPlannerConfig();
   if (!config) {
-    throw new Error("Keyword Planner n’est pas configuré.");
+    throw new Error("Keyword Planner is not configured.");
   }
   const payload = await adsPost<{
     results?: Array<{
@@ -308,7 +308,7 @@ export async function fetchKeywordHistoricalMetrics(keywords: string[]) {
 export async function fetchKeywordIdeas(keywords: string[]) {
   const config = getKeywordPlannerConfig();
   if (!config) {
-    throw new Error("Keyword Planner n’est pas configuré.");
+    throw new Error("Keyword Planner is not configured.");
   }
   const payload = await adsPost<{
     results?: Array<{

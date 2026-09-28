@@ -38,7 +38,7 @@ const emptyDraft: Draft = {
   postalCode: "",
   city: "",
   phone: "",
-  country: "FR",
+  country: "US",
   promoCode: "",
 };
 
@@ -182,9 +182,9 @@ export function CheckoutForm() {
   if (itemCount === 0) {
     return (
       <div className="rounded-2xl border border-border bg-card p-8">
-        <p className="text-muted">Votre panier est vide.</p>
+        <p className="text-muted">Your cart is empty.</p>
         <Link href="/collections/meubles" className="btn btn-primary mt-6 inline-flex">
-          Voir la sélection
+          Browse furniture
         </Link>
       </div>
     );
@@ -195,12 +195,12 @@ export function CheckoutForm() {
     setError(null);
     const postalCode = normalizeShippingPostal(draft.country, draft.postalCode);
     if (!postalCode) {
-      setError("Code postal invalide pour le pays choisi.");
+      setError("Enter a valid ZIP code for the United States.");
       return;
     }
     const phone = normalizeZonePhone(draft.phone, draft.country);
     if (!phone) {
-      setError("Indiquez un numéro valide (France, Belgique, Luxembourg, Monaco ou Suisse).");
+      setError("Enter a valid U.S. phone number.");
       return;
     }
     setLoading(true);
@@ -225,11 +225,11 @@ export function CheckoutForm() {
         }),
       });
       const data = await res.json();
-      if (!res.ok || !data.url) throw new Error(data.error || "Paiement impossible");
+      if (!res.ok || !data.url) throw new Error(data.error || "Checkout unavailable");
       trackBeginCheckout({ valueEur: payable.total, itemCount });
       window.location.href = data.url;
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur");
+      setError(err instanceof Error ? err.message : "Something went wrong");
       setLoading(false);
     }
   }
@@ -237,18 +237,18 @@ export function CheckoutForm() {
   return (
     <form className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]" onSubmit={onSubmit}>
       <div className="space-y-4 rounded-2xl border border-border bg-card p-4 sm:p-6">
-        <h2 className="text-lg font-medium">Livraison</h2>
+        <h2 className="text-lg font-medium">Shipping</h2>
         <p className="text-sm text-muted">
-          Une seule étape ici. Le paiement carte, Apple Pay ou Google Pay s’ouvre ensuite sur Stripe.
+          One step here. Card, Apple Pay, or Google Pay opens next on Stripe.
         </p>
         {pro ? (
           <p className="rounded-xl bg-cream px-4 py-3 text-sm leading-relaxed text-navy">
-            Compte professionnel — {pro.companyName} (SIREN {pro.siren}). Cette commande porte le
-            nom de l’entreprise. Les prix restent TTC.
+            Trade account — {pro.companyName} (SIREN {pro.siren}). This order is placed under the
+            company name. Prices include tax where applicable.
           </p>
         ) : null}
         <label className="block text-sm">
-          Pays
+          Country
           <select
             required
             name="country"
@@ -265,7 +265,7 @@ export function CheckoutForm() {
           </select>
         </label>
         <label className="block text-sm">
-          Nom
+          Name
           <input
             required
             name="name"
@@ -288,7 +288,7 @@ export function CheckoutForm() {
           />
         </label>
         <label className="block text-sm">
-          Adresse
+          Street address
           <input
             required
             name="line1"
@@ -300,7 +300,7 @@ export function CheckoutForm() {
         </label>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block text-sm">
-            Code postal
+            ZIP code
             <input
               required
               name="postalCode"
@@ -313,7 +313,7 @@ export function CheckoutForm() {
             />
           </label>
           <label className="block text-sm">
-            Ville
+            City
             <input
               required
               name="city"
@@ -325,7 +325,7 @@ export function CheckoutForm() {
           </label>
         </div>
         <label className="block text-sm">
-          Téléphone
+          Phone
           <input
             required
             name="phone"
@@ -339,23 +339,23 @@ export function CheckoutForm() {
             className="input mt-1"
           />
           <span className="mt-1 block text-xs text-muted">
-            Pour la livraison. Exemple : {hints.phone}
+            For delivery updates. Example: {hints.phone}
           </span>
         </label>
         {pro ? (
           <p className="text-sm text-muted">
-            Les tarifs professionnels s’appliquent déjà. Le code BIENVENUE n’est pas cumulable.
+            Trade pricing already applies. Code WELCOME cannot be combined.
           </p>
         ) : welcome.status === "expired" ? (
-          <p className="text-sm text-muted">Le délai du code BIENVENUE est écoulé.</p>
+          <p className="text-sm text-muted">The WELCOME offer has expired.</p>
         ) : (
           <label className="block text-sm">
-            Code promo
+            Promo code
             <input
               name="promoCode"
               autoComplete="off"
               spellCheck={false}
-              placeholder="BIENVENUE"
+              placeholder="WELCOME"
               maxLength={20}
               value={draft.promoCode}
               onChange={(event) => update("promoCode", event.target.value.toUpperCase())}
@@ -364,15 +364,9 @@ export function CheckoutForm() {
             <WelcomeOfferNote className="mt-3" />
           </label>
         )}
-        {draft.country === "CH" ? (
-          <p className="text-sm text-muted">
-            En Suisse, des droits ou taxes d’importation peuvent s’ajouter à la réception. Ils ne
-            sont pas inclus dans le prix payé ici.
-          </p>
-        ) : null}
       </div>
       <aside className="h-fit space-y-4 rounded-2xl border border-border bg-card p-4 sm:p-6">
-        <h2 className="text-lg font-medium">Récapitulatif</h2>
+        <h2 className="text-lg font-medium">Order summary</h2>
         <ul className="space-y-2 text-sm">
           {items.map((item) => (
             <li key={`${item.productId}-${item.variantId ?? "default"}`} className="flex justify-between gap-3">
@@ -384,8 +378,8 @@ export function CheckoutForm() {
           ))}
         </ul>
         <p className="flex justify-between text-sm text-muted">
-          <span>Livraison</span>
-          <span>0,00 €</span>
+          <span>Shipping</span>
+          <span>$0.00</span>
         </p>
         {welcomePreview ? (
           <p className="flex justify-between text-sm">
@@ -398,32 +392,32 @@ export function CheckoutForm() {
           </p>
         ) : null}
         <p className="flex justify-between border-t border-border pt-3 font-medium">
-          <span>Total TTC</span>
+          <span>Order total</span>
           <span>{formatPrice(payable.total)}</span>
         </p>
         <p className="text-sm text-muted">{SHIPPING_OFFERED_SENTENCE}</p>
         <p className="text-xs text-muted">
-          Pas de compte obligatoire. Paiement sécurisé par Stripe (carte, Apple Pay, Google Pay).
+          No account required. Secure payment by Stripe (card, Apple Pay, Google Pay).
         </p>
         <p className="text-xs text-muted">
-          <Link href="/livraison" className="underline-offset-4 hover:underline">
-            Livraison
+          <Link href="/shipping" className="underline-offset-4 hover:underline">
+            Shipping
           </Link>
           {" · "}
-          <Link href="/retours" className="underline-offset-4 hover:underline">
-            Retours
+          <Link href="/returns" className="underline-offset-4 hover:underline">
+            Returns
           </Link>
           {" · "}
-          <Link href="/cgv" className="underline-offset-4 hover:underline">
-            CGV
+          <Link href="/terms" className="underline-offset-4 hover:underline">
+            Terms
           </Link>
         </p>
         {error ? <p className="text-sm text-red-700">{error}</p> : null}
         <button type="submit" disabled={loading} className="btn btn-primary w-full">
-          {loading ? "Ouverture du paiement…" : `Payer ${formatPrice(payable.total)}`}
+          {loading ? "Opening checkout…" : `Pay ${formatPrice(payable.total)}`}
         </button>
-        <Link href="/panier" className="block text-center text-sm text-muted underline-offset-4 hover:underline">
-          Retour au panier
+        <Link href="/cart" className="block text-center text-sm text-muted underline-offset-4 hover:underline">
+          Back to cart
         </Link>
       </aside>
     </form>

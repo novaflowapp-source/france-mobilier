@@ -123,7 +123,7 @@ export function PaymentMarks() {
   return (
     <ul
       className="flex flex-wrap items-center gap-1.5"
-      aria-label="Moyens de paiement : carte, Apple Pay et Google Pay"
+      aria-label="Payment methods: card, Apple Pay, and Google Pay"
     >
       {marks.map(({ slug, Mark }) => {
         const method = paymentMethods.find((item) => item.slug === slug);
@@ -133,8 +133,8 @@ export function PaymentMarks() {
             <Link
               href={paymentMethodHref(slug)}
               className={badge}
-              title={`${method.name} — conditions de paiement`}
-              aria-label={`${method.name} — voir les conditions de paiement`}
+              title={`${method.name} — payment details`}
+              aria-label={`${method.name} — view payment details`}
             >
               <Mark />
             </Link>

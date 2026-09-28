@@ -236,7 +236,7 @@ export async function createPendingOrder(input: {
     city: input.customer.city.trim(),
     country: input.customer.country,
     amountCents: input.amountCents,
-    currency: "eur",
+    currency: "usd",
     status: "pending",
     reference: await uniqueReference(),
     viewToken: randomToken(),
@@ -328,15 +328,15 @@ async function sendOrderConfirmationIfNeeded(orderId: string, temporaryPassword?
       city: withAccess.city,
       country: withAccess.country,
       items: full.items,
-      viewUrl: `${getSiteUrl()}/commande/${withAccess.id}?t=${withAccess.viewToken}`,
-      loginUrl: `${getSiteUrl()}/connexion?next=${encodeURIComponent("/compte#mot-de-passe")}`,
+      viewUrl: `${getSiteUrl()}/order/${withAccess.id}?t=${withAccess.viewToken}`,
+      loginUrl: `${getSiteUrl()}/login?next=${encodeURIComponent("/account#password")}`,
       testMode: stripeMode() === "test",
       temporaryPassword: password,
       companyName: withAccess.companyName,
       siren: withAccess.siren,
       invoicesUrl:
         withAccess.accountType === "pro"
-          ? `${getSiteUrl()}/compte/factures`
+          ? `${getSiteUrl()}/account/invoices`
           : null,
     });
     if (sent) {
@@ -404,7 +404,7 @@ export async function markOrderPaid(orderId: string, stripeSessionId: string) {
       orderReference: paid.reference || paid.id.slice(0, 8).toUpperCase(),
       email: paid.email,
       amountCents: paid.amountCents,
-      productName: items.map((item) => `${item.name} × ${item.quantity}`).join(", ") || "Commande",
+      productName: items.map((item) => `${item.name} × ${item.quantity}`).join(", ") || "Order",
     });
   } catch (error) {
     console.error("[orders] activity purchase failed", error);

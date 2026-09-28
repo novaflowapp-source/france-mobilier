@@ -10,7 +10,7 @@ const patchSchema = z.object({
 
 export async function GET(request: Request) {
   const session = await getAdminSession();
-  if (!session) return NextResponse.json({ error: "Accès administrateur requis" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "Admin access required" }, { status: 401 });
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
   if (id) {
@@ -24,9 +24,9 @@ export async function GET(request: Request) {
 
 export async function PATCH(request: Request) {
   const session = await getAdminSession();
-  if (!session) return NextResponse.json({ error: "Accès administrateur requis" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "Admin access required" }, { status: 401 });
   const parsed = patchSchema.safeParse(await request.json());
-  if (!parsed.success) return NextResponse.json({ error: "Données invalides" }, { status: 400 });
+  if (!parsed.success) return NextResponse.json({ error: "Invalid data" }, { status: 400 });
   const quote = await setQuoteStatus(parsed.data.id, parsed.data.status as QuoteStatus, session.user.email);
   if (!quote) return NextResponse.json({ error: "Introuvable" }, { status: 404 });
   return NextResponse.json({ ok: true, quote });

@@ -59,7 +59,7 @@ export function getBusinessIdentity(): BusinessIdentity {
     email: store.supportEmail,
     hours: store.supportHours,
     hoursShort: store.supportHoursShort,
-    relationship: `${store.storeName} est une boutique en ligne exploitée par ${store.companyName}.`,
+    relationship: `${store.storeName} is an online store operated by ${store.companyName}.`,
     domain: store.domain.replace(/^https?:\/\//, ""),
     url: store.domain.replace(/\/$/, ""),
   };

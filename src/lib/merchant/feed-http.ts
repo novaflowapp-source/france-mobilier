@@ -15,7 +15,7 @@ export function googleMerchantFeedResponse() {
           .filter((item) => item.level === "BLOCKER")
           .map((item) => item.id),
         message:
-          "Feed non publié : flags incomplets, identité/politiques bloquantes, ou aucun produit merchant-ready.",
+          "Feed not published: incomplete flags, blocking identity/policies, or no merchant-ready products.",
       },
       { status: 503 },
     );

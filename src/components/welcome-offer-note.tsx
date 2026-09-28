@@ -16,7 +16,7 @@ export function WelcomeCodeMark({
         onDark ? "text-[var(--promo-green-on-navy)]" : "text-[var(--promo-green)]"
       } ${className}`}
     >
-      Code BIENVENUE −10%
+      Code WELCOME −10%
     </span>
   );
 }
@@ -24,7 +24,7 @@ export function WelcomeCodeMark({
 export function WelcomeRemaining({ remainingMs }: { remainingMs: number }) {
   return (
     <span className="whitespace-nowrap">
-      code valable encore{" "}
+      valid for{" "}
       <span className="tabular-nums font-semibold">{formatWelcomeCountdown(remainingMs)}</span>
     </span>
   );
@@ -56,7 +56,7 @@ export function WelcomeOfferNote({
             </>
           ) : (
             <>
-              <WelcomeCodeMark /> sur votre première commande
+              <WelcomeCodeMark /> on your first order
               {remaining ? <> · {remaining}</> : null}
             </>
           )}

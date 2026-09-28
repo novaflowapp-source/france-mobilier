@@ -6,7 +6,7 @@ import { shippingCountryName } from "@/lib/shipping-zone";
 function formatDate(value: Date | string | null) {
   if (!value) return "";
   const date = value instanceof Date ? value : new Date(value);
-  return new Intl.DateTimeFormat("fr-FR", { dateStyle: "long" }).format(date);
+  return new Intl.DateTimeFormat("en-US", { dateStyle: "long" }).format(date);
 }
 
 export function OrderSummary({
@@ -18,7 +18,7 @@ export function OrderSummary({
 }) {
   const heading = (
     <h3 className="font-medium text-navy">
-      Commande {order.reference}
+      Order {order.reference}
       {order.paidAt ? <span className="ml-2 text-sm font-normal text-muted">{formatDate(order.paidAt)}</span> : null}
     </h3>
   );
@@ -44,12 +44,12 @@ export function OrderSummary({
       </ul>
       {order.promoDiscountCents > 0 ? (
         <p className="mt-3 flex justify-between text-sm text-muted">
-          <span>{order.promoCode ? `Code ${order.promoCode}` : "Remise"}</span>
+          <span>{order.promoCode ? `Code ${order.promoCode}` : "Discount"}</span>
           <span>−{formatPrice(order.promoDiscountCents / 100)}</span>
         </p>
       ) : null}
       <p className="mt-3 flex justify-between border-t border-border pt-3 text-sm font-medium">
-        <span>Total TTC</span>
+        <span>Order total</span>
         <span>{formatPrice(order.amountCents / 100)}</span>
       </p>
       {order.fulfillmentLabel ? (

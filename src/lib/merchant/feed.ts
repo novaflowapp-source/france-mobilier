@@ -59,7 +59,7 @@ function offerXml(offer: MerchantOffer) {
     `<g:google_product_category>${escapeXml(googleProductCategory(product))}</g:google_product_category>`,
     offer.color ? `<g:color>${escapeXml(offer.color)}</g:color>` : "",
     offer.size ? `<g:size>${escapeXml(offer.size)}</g:size>` : "",
-    `<g:canonical_link>${escapeXml(canonicalUrl(`/produits/${product.slug}`))}</g:canonical_link>`,
+    `<g:canonical_link>${escapeXml(canonicalUrl(`/products/${product.slug}`))}</g:canonical_link>`,
     product.weight != null ? `<g:shipping_weight>${product.weight} kg</g:shipping_weight>` : "",
     ...shipping.merchantTargetCountries.map((country) => {
       const handling =
@@ -70,7 +70,7 @@ function offerXml(offer: MerchantOffer) {
         delivery.structured && delivery.transitMinBusinessDays != null
           ? `<g:min_transit_time>${delivery.transitMinBusinessDays}</g:min_transit_time><g:max_transit_time>${delivery.transitMaxBusinessDays}</g:max_transit_time>`
           : "";
-      return `<g:shipping><g:country>${country}</g:country><g:price>${shipping.shippingCostEur.toFixed(2)} EUR</g:price>${handling}${transit}</g:shipping>`;
+      return `<g:shipping><g:country>${country}</g:country><g:price>${shipping.shippingCostUsd.toFixed(2)} USD</g:price>${handling}${transit}</g:shipping>`;
     }),
     `</item>`,
   ];
@@ -94,7 +94,7 @@ export function buildGoogleMerchantFeedXml() {
     `<channel>`,
     `<title>${escapeXml(identity.storeName)}</title>`,
     `<link>${escapeXml(identity.url)}</link>`,
-    `<description>${escapeXml("Catalogue — produits achetables et merchant-ready")}</description>`,
+    `<description>${escapeXml("Catalog — purchasable, merchant-ready products")}</description>`,
     ...items.map(offerXml),
     `</channel>`,
     `</rss>`,

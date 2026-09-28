@@ -32,7 +32,7 @@ export function merchantOffers(product: Product): MerchantOffer[] {
 function offerFrom(product: Product, variant: ProductVariant | null, base: string): MerchantOffer {
   const id = variant?.id ?? product.id;
   // Same crawlable URL for every variant: Google indexes the canonical page, not ?variant=.
-  const link = `${base}/produits/${product.slug}`;
+  const link = `${base}/products/${product.slug}`;
   return {
     id,
     itemGroupId: product.id,
@@ -64,16 +64,16 @@ export function merchantDescription(product: Product, variant?: ProductVariant |
   if (product.merchantDescription) return product.merchantDescription;
   const measures = getProductMeasures(product);
   const dims = [
-    measures.widthCm != null ? `largeur ${measures.widthCm} cm` : null,
-    measures.depthCm != null ? `profondeur ${measures.depthCm} cm` : null,
-    measures.heightCm != null ? `hauteur ${measures.heightCm} cm` : null,
+    measures.widthCm != null ? `width ${measures.widthCm} cm` : null,
+    measures.depthCm != null ? `depth ${measures.depthCm} cm` : null,
+    measures.heightCm != null ? `height ${measures.heightCm} cm` : null,
   ].filter(Boolean);
   const blocks = [
     product.description,
-    product.material ? `Matière : ${product.material}.` : "",
-    dims.length ? `Dimensions : ${dims.join(", ")}.` : "",
-    variant ? `Variante : ${variant.colorLabel}, ${variant.sizeLabel}.` : "",
-    product.madeToOrder ? "Fabriqué après commande, modèle standard non personnalisé." : "",
+    product.material ? `Material: ${product.material}.` : "",
+    dims.length ? `Dimensions: ${dims.join(", ")}.` : "",
+    variant ? `Variant: ${variant.colorLabel}, ${variant.sizeLabel}.` : "",
+    product.madeToOrder ? "Made to order after purchase; standard model, not custom-built." : "",
   ];
   return blocks.filter(Boolean).join(" ").replace(/\s+/g, " ").trim();
 }

@@ -8,41 +8,41 @@ import { formatPublicAddress, getBusinessIdentity } from "@/lib/business/identit
 
 const groups = [
   {
-    title: "Nos meubles",
+    title: "Shop",
     links: [
-      { href: "/collections/salon", label: "Salon" },
-      { href: "/collections/chambre", label: "Chambre" },
-      { href: "/collections/entree-rangement", label: "Entrée & rangement" },
-      { href: "/collections/bureau", label: "Bureau" },
-      { href: "/collections/petits-espaces", label: "Petits espaces" },
-      { href: "/collections/meubles", label: "Tous les meubles" },
+      { href: "/collections/salon", label: "Living room" },
+      { href: "/collections/chambre", label: "Bedroom" },
+      { href: "/collections/entree-rangement", label: "Entry & storage" },
+      { href: "/collections/bureau", label: "Office" },
+      { href: "/collections/petits-espaces", label: "Small spaces" },
+      { href: "/collections/meubles", label: "All furniture" },
     ],
   },
   {
-    title: "Aide",
+    title: "Help",
     links: [
-      { href: "/livraison", label: "Livraison" },
-      { href: "/retours", label: "Retours et remboursements" },
+      { href: "/shipping", label: "Shipping" },
+      { href: "/returns", label: "Returns & refunds" },
       { href: "/contact", label: "Contact" },
-      { href: "/questions-frequentes", label: "FAQ" },
-      { href: "/guides", label: "Conseils" },
+      { href: "/faq", label: "FAQ" },
+      { href: "/guides", label: "Guides" },
     ],
   },
   {
-    title: "Professionnels",
+    title: "Professionals",
     links: [
-      { href: "/professionnels", label: "France Mobilier Pro" },
-      { href: "/compte/devis", label: "Demande de devis" },
+      { href: "/trade", label: "France Mobilier Pro" },
+      { href: "/account/quotes", label: "Request a quote" },
     ],
   },
   {
-    title: "Informations",
+    title: "Information",
     links: [
-      { href: "/a-propos", label: "Notre histoire" },
-      { href: "/mentions-legales", label: "Mentions légales" },
-      { href: "/cgv", label: "CGV" },
-      { href: "/cgv/moyens-de-paiement", label: "Moyens de paiement" },
-      { href: "/confidentialite", label: "Confidentialité" },
+      { href: "/about", label: "Our story" },
+      { href: "/legal", label: "Legal notice" },
+      { href: "/terms", label: "Terms" },
+      { href: "/terms/payment-methods", label: "Payment methods" },
+      { href: "/privacy", label: "Privacy" },
     ],
   },
 ];
@@ -63,7 +63,7 @@ export function SiteFooter() {
             />
           </Link>
           <p className="mt-5 max-w-xs text-sm leading-relaxed text-white/75">
-            {identity.relationship} Une sélection pensée pour les logements d’aujourd’hui.
+            Curated furniture for modern living.
           </p>
           <p className="mt-4 text-sm text-white/70">
             <a href={`mailto:${identity.email}`}>{identity.email}</a>
@@ -85,7 +85,7 @@ export function SiteFooter() {
                   </Link>
                 </li>
               ))}
-              {group.title === "Informations" ? (
+              {group.title === "Information" ? (
                 <li>
                   <CookieManageButton className="inline-flex min-h-11 items-center bg-transparent p-0 text-inherit" />
                 </li>
@@ -98,20 +98,20 @@ export function SiteFooter() {
         <div className="container-page flex flex-col gap-5 py-6 md:flex-row md:items-center md:justify-between md:gap-8">
           <ul className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-white/75">
             <li>
-              <Link href="/livraison" className="inline-flex min-h-11 items-center gap-2">
+              <Link href="/shipping" className="inline-flex min-h-11 items-center gap-2">
                 <IconTruck className="h-4 w-4" />
-                Livraison offerte
+                Free shipping
               </Link>
             </li>
             <li>
-              <Link href="/retours" className="inline-flex min-h-11 items-center gap-2">
+              <Link href="/returns" className="inline-flex min-h-11 items-center gap-2">
                 <IconReturn className="h-4 w-4" />
-                Retours 14 jours
+                14-day returns
               </Link>
             </li>
             <li className="inline-flex min-h-11 items-center gap-2">
               <IconLock className="h-4 w-4" />
-              Paiement sécurisé
+              Secure payment
             </li>
           </ul>
           <PaymentMarks />
@@ -120,7 +120,7 @@ export function SiteFooter() {
       <div className="border-t border-white/10">
         <div className="container-page flex flex-col gap-2 py-5 text-xs text-white/55 md:flex-row md:justify-between">
           <p>
-            © {new Date().getFullYear()} {store.storeName}. Tous droits réservés.
+            © {new Date().getFullYear()} {store.storeName}. All rights reserved.
           </p>
           <p>
             {identity.legalName} — {formatPublicAddress(identity)}

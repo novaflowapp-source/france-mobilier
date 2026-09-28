@@ -31,12 +31,12 @@ function rateLimit(ip: string) {
 export async function POST(request: Request) {
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
   if (!rateLimit(ip)) {
-    return NextResponse.json({ error: "Trop de tentatives. Réessayez dans une minute." }, { status: 429 });
+    return NextResponse.json({ error: "Too many attempts. Try again in a minute." }, { status: 429 });
   }
 
   const parsed = schema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) {
-    return NextResponse.json({ error: "Indiquez l’e-mail et le code postal de la commande." }, { status: 400 });
+    return NextResponse.json({ error: "Enter the order email and ZIP code." }, { status: 400 });
   }
 
   const { orders, guestAccount } = await lookupPaidOrders(parsed.data.email, parsed.data.postalCode);

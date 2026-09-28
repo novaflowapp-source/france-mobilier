@@ -37,23 +37,23 @@ export function CookieConsent() {
         </h2>
       </div>
       <p className="mt-2 text-sm leading-relaxed text-muted">
-        Nous utilisons des cookies et un stockage local nécessaires à la boutique : compte, panier,
-        accès aux commandes et paiement. Si vous acceptez, Google Ads mesure aussi les campagnes
-        publicitaires. Aucun cookie publicitaire n’est déposé sans votre accord.
+        We use cookies and local storage needed to run the store: account, cart, order access, and
+        checkout. If you accept, Google Ads can also measure ad campaigns. No advertising cookies are
+        set without your consent.
       </p>
       <p className="mt-2 text-sm leading-relaxed text-muted">
-        Vous pouvez tout accepter, ou refuser les cookies non essentiels — le site reste utilisable.{" "}
-        <Link href="/confidentialite#cookies" className="text-navy underline-offset-2 hover:underline">
-          En savoir plus
+        You can accept all cookies, or decline non-essential ones — the site still works.{" "}
+        <Link href="/privacy#cookies" className="text-navy underline-offset-2 hover:underline">
+          Learn more
         </Link>
         .
       </p>
       <div className="mt-4 grid gap-2 sm:grid-cols-2">
         <button type="button" className="btn btn-secondary w-full" onClick={() => decide(false)}>
-          Tout refuser
+          Decline all
         </button>
         <button type="button" className="btn btn-primary w-full" onClick={() => decide(true)}>
-          Tout accepter
+          Accept all
         </button>
       </div>
     </div>

@@ -24,9 +24,9 @@ function HeaderTopNotices({
 }) {
   return (
     <>
-      <Link href="/livraison" className="inline-flex shrink-0 items-center gap-1.5 hover:text-white">
+      <Link href="/shipping" className="inline-flex shrink-0 items-center gap-1.5 hover:text-white">
         <IconTruck className="h-3.5 w-3.5" aria-hidden />
-        Livraison gratuite
+        Free shipping
       </Link>
       <span className="text-white/40" aria-hidden>
         •
@@ -46,9 +46,9 @@ function HeaderTopNotices({
       <span className="text-white/40" aria-hidden>
         •
       </span>
-      <Link href="/retours" className="inline-flex shrink-0 items-center gap-1.5 hover:text-white">
+      <Link href="/returns" className="inline-flex shrink-0 items-center gap-1.5 hover:text-white">
         <IconReturn className="h-3.5 w-3.5" aria-hidden />
-        Retours 14 jours
+        14-day returns
       </Link>
     </>
   );
@@ -113,7 +113,7 @@ export function SiteHeader() {
     event.preventDefault();
     const q = String(new FormData(event.currentTarget).get("q") || "").trim();
     setOpen(false);
-    router.push(q ? `/recherche?q=${encodeURIComponent(q)}` : "/recherche");
+    router.push(q ? `/search?q=${encodeURIComponent(q)}` : "/search");
   }
 
   return (
@@ -143,7 +143,7 @@ export function SiteHeader() {
             <span className="text-white/40">•</span>
             <Link href="/contact" className="inline-flex items-center gap-1.5 hover:text-white">
               <IconHeadset className="h-3.5 w-3.5" aria-hidden />
-              SAV du lundi au vendredi, 10h–22h
+              Customer service Mon–Fri, 10am–10pm (Paris time)
             </Link>
           </span>
         </p>
@@ -185,7 +185,7 @@ export function SiteHeader() {
                           href={item.href}
                           className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-cream"
                         >
-                          Toute la sélection
+                          Shop all
                         </Link>
                         {item.children.map((child) => (
                           <Link
@@ -212,7 +212,7 @@ export function SiteHeader() {
             </nav>
             <form onSubmit={onSearch} className="hidden max-w-xs flex-1 md:block">
               <label className="sr-only" htmlFor="header-search">
-                Rechercher
+                Search
               </label>
               <div className="relative">
                 <IconSearch className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
@@ -220,29 +220,29 @@ export function SiteHeader() {
                   id="header-search"
                   name="q"
                   type="search"
-                  placeholder="Rechercher un produit…"
+                  placeholder="Search furniture…"
                   className="input input-with-icon"
                 />
               </div>
             </form>
             <div className="flex items-center gap-1">
               <Link
-                href={session?.user ? (proApproved ? "/compte" : "/compte/entreprise") : "/professionnels"}
+                href={session?.user ? (proApproved ? "/account" : "/account/company") : "/trade"}
                 className="hidden h-11 items-center px-2 text-sm font-medium text-navy hover:opacity-70 sm:inline-flex"
               >
-                {session?.user && proApproved ? "Espace Pro" : "Accès pro"}
+                {session?.user && proApproved ? "Pro account" : "Trade access"}
               </Link>
               <Link
-                href={session?.user ? "/compte" : "/connexion"}
+                href={session?.user ? "/account" : "/login"}
                 className="inline-flex h-11 w-11 items-center justify-center text-navy hover:opacity-70"
-                aria-label={session?.user ? "Compte" : "Connexion"}
+                aria-label={session?.user ? "Account" : "Sign in"}
               >
                 <IconUser />
               </Link>
               <Link
-                href="/panier"
+                href="/cart"
                 className="relative inline-flex h-11 w-11 items-center justify-center text-navy hover:opacity-70"
-                aria-label={itemCount > 0 ? `Panier, ${itemCount} articles` : "Panier"}
+                aria-label={itemCount > 0 ? `Cart, ${itemCount} items` : "Cart"}
               >
                 <IconBag />
                 {itemCount > 0 ? (
@@ -255,7 +255,7 @@ export function SiteHeader() {
                 type="button"
                 className="inline-flex h-11 w-11 items-center justify-center text-navy xl:hidden"
                 aria-expanded={open}
-                aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
+                aria-label={open ? "Close menu" : "Open menu"}
                 onClick={() => setOpen((value) => !value)}
               >
                 <span aria-hidden className="flex flex-col gap-1.5">
@@ -279,7 +279,7 @@ export function SiteHeader() {
           <div className="container-page space-y-4 py-4 pb-[calc(1.25rem+env(safe-area-inset-bottom))]">
             <form onSubmit={onSearch}>
               <label className="sr-only" htmlFor="mobile-search">
-                Rechercher
+                Search
               </label>
               <div className="relative">
                 <IconSearch className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
@@ -287,7 +287,7 @@ export function SiteHeader() {
                   id="mobile-search"
                   name="q"
                   type="search"
-                  placeholder="Rechercher un produit…"
+                  placeholder="Search furniture…"
                   className="input input-with-icon"
                 />
               </div>
@@ -318,7 +318,7 @@ export function SiteHeader() {
                   ) : null}
                 </div>
               ))}
-              <p className="px-3 pt-3 text-xs uppercase tracking-[0.12em] text-muted">Plus</p>
+              <p className="px-3 pt-3 text-xs uppercase tracking-[0.12em] text-muted">More</p>
               {secondaryNavigation.map((item) => (
                 <Link
                   key={item.href}
@@ -330,11 +330,11 @@ export function SiteHeader() {
                 </Link>
               ))}
               <Link
-                href={session?.user ? "/compte" : "/connexion"}
+                href={session?.user ? "/account" : "/login"}
                 className="rounded-lg px-3 py-3 hover:bg-cream sm:hidden"
                 onClick={() => setOpen(false)}
               >
-                {session?.user ? "Compte" : "Connexion"}
+                {session?.user ? "Account" : "Sign in"}
               </Link>
             </nav>
           </div>

@@ -34,14 +34,14 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(publicOrigin()),
   title: {
-    default: `${store.storeName} — Le mobilier qui simplifie votre intérieur`,
+    default: `${store.storeName} — Furniture that simplifies your home`,
     template: `%s | ${store.storeName}`,
   },
   description: store.storeTagline,
   openGraph: {
     title: store.storeName,
     description: store.storeTagline,
-    locale: "fr_FR",
+    locale: "en_US",
     type: "website",
     url: publicOrigin(),
     siteName: store.storeName,
@@ -68,13 +68,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     url: publicOrigin(),
     potentialAction: {
       "@type": "SearchAction",
-      target: `${publicOrigin()}/recherche?q={search_term_string}`,
+      target: `${publicOrigin()}/search?q={search_term_string}`,
       "query-input": "required name=search_term_string",
     },
   };
 
   return (
-    <html lang="fr">
+    <html lang="en">
       <head>
         <meta name="google-site-verification" content="vQe3HrEPuyNqaWOhMQ3YLVtLpg6pGwkLZvtIaaE99vc" />
         <meta name="google-site-verification" content="X1t-3bOz44QjPw2gznrdLPBeTqZPErySlFsT3H_Gx9U" />

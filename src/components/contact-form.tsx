@@ -34,7 +34,7 @@ export function ContactForm() {
   return (
     <form onSubmit={onSubmit} className="space-y-4 rounded-2xl border border-border bg-card p-6">
       <label className="block text-sm">
-        Nom
+        Name
         <input name="name" required autoComplete="name" className="input mt-1" />
       </label>
       <label className="block text-sm">
@@ -46,13 +46,13 @@ export function ContactForm() {
         <textarea name="message" required minLength={10} rows={5} className="input mt-1" />
       </label>
       <button type="submit" className="btn btn-primary w-full sm:w-auto" disabled={status === "loading"}>
-        {status === "loading" ? "Envoi…" : "Envoyer"}
+        {status === "loading" ? "Sending…" : "Send"}
       </button>
       {status === "ok" ? (
-        <p className="text-sm text-accent">Message reçu. Nous répondrons dès que possible.</p>
+        <p className="text-sm text-accent">Message received. We’ll reply as soon as we can.</p>
       ) : null}
       {status === "error" ? (
-        <p className="text-sm text-red-700">Envoi impossible pour le moment. Réessayez plus tard.</p>
+        <p className="text-sm text-red-700">Could not send right now. Please try again later.</p>
       ) : null}
     </form>
   );

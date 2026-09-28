@@ -19,7 +19,7 @@ export function PasswordInput({ className, ...props }: PasswordInputProps) {
         type="button"
         onClick={() => setVisible((open) => !open)}
         className="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-muted hover:text-navy"
-        aria-label={visible ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+        aria-label={visible ? "Hide password" : "Show password"}
         aria-pressed={visible}
       >
         {visible ? <IconEyeOff className="h-5 w-5" /> : <IconEye className="h-5 w-5" />}

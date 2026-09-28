@@ -34,15 +34,15 @@ export function NotifyForm({
     <form className="space-y-3 rounded-2xl border border-border bg-card p-5" onSubmit={onSubmit}>
       <p className="text-sm font-medium leading-relaxed">
         {comingSoon
-          ? `Cet article arrive bientôt. Prévenez-moi lorsque ${productName} sera disponible.`
-          : `Cet article est indisponible. Prévenez-moi lorsque ${productName} sera de nouveau en stock.`}
+          ? `Coming soon. Email me when ${productName} is available.`
+          : `Out of stock. Email me when ${productName} is back in stock.`}
       </p>
       {status === "ok" ? (
-        <p className="text-sm text-accent">Demande enregistrée.</p>
+        <p className="text-sm text-accent">You’re on the list.</p>
       ) : (
         <div className="flex flex-col gap-2 sm:flex-row">
           <label className="sr-only" htmlFor={fieldId}>
-            E-mail
+            Email
           </label>
           <input
             id={fieldId}
@@ -50,16 +50,16 @@ export function NotifyForm({
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="votre@email.fr"
+            placeholder="you@example.com"
             className="input"
           />
           <button type="submit" className="btn btn-primary w-full whitespace-nowrap sm:w-auto" disabled={status === "loading"}>
-            {status === "loading" ? "Envoi…" : "M’avertir"}
+            {status === "loading" ? "Sending…" : "Notify me"}
           </button>
         </div>
       )}
       {status === "error" && (
-        <p className="text-sm text-red-700">Impossible d’enregistrer la demande. Réessayez.</p>
+        <p className="text-sm text-red-700">Could not save your request. Please try again.</p>
       )}
     </form>
   );

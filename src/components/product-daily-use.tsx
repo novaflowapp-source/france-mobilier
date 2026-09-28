@@ -6,7 +6,7 @@ export function ProductDailyUse({ items }: { items: ProductDailyUse[] }) {
   return (
     <section className="section section-cream">
       <div className="container-page">
-        <h2 className="display text-3xl text-navy">Pensé pour votre quotidien</h2>
+        <h2 className="display text-3xl text-navy">Built for everyday life</h2>
         <div className="prose-narrow mt-8 grid gap-8">
           {items.map((item) => (
             <div key={item.title}>

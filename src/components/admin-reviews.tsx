@@ -5,9 +5,9 @@ import Link from "next/link";
 import type { ModerationReview, ReviewStatus } from "@/lib/reviews";
 
 const labels: Record<ReviewStatus, string> = {
-  pending: "À valider",
-  approved: "En ligne",
-  archived: "Archivé",
+  pending: "Pending",
+  approved: "Live",
+  archived: "Archived",
 };
 
 function ReviewCard({
@@ -29,11 +29,11 @@ function ReviewCard({
         </p>
       </div>
       <p className="mt-3 text-sm leading-relaxed">
-        Avis publié sous le nom{" "}
+        Review submitted as{" "}
         <span className="font-medium text-navy">{item.displayName || item.authorName}</span>
       </p>
       <p className="text-xs text-muted">
-        Compte : {item.authorName} · {item.authorEmail}
+        Account: {item.authorName} · {item.authorEmail}
       </p>
       <blockquote className="mt-2 text-sm leading-relaxed text-muted">
         « {item.body} »
@@ -41,19 +41,19 @@ function ReviewCard({
       {item.title ? <p className="mt-2 text-sm font-medium text-navy">{item.title}</p> : null}
       <p className="mt-3 text-xs text-muted">
         {item.productSlug ? (
-          <Link href={`/produits/${item.productSlug}`} className="underline-offset-2 hover:underline">
+          <Link href={`/products/${item.productSlug}`} className="underline-offset-2 hover:underline">
             {item.productName}
           </Link>
         ) : (
           item.productName
         )}
         {" · "}
-        {new Date(item.createdAt).toLocaleDateString("fr-FR", {
+        {new Date(item.createdAt).toLocaleDateString("en-US", {
           day: "numeric",
           month: "long",
           year: "numeric",
         })}
-        {item.verifiedPurchase ? " · Achat vérifié" : ""}
+        {item.verifiedPurchase ? " · Verified purchase" : ""}
       </p>
       <div className="mt-4 flex flex-wrap gap-2">
         {item.status !== "approved" ? (
@@ -63,7 +63,7 @@ function ReviewCard({
             className="btn btn-primary"
             onClick={() => onAction(item.id, "approve")}
           >
-            Mettre en ligne
+            Publish
           </button>
         ) : null}
         {item.status !== "archived" ? (
@@ -73,7 +73,7 @@ function ReviewCard({
             className="btn btn-secondary"
             onClick={() => onAction(item.id, "archive")}
           >
-            Archiver
+            Archive
           </button>
         ) : null}
       </div>
@@ -100,10 +100,10 @@ export function AdminReviews({ initialReviews }: { initialReviews: ModerationRev
         body: JSON.stringify({ id, action }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Action impossible");
+      if (!res.ok) throw new Error(data.error || "Action failed");
       setReviews(data.reviews || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur");
+      setError(err instanceof Error ? err.message : "Error");
     } finally {
       setBusyId(null);
     }
@@ -111,15 +111,15 @@ export function AdminReviews({ initialReviews }: { initialReviews: ModerationRev
 
   return (
     <section className="mt-10">
-      <h2 className="text-xl font-semibold tracking-tight">Avis clients</h2>
+      <h2 className="text-xl font-semibold tracking-tight">Customer reviews</h2>
       <p className="mt-1 text-sm text-muted">
-        Chaque avis vérifié reste hors ligne jusqu’à validation. Mettez-le en ligne ou archivez-le.
+        Verified reviews stay offline until approved. Publish or archive them here.
       </p>
       {error ? <p className="mt-3 text-sm text-red-700">{error}</p> : null}
 
-      <h3 className="mt-6 text-sm font-medium text-navy">À valider ({pending.length})</h3>
+      <h3 className="mt-6 text-sm font-medium text-navy">Pending review ({pending.length})</h3>
       {pending.length === 0 ? (
-        <p className="mt-2 text-sm text-muted">Aucun avis en attente.</p>
+        <p className="mt-2 text-sm text-muted">No reviews waiting.</p>
       ) : (
         <div className="mt-3 space-y-3">
           {pending.map((item) => (
@@ -130,7 +130,7 @@ export function AdminReviews({ initialReviews }: { initialReviews: ModerationRev
 
       {approved.length > 0 ? (
         <>
-          <h3 className="mt-8 text-sm font-medium text-navy">En ligne ({approved.length})</h3>
+          <h3 className="mt-8 text-sm font-medium text-navy">Live ({approved.length})</h3>
           <div className="mt-3 space-y-3">
             {approved.map((item) => (
               <ReviewCard key={item.id} item={item} busy={busyId === item.id} onAction={onAction} />
@@ -141,7 +141,7 @@ export function AdminReviews({ initialReviews }: { initialReviews: ModerationRev
 
       {archived.length > 0 ? (
         <>
-          <h3 className="mt-8 text-sm font-medium text-navy">Archives ({archived.length})</h3>
+          <h3 className="mt-8 text-sm font-medium text-navy">Archived ({archived.length})</h3>
           <div className="mt-3 space-y-3">
             {archived.map((item) => (
               <ReviewCard key={item.id} item={item} busy={busyId === item.id} onAction={onAction} />

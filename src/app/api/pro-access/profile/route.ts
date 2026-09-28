@@ -25,24 +25,25 @@ export async function PATCH(request: Request) {
   await prepareAuth();
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) {
-    return NextResponse.json({ error: "Connexion requise" }, { status: 401 });
+    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
   }
   const parsed = schema.safeParse(await request.json());
   if (!parsed.success) {
-    return NextResponse.json({ error: "Vérifiez les champs." }, { status: 400 });
+    return NextResponse.json({ error: "Check the fields." }, { status: 400 });
   }
 
   const data = parsed.data;
-  const country = data.country || "FR";
-  const french = country === "FR" || country === "MC";
+  const country = data.country || "US";
+  const nextSirenRaw = data.siren ? normalizeSiren(data.siren) : "";
+  const french = Boolean(nextSirenRaw && isValidSiren(nextSirenRaw));
   const postalCode = data.postalCode ? normalizeShippingPostal(country, data.postalCode) : data.postalCode;
   if (data.postalCode && !postalCode) {
-    return NextResponse.json({ error: "Code postal invalide pour le pays choisi." }, { status: 400 });
+    return NextResponse.json({ error: "Invalid ZIP code for the selected country." }, { status: 400 });
   }
 
   const { getProAccessByUserId } = await import("@/lib/pro-access");
   const existing = await getProAccessByUserId(session.user.id);
-  if (!existing) return NextResponse.json({ error: "Aucun profil professionnel." }, { status: 404 });
+  if (!existing) return NextResponse.json({ error: "No trade profile found." }, { status: 404 });
 
   let siren = existing.siren;
   let legalName = existing.legalName;
@@ -50,39 +51,33 @@ export async function PATCH(request: Request) {
   let status = existing.status;
 
   if (french) {
-    const nextSiren = data.siren ? normalizeSiren(data.siren) : existing.siren;
-    if (!isValidSiren(nextSiren)) {
-      return NextResponse.json(
-        { error: "Ce SIREN n’est pas valide. Saisissez les 9 chiffres de l’entreprise." },
-        { status: 400 },
-      );
-    }
+    const nextSiren = nextSirenRaw;
     if (nextSiren !== existing.siren) {
       const company = await lookupSiren(nextSiren);
       if (!company) {
         return NextResponse.json(
-          { error: "Nous n’avons pas trouvé cette entreprise dans le répertoire Sirene. Vérifiez le SIREN." },
+          { error: "We could not find this company in the Sirene directory. Check the SIREN." },
           { status: 422 },
         );
       }
       if (!company.active) {
         return NextResponse.json(
-          { error: "Cette entreprise n’est plus active. L’accès pro n’est pas ouvert sur ce SIREN." },
+          { error: "This company is no longer active. Trade access is not available for this SIREN." },
           { status: 422 },
         );
       }
       siren = company.siren;
       legalName = company.legalName;
       city = company.city || city;
-      if (existing.status === "approved" || existing.status === "pending") {
-        status = "approved";
+      if (existing.status === "approved") {
+        status = "pending";
       }
     } else {
       siren = nextSiren;
     }
   } else {
     siren = data.siren ? normalizeSiren(data.siren) : "";
-    if (existing.status === "approved" || existing.status === "pending") {
+    if (existing.status === "approved") {
       status = "pending";
     }
   }
@@ -106,6 +101,6 @@ export async function PATCH(request: Request) {
     country,
     status,
   });
-  if (!row) return NextResponse.json({ error: "Aucun profil professionnel." }, { status: 404 });
+  if (!row) return NextResponse.json({ error: "No trade profile found." }, { status: 404 });
   return NextResponse.json({ ok: true, request: publicProRow(row) });
 }

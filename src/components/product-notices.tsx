@@ -13,8 +13,7 @@ export function ProductNotices() {
               <IconSort className="h-14 w-14" />
             </span>
             <p>
-              Ce produit peut, au choix, être réemployé ou recyclé. Si vous souhaitez le recycler, vous
-              pouvez vous rendre dans l’un des points de collecte dont la liste est disponible sur{" "}
+              This product can be reused or recycled. To recycle it, find a drop-off location listed on{" "}
               <a
                 href={COLLECTION_POINTS_URL}
                 target="_blank"
@@ -30,10 +29,9 @@ export function ProductNotices() {
               <IconCamera className="h-8 w-8" />
             </span>
             <p>
-              Les équipes France Mobilier mettent tout en œuvre pour restituer l’aspect des produits à
-              travers des visuels au plus près de la réalité. Toutefois, la prise de vue, la luminosité et
-              la résolution des écrans peuvent entraîner de légères variations dans la perception des
-              couleurs, des dimensions ou des matières.
+              Our team works to show products as accurately as possible in photos. Lighting, camera
+              angles, and your screen can still cause slight differences in how colors, dimensions, or
+              materials appear.
             </p>
           </li>
         </ul>

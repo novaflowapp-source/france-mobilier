@@ -149,7 +149,7 @@ export function ProductGallery({
             <div key={`${src}-${imageIndex}`} className="product-gallery-slide">
               <Image
                 src={src}
-                alt={`${name} — photo ${imageIndex + 1}`}
+                alt={`${name} — image ${imageIndex + 1}`}
                 fill
                 className={`object-cover select-none ${canHover ? "transition-transform duration-500 md:group-hover:scale-[1.06]" : ""}`}
                 priority={imageIndex === 0}
@@ -164,7 +164,7 @@ export function ProductGallery({
             <button
               type="button"
               className="absolute left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-navy shadow-sm"
-              aria-label="Photo précédente"
+              aria-label="Previous photo"
               onClick={(event) => {
                 event.stopPropagation();
                 go(index - 1);
@@ -175,7 +175,7 @@ export function ProductGallery({
             <button
               type="button"
               className="absolute right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-navy shadow-sm"
-              aria-label="Photo suivante"
+              aria-label="Next photo"
               onClick={(event) => {
                 event.stopPropagation();
                 go(index + 1);
@@ -201,7 +201,7 @@ export function ProductGallery({
                 }}
                 type="button"
                 onClick={() => onIndexChange(imageIndex)}
-                aria-label={`Voir la photo ${imageIndex + 1}`}
+                aria-label={`View image ${imageIndex + 1}`}
                 aria-current={selected ? "true" : undefined}
                 className={`relative aspect-square w-16 shrink-0 overflow-hidden rounded-md bg-white sm:w-[4.5rem] ${
                   selected ? "ring-2 ring-navy ring-offset-2 ring-offset-white" : "ring-1 ring-border"

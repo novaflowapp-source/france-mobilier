@@ -32,7 +32,7 @@ function unique<T>(values: Array<T | undefined | null>): T[] {
 function FilterFields({ products, query }: Props) {
   const types = unique(products.map((product) => product.productType)).sort();
   const materials = unique(products.map((product) => product.material)).sort((a, b) =>
-    a.localeCompare(b, "fr"),
+    a.localeCompare(b, "en"),
   );
   const colors = [
     ...new Map(
@@ -62,14 +62,14 @@ function FilterFields({ products, query }: Props) {
   return (
     <>
       <label className="text-sm md:col-span-3">
-        <span className="mb-1 block text-muted">Recherche</span>
-        <input name="q" defaultValue={query.q || ""} placeholder="Meuble, 20 cm…" className="input" />
+        <span className="mb-1 block text-muted">Search</span>
+        <input name="q" defaultValue={query.q || ""} placeholder="Furniture, 20 cm…" className="input" />
       </label>
       {types.length > 1 ? (
         <label className="text-sm md:col-span-2">
           <span className="mb-1 block text-muted">Type</span>
           <select name="productType" defaultValue={query.productType || ""} className="input">
-            <option value="">Tous</option>
+            <option value="">All</option>
             {types.map((type) => (
               <option key={type} value={type}>
                 {PRODUCT_TYPE_LABELS[type]}
@@ -80,12 +80,12 @@ function FilterFields({ products, query }: Props) {
       ) : null}
       {depthOptions.length > 0 ? (
         <label className="text-sm md:col-span-2">
-          <span className="mb-1 block text-muted">Profondeur</span>
+          <span className="mb-1 block text-muted">Depth</span>
           <select name="maxDepth" defaultValue={query.maxDepth || ""} className="input">
-            <option value="">Toutes</option>
+            <option value="">Any</option>
             {depthOptions.map((limit) => (
               <option key={limit} value={limit}>
-                Moins de {limit} cm
+                Under {limit} cm
               </option>
             ))}
           </select>
@@ -93,9 +93,9 @@ function FilterFields({ products, query }: Props) {
       ) : null}
       {widthOptions.length > 0 ? (
         <label className="text-sm md:col-span-2">
-          <span className="mb-1 block text-muted">Largeur max.</span>
+          <span className="mb-1 block text-muted">Max width</span>
           <select name="maxWidth" defaultValue={query.maxWidth || ""} className="input">
-            <option value="">Toutes</option>
+            <option value="">Any</option>
             {widthOptions.map((limit) => (
               <option key={limit} value={limit}>
                 {limit} cm
@@ -106,9 +106,9 @@ function FilterFields({ products, query }: Props) {
       ) : null}
       {heightOptions.length > 0 ? (
         <label className="text-sm md:col-span-2">
-          <span className="mb-1 block text-muted">Hauteur max.</span>
+          <span className="mb-1 block text-muted">Max height</span>
           <select name="maxHeight" defaultValue={query.maxHeight || ""} className="input">
-            <option value="">Toutes</option>
+            <option value="">Any</option>
             {heightOptions.map((limit) => (
               <option key={limit} value={limit}>
                 {limit} cm
@@ -119,12 +119,12 @@ function FilterFields({ products, query }: Props) {
       ) : null}
       {priceOptions.length > 0 ? (
         <label className="text-sm md:col-span-2">
-          <span className="mb-1 block text-muted">Prix</span>
+          <span className="mb-1 block text-muted">Price</span>
           <select name="maxPrice" defaultValue={query.maxPrice || ""} className="input">
-            <option value="">Tous</option>
+            <option value="">All</option>
             {priceOptions.map((limit) => (
               <option key={limit} value={limit}>
-                Jusqu’à {limit} €
+                Up to ${limit}
               </option>
             ))}
           </select>
@@ -132,9 +132,9 @@ function FilterFields({ products, query }: Props) {
       ) : null}
       {materials.length > 1 ? (
         <label className="text-sm md:col-span-2">
-          <span className="mb-1 block text-muted">Matière</span>
+          <span className="mb-1 block text-muted">Material</span>
           <select name="material" defaultValue={query.material || ""} className="input">
-            <option value="">Toutes</option>
+            <option value="">Any</option>
             {materials.map((material) => (
               <option key={material} value={material}>
                 {material}
@@ -145,9 +145,9 @@ function FilterFields({ products, query }: Props) {
       ) : null}
       {colors.length > 1 ? (
         <label className="text-sm md:col-span-2">
-          <span className="mb-1 block text-muted">Couleur</span>
+          <span className="mb-1 block text-muted">Color</span>
           <select name="color" defaultValue={query.color || ""} className="input">
-            <option value="">Toutes</option>
+            <option value="">Any</option>
             {colors.map(([value, label]) => (
               <option key={value} value={value}>
                 {label}
@@ -158,20 +158,20 @@ function FilterFields({ products, query }: Props) {
       ) : null}
       {hasAvailable && hasUnavailable ? (
         <label className="text-sm md:col-span-2">
-          <span className="mb-1 block text-muted">Disponibilité</span>
+          <span className="mb-1 block text-muted">Availability</span>
           <select name="availability" defaultValue={query.availability || ""} className="input">
-            <option value="">Toutes</option>
-            <option value="available">Disponible à l’achat</option>
+            <option value="">Any</option>
+            <option value="available">Available to buy</option>
           </select>
         </label>
       ) : null}
       <label className="text-sm md:col-span-2">
-        <span className="mb-1 block text-muted">Tri</span>
+        <span className="mb-1 block text-muted">Sort</span>
         <select name="sort" defaultValue={query.sort || ""} className="input">
-          <option value="">Pertinence</option>
-          <option value="newest">Nouveautés</option>
-          <option value="price-asc">Prix croissant</option>
-          <option value="price-desc">Prix décroissant</option>
+          <option value="">Relevance</option>
+          <option value="newest">Newest</option>
+          <option value="price-asc">Price: low to high</option>
+          <option value="price-desc">Price: high to low</option>
         </select>
       </label>
     </>
@@ -212,11 +212,11 @@ export function ProductFilters({ products, query }: Props) {
     <div className="mb-8">
       <div className="mb-3 flex items-center justify-between gap-3 md:hidden">
         <button type="button" className="btn btn-secondary flex-1" onClick={() => setOpen(true)}>
-          Filtres{activeCount ? ` (${activeCount})` : ""}
+          Filters{activeCount ? ` (${activeCount})` : ""}
         </button>
         {activeCount > 0 ? (
           <Link href={pathname} className="text-sm text-navy underline-offset-4 hover:underline">
-            Réinitialiser
+            Reset
           </Link>
         ) : null}
       </div>
@@ -225,7 +225,7 @@ export function ProductFilters({ products, query }: Props) {
         <FilterFields products={products} query={query} />
         <div className="flex gap-2 md:col-span-2">
           <button type="submit" className="btn btn-primary w-full">
-            Filtrer
+            Apply filters
           </button>
         </div>
         {activeCount > 0 ? (
@@ -233,7 +233,7 @@ export function ProductFilters({ products, query }: Props) {
             href={pathname}
             className="self-center text-sm text-navy underline-offset-4 hover:underline md:col-span-2"
           >
-            Réinitialiser
+            Reset
           </Link>
         ) : null}
       </form>
@@ -243,7 +243,7 @@ export function ProductFilters({ products, query }: Props) {
           <button
             type="button"
             className="absolute inset-0 bg-navy/40"
-            aria-label="Fermer les filtres"
+            aria-label="Close filters"
             onClick={() => setOpen(false)}
           />
           <div
@@ -254,20 +254,20 @@ export function ProductFilters({ products, query }: Props) {
           >
             <div className="mb-4 flex items-center justify-between">
               <h2 id={titleId} className="text-lg font-semibold text-navy">
-                Filtres
+                Filters
               </h2>
               <button type="button" className="text-sm text-muted" onClick={() => setOpen(false)}>
-                Fermer
+                Close
               </button>
             </div>
             <form className="grid gap-3">
               <FilterFields products={products} query={query} />
               <button type="submit" className="btn btn-primary mt-2 w-full">
-                Voir les meubles
+                Show results
               </button>
               {activeCount > 0 ? (
                 <Link href={pathname} className="btn btn-secondary w-full" onClick={() => setOpen(false)}>
-                  Réinitialiser
+                  Reset
                 </Link>
               ) : null}
             </form>

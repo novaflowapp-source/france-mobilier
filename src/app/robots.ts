@@ -3,15 +3,15 @@ import { publicOrigin } from "@/lib/seo";
 
 const privatePaths = [
   "/admin",
-  "/panier",
-  "/paiement",
-  "/commande",
+  "/cart",
+  "/checkout",
+  "/order",
   "/api/",
-  "/compte",
-  "/connexion",
-  "/inscription",
-  "/mot-de-passe-oublie",
-  "/nouveau-mot-de-passe",
+  "/account",
+  "/login",
+  "/signup",
+  "/forgot-password",
+  "/reset-password",
 ];
 
 const googleCrawlers = [
@@ -36,7 +36,7 @@ export default function robots(): MetadataRoute.Robots {
       },
       {
         userAgent: googleCrawlers,
-        allow: ["/", "/produits/", "/collections/", "/guides/"],
+        allow: ["/", "/products/", "/collections/", "/guides/"],
         disallow: privatePaths,
       },
     ],

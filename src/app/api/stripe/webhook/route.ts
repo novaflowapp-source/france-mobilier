@@ -7,7 +7,7 @@ export const runtime = "nodejs";
 export async function POST(request: Request) {
   const secret = process.env.STRIPE_WEBHOOK_SECRET?.trim();
   if (!secret) {
-    return NextResponse.json({ error: "Webhook Stripe non configuré." }, { status: 503 });
+    return NextResponse.json({ error: "Stripe webhook is not configured." }, { status: 503 });
   }
 
   const signature = request.headers.get("stripe-signature");
@@ -20,7 +20,7 @@ export async function POST(request: Request) {
   try {
     event = getStripe().webhooks.constructEvent(rawBody, signature, secret);
   } catch {
-    return NextResponse.json({ error: "Signature invalide." }, { status: 400 });
+    return NextResponse.json({ error: "Invalid signature." }, { status: 400 });
   }
 
   if (event.type === "checkout.session.completed") {

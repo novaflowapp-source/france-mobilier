@@ -3,7 +3,7 @@ import type { Product } from "@/lib/types/commerce";
 
 export function ProductRecommendations({
   products,
-  title = "Vous aimerez peut-être aussi",
+  title = "You may also like",
 }: {
   products: Product[];
   title?: string;

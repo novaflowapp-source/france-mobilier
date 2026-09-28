@@ -5,7 +5,7 @@ import { indexableMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = indexableMetadata("/contact", {
   title: "Contact",
-  description: "Contacter France Mobilier : e-mail, formulaire et coordonnées de l’entreprise.",
+  description: "Contact France Mobilier: email, form, and company details.",
 });
 
 export default function ContactPage() {
@@ -16,7 +16,7 @@ export default function ContactPage() {
     <div className="container-page py-10 md:py-14">
       <h1 className="display text-3xl text-navy md:text-4xl">Contact</h1>
       <p className="mt-3 max-w-2xl text-muted">
-        Une question sur une commande, un produit ou la livraison ? Écrivez-nous.
+        Questions about an order, a product, or shipping? Get in touch.
       </p>
       <div className="mt-8 grid gap-8 md:grid-cols-2">
         <ContactForm />
@@ -36,7 +36,7 @@ export default function ContactPage() {
               </a>
             </p>
           ) : null}
-          <p className="mt-3">SAV : {identity.hours}.</p>
+          <p className="mt-3">Support: {identity.hours}.</p>
         </div>
       </div>
     </div>

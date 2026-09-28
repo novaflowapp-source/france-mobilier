@@ -83,8 +83,8 @@ function escapeHtml(value: string) {
     .replace(/"/g, "&quot;");
 }
 
-function formatEuros(cents: number) {
-  return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(
+function formatMoney(cents: number) {
+  return new Intl.NumberFormat(store.locale, { style: "currency", currency: store.currency }).format(
     cents / 100,
   );
 }
@@ -99,10 +99,10 @@ function emailButton(href: string, label: string) {
   return `<a href="${escapeHtml(href)}" style="display:inline-block;background:${NAVY};color:#ffffff;text-decoration:none;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:bold;padding:12px 22px;border-radius:6px">${escapeHtml(label)}</a>`;
 }
 
-/** Gabarit HTML des e-mails clients — logo, couleurs boutique, compatible Gmail. */
+/** Customer email HTML layout — logo, brand colors, Gmail-friendly. */
 function layoutCustomerEmail(input: { preheader: string; title: string; body: string }) {
   return `<!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -164,46 +164,46 @@ export function buildOrderPaidEmail(order: OrderPaidEmail) {
   const lines = order.items
     .map(
       (item) =>
-        `${item.name} × ${item.quantity} — ${formatEuros(item.unitPriceCents * item.quantity)}`,
+        `${item.name} × ${item.quantity} — ${formatMoney(item.unitPriceCents * item.quantity)}`,
     )
     .join("\n");
   const subject = order.testMode
-    ? `Commande test ${order.reference} — ${store.storeName}`
-    : `Commande ${order.reference} — ${store.storeName}`;
+    ? `Test order ${order.reference} — ${store.storeName}`
+    : `Order ${order.reference} — ${store.storeName}`;
   const intro = order.testMode
-    ? "Paiement test enregistré. Aucun débit réel n’a été effectué."
-    : "Nous avons bien reçu votre paiement.";
+    ? "Test payment recorded. No real charge was made."
+    : "We have received your payment.";
   const destination = `${order.line1}, ${order.postalCode} ${order.city}${
     order.country ? `, ${shippingCountryName(order.country)}` : ""
   }${order.phone ? `, ${order.phone}` : ""}`;
   const text = [
-    `Bonjour ${order.name},`,
+    `Hello ${order.name},`,
     "",
     intro,
-    `Référence : ${order.reference}`,
-    `Total TTC : ${formatEuros(order.amountCents)}`,
+    `Reference: ${order.reference}`,
+    `Total: ${formatMoney(order.amountCents)}`,
     "",
     lines,
     "",
-    `Livraison : ${destination}`,
+    `Shipping: ${destination}`,
     ...(order.companyName && order.siren
-      ? [`Facture entreprise : ${order.companyName} (SIREN ${order.siren})`]
+      ? [`Business invoice: ${order.companyName} (SIREN ${order.siren})`]
       : []),
-    `Voir la commande : ${order.viewUrl}`,
-    ...(order.invoicesUrl ? [`Vos factures : ${order.invoicesUrl}`] : []),
+    `View order: ${order.viewUrl}`,
+    ...(order.invoicesUrl ? [`Your invoices: ${order.invoicesUrl}`] : []),
     "",
     ...(order.temporaryPassword
       ? [
-          "Un compte a été créé pour suivre vos commandes :",
-          `Identifiant : ${order.email}`,
-          `Mot de passe provisoire : ${order.temporaryPassword}`,
-          `Connexion : ${order.loginUrl}`,
-          "Une fois connecté, changez ce mot de passe dans Mon compte.",
+          "An account was created so you can track orders:",
+          `Sign-in email: ${order.email}`,
+          `Temporary password: ${order.temporaryPassword}`,
+          `Sign in: ${order.loginUrl}`,
+          "After signing in, change this password in My account.",
           "",
         ]
       : []),
-    `${SHIPPING_OFFERED_SENTENCE} Nous vous écrirons à la fin de la préparation, puis à l’expédition du colis.`,
-    `SAV : ${store.supportEmail}`,
+    `${SHIPPING_OFFERED_SENTENCE} We will email you when preparation is complete, then again when your package ships.`,
+    `Support: ${store.supportEmail}`,
   ].join("\n");
 
   const rows = order.items
@@ -211,7 +211,7 @@ export function buildOrderPaidEmail(order: OrderPaidEmail) {
       (item) =>
         `<tr>
           <td style="padding:10px 0;border-bottom:1px solid ${BORDER};font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#222">${escapeHtml(item.name)} × ${item.quantity}</td>
-          <td style="padding:10px 0;border-bottom:1px solid ${BORDER};font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#222;text-align:right">${formatEuros(item.unitPriceCents * item.quantity)}</td>
+          <td style="padding:10px 0;border-bottom:1px solid ${BORDER};font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#222;text-align:right">${formatMoney(item.unitPriceCents * item.quantity)}</td>
         </tr>`,
     )
     .join("");
@@ -220,11 +220,11 @@ export function buildOrderPaidEmail(order: OrderPaidEmail) {
     ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:20px 0 8px;background:${CREAM};border:1px solid ${BORDER};border-radius:8px">
         <tr>
           <td style="padding:16px 18px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.55;color:#222">
-            <strong>Votre compte</strong><br>
-            Identifiant : ${escapeHtml(order.email)}<br>
-            Mot de passe provisoire : ${escapeHtml(order.temporaryPassword)}<br>
-            <span style="color:${MUTED};font-size:13px">Une fois connecté, changez ce mot de passe dans Mon compte.</span>
-            <div style="margin-top:14px">${emailButton(order.loginUrl, "Se connecter")}</div>
+            <strong>Your account</strong><br>
+            Sign-in email: ${escapeHtml(order.email)}<br>
+            Temporary password: ${escapeHtml(order.temporaryPassword)}<br>
+            <span style="color:${MUTED};font-size:13px">After signing in, change this password in My account.</span>
+            <div style="margin-top:14px">${emailButton(order.loginUrl, "Sign in")}</div>
           </td>
         </tr>
       </table>`
@@ -233,39 +233,39 @@ export function buildOrderPaidEmail(order: OrderPaidEmail) {
   const body = `
     ${
       order.testMode
-        ? `<p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:${NAVY};background:${CREAM};border:1px solid ${BORDER};border-radius:8px;padding:10px 14px">Paiement test — aucun débit réel.</p>`
+        ? `<p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:${NAVY};background:${CREAM};border:1px solid ${BORDER};border-radius:8px;padding:10px 14px">Test payment — no real charge.</p>`
         : ""
     }
-    <p style="margin:0 0 8px;font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.3;color:${NAVY}">Commande confirmée</p>
-    <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">Bonjour ${escapeHtml(order.name)},<br>${escapeHtml(intro)}</p>
+    <p style="margin:0 0 8px;font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.3;color:${NAVY}">Order confirmed</p>
+    <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">Hello ${escapeHtml(order.name)},<br>${escapeHtml(intro)}</p>
     <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">
-      <strong>Référence ${escapeHtml(order.reference)}</strong><br>
-      Total TTC ${formatEuros(order.amountCents)}
+      <strong>Reference ${escapeHtml(order.reference)}</strong><br>
+      Total ${formatMoney(order.amountCents)}
     </p>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:0 0 18px">${rows}</table>
     <p style="margin:0 0 22px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.55;color:${MUTED}">
-      Livraison : ${escapeHtml(destination)}
+      Shipping: ${escapeHtml(destination)}
       ${
         order.companyName && order.siren
-          ? `<br>Facture entreprise : ${escapeHtml(order.companyName)} (SIREN ${escapeHtml(order.siren)})`
+          ? `<br>Business invoice: ${escapeHtml(order.companyName)} (SIREN ${escapeHtml(order.siren)})`
           : ""
       }
     </p>
-    <p style="margin:0 0 8px">${emailButton(order.viewUrl, "Voir la commande")}</p>
+    <p style="margin:0 0 8px">${emailButton(order.viewUrl, "View order")}</p>
     ${
       order.invoicesUrl
-        ? `<p style="margin:0 0 8px">${emailButton(order.invoicesUrl, "Télécharger la facture")}</p>`
+        ? `<p style="margin:0 0 8px">${emailButton(order.invoicesUrl, "Download invoice")}</p>`
         : ""
     }
     ${accountBlock}
-    <p style="margin:22px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.55;color:${MUTED}">${escapeHtml(SHIPPING_OFFERED_SENTENCE)} Nous vous écrirons à la fin de la préparation, puis à l’expédition du colis.</p>
+    <p style="margin:22px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.55;color:${MUTED}">${escapeHtml(SHIPPING_OFFERED_SENTENCE)} We will email you when preparation is complete, then again when your package ships.</p>
   `;
 
   return {
     subject,
     text,
     html: layoutCustomerEmail({
-      preheader: `${intro} Référence ${order.reference}.`,
+      preheader: `${intro} Reference ${order.reference}.`,
       title: subject,
       body,
     }),
@@ -283,38 +283,38 @@ export async function sendProAccessActivatedEmail(input: {
   companyName: string;
   siren?: string | null;
 }) {
-  const accountUrl = `${store.domain.replace(/\/$/, "")}/compte`;
-  const greeting = input.firstName?.trim() ? `Bonjour ${input.firstName.trim()},` : "Bonjour,";
-  const subject = "Votre accès France Mobilier Pro est activé";
+  const accountUrl = `${store.domain.replace(/\/$/, "")}/account`;
+  const greeting = input.firstName?.trim() ? `Hello ${input.firstName.trim()},` : "Hello,";
+  const subject = "Your France Mobilier Pro access is active";
   const text = [
     greeting,
     "",
-    "Votre accès professionnel France Mobilier est désormais actif.",
+    "Your France Mobilier professional access is now active.",
     input.siren
-      ? `Entreprise : ${input.companyName} (SIREN ${input.siren}).`
-      : `Entreprise : ${input.companyName}.`,
-    "Vous pouvez vous connecter à votre compte afin de gérer vos informations professionnelles, consulter vos commandes et demander un devis pour vos projets.",
-    `Espace : ${accountUrl}`,
+      ? `Company: ${input.companyName} (SIREN ${input.siren}).`
+      : `Company: ${input.companyName}.`,
+    "Sign in to manage your business details, view orders, and request quotes for your projects.",
+    `Account: ${accountUrl}`,
     "",
-    "À bientôt,",
+    "Best regards,",
     store.storeName,
   ].join("\n");
   const html = layoutCustomerEmail({
-    preheader: "Votre accès professionnel est actif.",
+    preheader: "Your professional access is active.",
     title: subject,
     body: `
-    <p style="margin:0 0 8px;font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.3;color:${NAVY}">Accès professionnel activé</p>
+    <p style="margin:0 0 8px;font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.3;color:${NAVY}">Professional access activated</p>
     <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">${escapeHtml(greeting)}</p>
     <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">
-      Votre accès professionnel France Mobilier est désormais actif.
+      Your France Mobilier professional access is now active.
     </p>
     <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">
       ${escapeHtml(input.companyName)}${input.siren ? `<br>SIREN ${escapeHtml(input.siren)}` : ""}
     </p>
     <p style="margin:0 0 22px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">
-      Vous pouvez vous connecter pour gérer vos informations, consulter vos commandes et demander un devis.
+      Sign in to manage your details, view orders, and request quotes.
     </p>
-    <p style="margin:0">${emailButton(accountUrl, "Ouvrir mon espace")}</p>
+    <p style="margin:0">${emailButton(accountUrl, "Open my account")}</p>
     `,
   });
   return sendMail({ to: input.email, subject, text, html });
@@ -332,32 +332,32 @@ export async function sendProAccessRequestEmails(input: {
   volume?: string | null;
   status: string;
 }) {
-  const greeting = input.firstName?.trim() ? `Bonjour ${input.firstName.trim()},` : "Bonjour,";
+  const greeting = input.firstName?.trim() ? `Hello ${input.firstName.trim()},` : "Hello,";
   if (input.status === "pending") {
-    const clientSubject = "Votre demande France Mobilier Pro";
+    const clientSubject = "Your France Mobilier Pro request";
     await sendMail({
       to: input.email,
       subject: clientSubject,
       text: [
         greeting,
         "",
-        "Nous avons bien reçu votre demande d’accès professionnel France Mobilier.",
-        "Votre dossier est actuellement en cours de vérification.",
-        "Vous recevrez un e-mail dès que votre accès professionnel sera activé.",
+        "We have received your France Mobilier professional access request.",
+        "Your application is being reviewed.",
+        "You will receive an email as soon as your professional access is activated.",
         "",
         store.storeName,
       ].join("\n"),
       html: layoutCustomerEmail({
-        preheader: "Votre demande professionnelle est en cours de vérification.",
+        preheader: "Your professional request is under review.",
         title: clientSubject,
         body: `
-        <p style="margin:0 0 8px;font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.3;color:${NAVY}">Demande reçue</p>
+        <p style="margin:0 0 8px;font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.3;color:${NAVY}">Request received</p>
         <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">${escapeHtml(greeting)}</p>
         <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">
-          Nous avons bien reçu votre demande d’accès professionnel France Mobilier.
+          We have received your France Mobilier professional access request.
         </p>
         <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">
-          Votre dossier est actuellement en cours de vérification. Vous recevrez un e-mail dès que votre accès professionnel sera activé.
+          Your application is being reviewed. You will receive an email as soon as your professional access is activated.
         </p>
         `,
       }),
@@ -366,82 +366,82 @@ export async function sendProAccessRequestEmails(input: {
 
   const { b2bConfig } = await import("@/lib/b2b");
   const adminTo = b2bConfig().salesEmail;
-  const adminUrl = `${store.domain.replace(/\/$/, "")}/admin/professionnels`;
+  const adminUrl = `${store.domain.replace(/\/$/, "")}/admin/professionals`;
   const adminLines = [
-    `Nom : ${[input.firstName, input.lastName].filter(Boolean).join(" ") || "—"}`,
-    `Entreprise : ${input.companyName}`,
-    `E-mail : ${input.email}`,
-    `Téléphone : ${input.phone || "—"}`,
-    `SIREN : ${input.siren || "—"}`,
-    `TVA : ${input.vatNumber || "—"}`,
-    `Activité : ${input.activity || "—"}`,
-    `Volume estimé : ${input.volume || "—"}`,
-    `Statut : ${input.status}`,
-    `Date : ${new Date().toLocaleString("fr-FR")}`,
+    `Name: ${[input.firstName, input.lastName].filter(Boolean).join(" ") || "—"}`,
+    `Company: ${input.companyName}`,
+    `Email: ${input.email}`,
+    `Phone: ${input.phone || "—"}`,
+    `SIREN: ${input.siren || "—"}`,
+    `VAT: ${input.vatNumber || "—"}`,
+    `Activity: ${input.activity || "—"}`,
+    `Estimated volume: ${input.volume || "—"}`,
+    `Status: ${input.status}`,
+    `Date: ${new Date().toLocaleString(store.locale)}`,
     adminUrl,
   ];
   await sendMail({
     to: adminTo,
-    subject: "Nouvelle demande France Mobilier Pro",
+    subject: "New France Mobilier Pro request",
     text: adminLines.join("\n"),
     html: `<p>${adminLines.map((line) => escapeHtml(line)).join("<br>")}</p>`,
   });
 }
 
 export async function sendWelcomeEmail(input: { email: string; name?: string | null }) {
-  const accountUrl = `${store.domain.replace(/\/$/, "")}/compte`;
+  const accountUrl = `${store.domain.replace(/\/$/, "")}/account`;
   const catalogUrl = `${store.domain.replace(/\/$/, "")}/collections/meubles`;
-  const greeting = input.name?.trim() ? `Bonjour ${input.name.trim()},` : "Bonjour,";
-  const subject = `Bienvenue chez ${store.storeName}`;
+  const greeting = input.name?.trim() ? `Hello ${input.name.trim()},` : "Hello,";
+  const subject = `Welcome to ${store.storeName}`;
   const text = [
     greeting,
     "",
-    `Votre compte ${store.storeName} est créé.`,
-    "Vous pouvez suivre vos commandes, enregistrer vos informations et parcourir nos meubles depuis votre espace.",
-    "Si vous n’avez pas encore commandé, le code BIENVENUE offre 10 % sur toute la première commande, une fois par numéro de téléphone.",
-    `Mon compte : ${accountUrl}`,
-    `Nos meubles : ${catalogUrl}`,
+    `Your ${store.storeName} account is ready.`,
+    "Track orders, save your details, and browse furniture from your account.",
+    "If you have not ordered yet, promo code WELCOME gives 10% off your entire first order, once per US phone number.",
+    `My account: ${accountUrl}`,
+    `Shop furniture: ${catalogUrl}`,
     "",
-    `Une question ? ${store.supportEmail} — ${store.supportHoursShort}.`,
+    `Questions? ${store.supportEmail} — ${store.supportHoursShort}.`,
     "",
     store.storeName,
   ].join("\n");
   const html = layoutCustomerEmail({
-    preheader: `Votre compte ${store.storeName} est créé.`,
+    preheader: `Your ${store.storeName} account is ready.`,
     title: subject,
     body: `
-    <p style="margin:0 0 8px;font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.3;color:${NAVY}">Bienvenue</p>
+    <p style="margin:0 0 8px;font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.3;color:${NAVY}">Welcome</p>
     <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">${escapeHtml(greeting)}</p>
     <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">
-      Votre compte ${escapeHtml(store.storeName)} est créé. Vous pouvez suivre vos commandes, enregistrer vos informations et parcourir nos meubles depuis votre espace. Si vous n’avez pas encore commandé, le code BIENVENUE offre 10 % sur toute la première commande, une fois par numéro de téléphone.
+      Your ${escapeHtml(store.storeName)} account is ready. Track orders, save your details, and browse our furniture from your account. If you have not ordered yet, promo code WELCOME gives 10% off your entire first order, once per US phone number.
     </p>
-    <p style="margin:0 0 8px">${emailButton(accountUrl, "Ouvrir mon compte")}</p>
-    <p style="margin:0">${emailButton(catalogUrl, "Découvrir les meubles")}</p>
+    <p style="margin:0 0 8px">${emailButton(accountUrl, "Open my account")}</p>
+    <p style="margin:0">${emailButton(catalogUrl, "Browse furniture")}</p>
     `,
   });
   return sendMail({ to: input.email, subject, text, html });
 }
 
 export async function sendPasswordResetEmail(input: { email: string; url: string }) {
-  const subject = `Réinitialiser votre mot de passe — ${store.storeName}`;
+  const subject = `Reset your password — ${store.storeName}`;
   const text = [
-    "Vous avez demandé à réinitialiser le mot de passe de votre compte.",
-    "Ouvrez ce lien pour en choisir un nouveau. Il expire dans une heure.",
+    "You asked to reset your account password.",
+    "Open this link to choose a new one. It expires in one hour.",
     input.url,
-    "Si vous n’êtes pas à l’origine de cette demande, ignorez cet e-mail.",
+    "If you did not request this, you can ignore this email.",
   ].join("\n");
   const html = layoutCustomerEmail({
-    preheader: "Lien pour choisir un nouveau mot de passe.",
+    preheader: "Link to choose a new password.",
     title: subject,
     body: `
-    <p style="margin:0 0 8px;font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.3;color:${NAVY}">Nouveau mot de passe</p>
+    <p style="margin:0 0 8px;font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.3;color:${NAVY}">New password</p>
     <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">
-      Vous avez demandé à réinitialiser le mot de passe de votre compte ${escapeHtml(store.storeName)}.
+      You asked to reset the password for your ${escapeHtml(store.storeName)} account.
     </p>
     <p style="margin:0 0 22px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">
-      Ce lien expire dans une heure. Si vous n’êtes pas à l’origine de cette demande, ignorez cet e-mail.
+      This link expires in one hour. If you did not request this, you can ignore this email.
     </p>
-    <p style="margin:0">${emailButton(input.url, "Choisir un nouveau mot de passe")}</p>
+    <p style="margin:0">${emailButton(input.url, "Choose a new password")}</p>
     `,
   });
   return sendMail({ to: input.email, subject, text, html });
@@ -458,7 +458,7 @@ export type OrderLifecycleEmail = {
 };
 
 function lifecycleKindSubject(order: OrderLifecycleEmail, kind: "prepared" | "shipped") {
-  const title = kind === "prepared" ? "Préparation terminée" : "Colis expédié";
+  const title = kind === "prepared" ? "Preparation complete" : "Package shipped";
   return order.testMode
     ? `${title} (test) ${order.reference} — ${store.storeName}`
     : `${title} — ${order.reference} — ${store.storeName}`;
@@ -467,38 +467,38 @@ function lifecycleKindSubject(order: OrderLifecycleEmail, kind: "prepared" | "sh
 export async function sendOrderPreparedEmail(order: OrderLifecycleEmail) {
   const subject = lifecycleKindSubject(order, "prepared");
   const intro = order.testMode
-    ? "E-mail de test : la période de préparation affichée sur le site est écoulée."
-    : "La préparation de votre commande est terminée.";
+    ? "Test email: the preparation period shown on the site has elapsed."
+    : "Your order preparation is complete.";
   const next =
-    "Votre colis va être remis au transporteur. Vous recevrez un second e-mail à l’expédition. " +
-    `L’acheminement est ensuite estimé à ${order.transitBusinessDays} jours ouvrés.`;
+    "Your package will be handed to the carrier. You will receive a second email when it ships. " +
+    `Transit is then estimated at ${order.transitBusinessDays} business days.`;
   const text = [
-    `Bonjour ${order.name},`,
+    `Hello ${order.name},`,
     "",
     intro,
-    `Référence : ${order.reference}`,
+    `Reference: ${order.reference}`,
     next,
-    `Voir la commande : ${order.viewUrl}`,
+    `View order: ${order.viewUrl}`,
     "",
-    `SAV : ${store.supportEmail}`,
+    `Support: ${store.supportEmail}`,
   ].join("\n");
   const html = layoutCustomerEmail({
-    preheader: `Préparation terminée. Référence ${order.reference}.`,
+    preheader: `Preparation complete. Reference ${order.reference}.`,
     title: subject,
     body: `
     ${
       order.testMode
-        ? `<p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:${NAVY};background:${CREAM};border:1px solid ${BORDER};border-radius:8px;padding:10px 14px">E-mail de test — aucun envoi réel n’est confirmé.</p>`
+        ? `<p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:${NAVY};background:${CREAM};border:1px solid ${BORDER};border-radius:8px;padding:10px 14px">Test email — real shipment not confirmed.</p>`
         : ""
     }
-    <p style="margin:0 0 8px;font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.3;color:${NAVY}">Préparation terminée</p>
-    <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">Bonjour ${escapeHtml(order.name)},<br>${escapeHtml(intro)}</p>
+    <p style="margin:0 0 8px;font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.3;color:${NAVY}">Preparation complete</p>
+    <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">Hello ${escapeHtml(order.name)},<br>${escapeHtml(intro)}</p>
     <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">
-      <strong>Référence ${escapeHtml(order.reference)}</strong><br>
-      Préparation : ${order.handlingBusinessDays} jours ouvrés.
+      <strong>Reference ${escapeHtml(order.reference)}</strong><br>
+      Preparation: ${order.handlingBusinessDays} business days.
     </p>
     <p style="margin:0 0 22px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">${escapeHtml(next)}</p>
-    <p style="margin:0">${emailButton(order.viewUrl, "Voir la commande")}</p>
+    <p style="margin:0">${emailButton(order.viewUrl, "View order")}</p>
     `,
   });
   return sendMail({ to: order.email, subject, text, html });
@@ -507,37 +507,37 @@ export async function sendOrderPreparedEmail(order: OrderLifecycleEmail) {
 export async function sendOrderShippedEmail(order: OrderLifecycleEmail) {
   const subject = lifecycleKindSubject(order, "shipped");
   const intro = order.testMode
-    ? "E-mail de test : selon le délai annoncé, le colis est considéré comme expédié."
-    : "Votre colis a été expédié.";
+    ? "Test email: based on the stated timeline, the package is treated as shipped."
+    : "Your package has shipped.";
   const next =
-    `L’acheminement est estimé à ${order.transitBusinessDays} jours ouvrés. ` +
-    "Aucun numéro de suivi n’est encore disponible : nous vous l’enverrons dès que le transporteur le communique.";
+    `Transit is estimated at ${order.transitBusinessDays} business days. ` +
+    "No tracking number is available yet — we will send it when the carrier provides one.";
   const text = [
-    `Bonjour ${order.name},`,
+    `Hello ${order.name},`,
     "",
     intro,
-    `Référence : ${order.reference}`,
+    `Reference: ${order.reference}`,
     next,
-    `Voir la commande : ${order.viewUrl}`,
+    `View order: ${order.viewUrl}`,
     "",
-    `SAV : ${store.supportEmail}`,
+    `Support: ${store.supportEmail}`,
   ].join("\n");
   const html = layoutCustomerEmail({
-    preheader: `Colis expédié. Référence ${order.reference}.`,
+    preheader: `Package shipped. Reference ${order.reference}.`,
     title: subject,
     body: `
     ${
       order.testMode
-        ? `<p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:${NAVY};background:${CREAM};border:1px solid ${BORDER};border-radius:8px;padding:10px 14px">E-mail de test — aucun numéro de suivi n’est inventé.</p>`
+        ? `<p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:${NAVY};background:${CREAM};border:1px solid ${BORDER};border-radius:8px;padding:10px 14px">Test email — no tracking number is invented.</p>`
         : ""
     }
-    <p style="margin:0 0 8px;font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.3;color:${NAVY}">Colis expédié</p>
-    <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">Bonjour ${escapeHtml(order.name)},<br>${escapeHtml(intro)}</p>
+    <p style="margin:0 0 8px;font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.3;color:${NAVY}">Package shipped</p>
+    <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">Hello ${escapeHtml(order.name)},<br>${escapeHtml(intro)}</p>
     <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">
-      <strong>Référence ${escapeHtml(order.reference)}</strong>
+      <strong>Reference ${escapeHtml(order.reference)}</strong>
     </p>
     <p style="margin:0 0 22px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#222">${escapeHtml(next)}</p>
-    <p style="margin:0">${emailButton(order.viewUrl, "Voir la commande")}</p>
+    <p style="margin:0">${emailButton(order.viewUrl, "View order")}</p>
     `,
   });
   return sendMail({ to: order.email, subject, text, html });

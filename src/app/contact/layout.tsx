@@ -3,7 +3,7 @@ import { indexableMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = indexableMetadata("/contact", {
   title: "Contact",
-  description: "Contacter France Mobilier.",
+  description: "Contact France Mobilier.",
 });
 
 export default function ContactLayout({ children }: { children: React.ReactNode }) {

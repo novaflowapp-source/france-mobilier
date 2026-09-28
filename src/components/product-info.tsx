@@ -70,7 +70,7 @@ export function ProductInfo({
         <p className="badge">{availabilityLabel(product.availabilityStatus)}</p>
       ) : (
         <p className="text-sm font-medium text-navy">
-          {product.madeToOrder ? "Disponible à la commande" : "Disponible"}
+          {product.madeToOrder ? "Available to order" : "In stock"}
         </p>
       )}
       <div>
@@ -80,42 +80,42 @@ export function ProductInfo({
             href="#avis"
             className="product-rating-jump"
             onClick={scrollToReviews}
-            aria-label={`Voir les avis : ${ratingAverage.toLocaleString("fr-FR", {
+            aria-label={`View reviews: ${ratingAverage.toLocaleString("en-US", {
               minimumFractionDigits: 1,
               maximumFractionDigits: 1,
-            })} sur 5, ${ratingCount} avis`}
+            })} out of 5, ${ratingCount} reviews`}
           >
             <span className="product-rating-jump-stars" aria-hidden="true">
               {"★".repeat(Math.round(ratingAverage))}
               <span>{"★".repeat(5 - Math.round(ratingAverage))}</span>
             </span>
             <span className="product-rating-jump-label">
-              {`${ratingAverage.toLocaleString("fr-FR", {
+              {`${ratingAverage.toLocaleString("en-US", {
                 minimumFractionDigits: 1,
                 maximumFractionDigits: 1,
-              })}/5 (${ratingCount} avis)`}
+              })}/5 (${ratingCount} reviews)`}
             </span>
           </a>
         ) : null}
       </div>
       <div>
         <ProductPrice product={product} price={price} compareAtPrice={compareAtPrice} size="pdp" />
-        <p className="mt-1 text-sm text-muted">Prix TTC</p>
+        <p className="mt-1 text-sm text-muted">Price incl. tax</p>
       </div>
       <p className="max-w-[40rem] leading-relaxed text-muted">{product.shortDescription}</p>
       {product.madeToOrder ? (
         <div className="max-w-[40rem] text-sm leading-relaxed text-muted">
-          <p className="font-medium text-navy">Fabriqué à la commande</p>
-          {delivery ? <p>Livraison : {delivery}.</p> : null}
+          <p className="font-medium text-navy">Made to order</p>
+          {delivery ? <p>Delivery: {delivery}.</p> : null}
         </div>
       ) : delivery ? (
-        <p className="text-sm text-muted">Livraison : {delivery}.</p>
+        <p className="text-sm text-muted">Delivery: {delivery}.</p>
       ) : null}
       <ProductBenefits items={benefits} />
       {variants.length > 0 ? (
         <div className="space-y-4">
           <fieldset>
-            <legend className="text-sm text-muted">Couleur</legend>
+            <legend className="text-sm text-muted">Color</legend>
             <div className="mt-2 flex flex-wrap gap-2">
               {colors.map((option) => {
                 const selected = option.color === selectedColor;
@@ -143,7 +143,7 @@ export function ProductInfo({
             </div>
           </fieldset>
           <fieldset>
-            <legend className="text-sm text-muted">{product.sizesLabel ?? "Taille"}</legend>
+            <legend className="text-sm text-muted">{product.sizesLabel ?? "Size"}</legend>
             <div className="mt-2 flex flex-wrap gap-2">
               {sizes.map((option) => {
                 const selected = option.sizeCm === selectedSize;

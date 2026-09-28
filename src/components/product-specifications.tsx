@@ -8,7 +8,7 @@ export function ProductSpecifications({ product }: { product: Product }) {
   return (
     <section className="section section-cream">
       <div className="container-page">
-        <h2 className="display text-3xl text-navy">Caractéristiques</h2>
+        <h2 className="display text-3xl text-navy">Specifications</h2>
         <div className="mt-8 max-w-3xl overflow-x-auto rounded-[var(--radius)] bg-cream/60">
           <table className="w-full min-w-[280px] text-left text-sm">
             <tbody>

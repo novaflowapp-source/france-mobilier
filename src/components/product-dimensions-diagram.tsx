@@ -52,7 +52,7 @@ export function ProductDimensionsDiagram({ measures }: { measures: ProductMeasur
         viewBox={`0 0 ${viewW} ${viewH}`}
         className="mx-auto h-auto w-full max-w-md"
         role="img"
-        aria-label={`Schéma des dimensions : largeur ${width} cm, hauteur ${height} cm${depth != null ? `, profondeur ${depth} cm` : ""}`}
+        aria-label={`Dimension diagram: width ${width} cm, height ${height} cm${depth != null ? `, depth ${depth} cm` : ""}`}
       >
         {extrusion > 0 ? (
           <path
@@ -112,7 +112,7 @@ export function ProductDimensionsDiagram({ measures }: { measures: ProductMeasur
           <Label x={originX + bodyW + extrusion + 8} y={originY + 8} anchor="start">{`P ${depth} cm`}</Label>
         ) : null}
         {hasLegs ? (
-          <Label x={originX + bodyW + 8} y={originY + cabinetH / 2 + 4} anchor="start">{`Caisson ${measures.cabinetHeightCm} cm`}</Label>
+          <Label x={originX + bodyW + 8} y={originY + cabinetH / 2 + 4} anchor="start">{`Cabinet ${measures.cabinetHeightCm} cm`}</Label>
         ) : null}
       </svg>
     </div>

@@ -2,7 +2,7 @@ import type { Product, ProductVariant } from "@/lib/types/commerce";
 
 export type PublicPrice = {
   amount: number;
-  currency: "EUR";
+  currency: "USD";
   compareAt: number | null;
   saleEligible: boolean;
 };
@@ -21,12 +21,12 @@ export function getPublicPrice(product: Product, variant?: ProductVariant | null
   const saleEligible = isMerchantSaleEligible(product, variant) && compare != null && compare > amount;
   return {
     amount,
-    currency: "EUR",
+    currency: "USD",
     compareAt: saleEligible ? compare : null,
     saleEligible,
   };
 }
 
 export function formatFeedPrice(amount: number) {
-  return `${amount.toFixed(2)} EUR`;
+  return `${amount.toFixed(2)} USD`;
 }

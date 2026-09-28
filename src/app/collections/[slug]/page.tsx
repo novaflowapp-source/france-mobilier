@@ -106,7 +106,7 @@ export default async function CollectionPage({ params, searchParams }: Props) {
         {!image ? (
           <div className="mb-10 max-w-2xl">
             <nav className="mb-6 text-sm text-muted">
-              <Link href="/">Accueil</Link> / <span className="text-foreground">{collection.name}</span>
+              <Link href="/">Home</Link> / <span className="text-foreground">{collection.name}</span>
             </nav>
             <p className="eyebrow">Collection</p>
             <h1 className="display mt-3 text-3xl text-navy md:text-4xl">{collection.name}</h1>
@@ -114,26 +114,26 @@ export default async function CollectionPage({ params, searchParams }: Props) {
           </div>
         ) : (
           <nav className="mb-6 text-sm text-muted">
-            <Link href="/">Accueil</Link> / <span className="text-foreground">{collection.name}</span>
+            <Link href="/">Home</Link> / <span className="text-foreground">{collection.name}</span>
           </nav>
         )}
 
         <ProductFilters products={listed} query={query} />
         <p className="mb-6 text-sm text-muted">
-          {products.length} {products.length > 1 ? "meubles" : "meuble"}
+          {products.length} {products.length > 1 ? "items" : "item"}
         </p>
 
         {showSmallSpaceSections ? (
           <>
-            <Section title="Meubles étroits" products={listed.filter(isNarrow)} />
-            <Section title="Faible profondeur" products={listed.filter(isLowDepth)} />
-            <Section title="Mobilier extensible" products={listed.filter((product) => product.extensible)} />
-            <Section title="Rangements muraux" products={listed.filter(isWallMounted)} />
-            <Section title="Mobilier multifonction" products={listed.filter((product) => product.extensible || product.modular)} />
-            <Section title="Studio & appartement" products={listed.filter((product) => Boolean(product.smallSpaceFriendly))} />
+            <Section title="Slim furniture" products={listed.filter(isNarrow)} />
+            <Section title="Low depth" products={listed.filter(isLowDepth)} />
+            <Section title="Extendable furniture" products={listed.filter((product) => product.extensible)} />
+            <Section title="Wall storage" products={listed.filter(isWallMounted)} />
+            <Section title="Multifunction furniture" products={listed.filter((product) => product.extensible || product.modular)} />
+            <Section title="Studio & apartment" products={listed.filter((product) => Boolean(product.smallSpaceFriendly))} />
           </>
         ) : products.length === 0 ? (
-          <p className="text-muted">Aucun produit pour ces critères.</p>
+          <p className="text-muted">No products match these filters.</p>
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
             {products.map((product) => (

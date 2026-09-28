@@ -1,22 +1,22 @@
 import type { Product, ProductTypeSlug } from "@/lib/types/commerce";
 
 const PRODUCT_TYPE_PATH: Partial<Record<ProductTypeSlug, string>> = {
-  "table-basse": "Maison > Salon > Tables basses",
-  "meuble-tv": "Maison > Salon > Meubles TV",
-  "table-appoint": "Maison > Salon > Tables d’appoint",
-  "table-a-manger": "Maison > Salon > Tables à manger",
-  buffet: "Maison > Salon > Buffets",
-  console: "Maison > Salon > Consoles",
-  "table-de-chevet": "Maison > Chambre > Tables de chevet",
-  coiffeuse: "Maison > Chambre > Coiffeuses",
-  commode: "Maison > Chambre > Commodes",
-  armoire: "Maison > Chambre > Armoires",
-  banc: "Maison > Chambre > Bancs",
-  "meuble-chaussures": "Maison > Entrée > Meubles à chaussures",
-  casiers: "Maison > Entrée > Casiers",
-  bureau: "Maison > Bureau > Bureaux",
-  caisson: "Maison > Bureau > Caissons",
-  etagere: "Maison > Rangement > Étagères",
+  "table-basse": "Home > Living Room > Coffee Tables",
+  "meuble-tv": "Home > Living Room > TV Stands",
+  "table-appoint": "Home > Living Room > Side Tables",
+  "table-a-manger": "Home > Living Room > Dining Tables",
+  buffet: "Home > Living Room > Sideboards",
+  console: "Home > Living Room > Consoles",
+  "table-de-chevet": "Home > Bedroom > Nightstands",
+  coiffeuse: "Home > Bedroom > Vanities",
+  commode: "Home > Bedroom > Dressers",
+  armoire: "Home > Bedroom > Wardrobes",
+  banc: "Home > Bedroom > Benches",
+  "meuble-chaussures": "Home > Entryway > Shoe Storage",
+  casiers: "Home > Entryway > Cubbies",
+  bureau: "Home > Office > Desks",
+  caisson: "Home > Office > Pedestals",
+  etagere: "Home > Storage > Shelving",
 };
 
 const GOOGLE_CATEGORY: Partial<Record<ProductTypeSlug, string>> = {
@@ -40,7 +40,7 @@ const GOOGLE_CATEGORY: Partial<Record<ProductTypeSlug, string>> = {
 
 export function merchantProductType(product: Product) {
   const path = product.productType ? PRODUCT_TYPE_PATH[product.productType] : undefined;
-  return path ?? "Maison > Mobilier";
+  return path ?? "Home > Furniture";
 }
 
 export function googleProductCategory(product: Product) {

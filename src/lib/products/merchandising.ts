@@ -4,35 +4,35 @@ import { getProductMeasures } from "@/lib/products/presentation";
 import type { Product, ProductRoom, ProductTypeSlug } from "@/lib/types/commerce";
 
 export const ROOM_LABELS: Record<ProductRoom, string> = {
-  salon: "Salon",
-  chambre: "Chambre",
-  entree: "Entrée & rangement",
-  bureau: "Bureau",
-  accessoires: "Accessoires",
+  salon: "Living room",
+  chambre: "Bedroom",
+  entree: "Entry & storage",
+  bureau: "Office",
+  accessoires: "Accessories",
 };
 
 export const PRODUCT_TYPE_LABELS: Record<ProductTypeSlug, string> = {
-  "table-basse": "Tables basses",
-  "meuble-tv": "Meubles TV",
-  "table-appoint": "Tables d’appoint",
-  "table-a-manger": "Tables à manger",
-  "table-de-chevet": "Tables de chevet",
-  coiffeuse: "Coiffeuses",
-  "meuble-chaussures": "Meubles à chaussures",
-  casiers: "Casiers",
-  etagere: "Étagères",
-  bureau: "Bureaux",
-  support: "Supports",
-  organiseur: "Organiseurs",
-  chariot: "Chariots",
-  rangement: "Rangements",
-  "meuble-litiere": "Meubles pour animaux",
-  buffet: "Buffets",
+  "table-basse": "Coffee tables",
+  "meuble-tv": "TV stands",
+  "table-appoint": "Side tables",
+  "table-a-manger": "Dining tables",
+  "table-de-chevet": "Nightstands",
+  coiffeuse: "Vanities",
+  "meuble-chaussures": "Shoe storage",
+  casiers: "Cubbies",
+  etagere: "Shelves",
+  bureau: "Desks",
+  support: "Stands",
+  organiseur: "Organizers",
+  chariot: "Carts",
+  rangement: "Storage",
+  "meuble-litiere": "Pet furniture",
+  buffet: "Sideboards",
   console: "Consoles",
-  commode: "Commodes",
-  armoire: "Armoires",
-  caisson: "Caissons",
-  banc: "Bancs",
+  commode: "Dressers",
+  armoire: "Wardrobes",
+  caisson: "Pedestals",
+  banc: "Benches",
 };
 
 export function isSellable(product: Product) {
@@ -50,10 +50,13 @@ export function isNarrow(product: Product) {
 }
 
 export function isWallMounted(product: Product) {
-  const fixation = product.specifications?.Fixation;
-  if (typeof fixation === "string" && /mural/i.test(fixation)) return true;
+  const mount =
+    product.specifications?.Fixation ||
+    product.specifications?.Mounting ||
+    product.specifications?.["Wall mount"];
+  if (typeof mount === "string" && /mural|wall/i.test(mount)) return true;
   const text = [product.slug, product.name, ...(product.features ?? [])].join(" ");
-  return /mural/i.test(text);
+  return /mural|wall[- ]mount/i.test(text);
 }
 
 export function isSmallSpaceProduct(product: Product) {
@@ -89,11 +92,11 @@ export function productCardMeta(product: Product): string | null {
   const parts: string[] = [];
   if (product.material) parts.push(product.material);
   if (isLowDepth(product) && measures.depthCm != null) {
-    parts.push(`${measures.depthCm} cm de profondeur`);
+    parts.push(`${measures.depthCm} cm deep`);
   } else if (measures.widthCm != null) {
     parts.push(`${measures.widthCm} cm`);
   } else if (product.extensible) {
-    parts.push("Extensible");
+    parts.push("Extendable");
   }
   return parts.length ? parts.join(" · ") : null;
 }
@@ -102,10 +105,10 @@ export function cardDeliveryLines(product: Product): string[] {
   if (!isSellable(product)) return [];
   const estimate = getDeliveryEstimate(product);
   const lines: string[] = [];
-  if (product.madeToOrder) lines.push("Fabriqué à la commande");
+  if (product.madeToOrder) lines.push("Made to order");
   if (estimate.structured && estimate.handlingMinBusinessDays != null && estimate.transitMinBusinessDays != null) {
-    lines.push(`Préparation ${estimate.handlingMinBusinessDays} jours ouvrés`);
-    lines.push(`Acheminement ${estimate.transitMinBusinessDays} jours ouvrés`);
+    lines.push(`${estimate.handlingMinBusinessDays} business days to prepare`);
+    lines.push(`${estimate.transitMinBusinessDays} business days in transit`);
     return lines;
   }
   const delay = deliveryCustomerLabel(product);

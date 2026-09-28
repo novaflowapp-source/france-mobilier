@@ -8,8 +8,8 @@ import { cardDeliveryLines, isLowDepth, isSellable, productCardMeta } from "@/li
 
 export function ProductCard({ product }: { product: Product }) {
   const badges: string[] = [];
-  if (isOnSale(product) && isSellable(product)) badges.push("Promo");
-  if (isLowDepth(product)) badges.push("Faible profondeur");
+  if (isOnSale(product) && isSellable(product)) badges.push("Sale");
+  if (isLowDepth(product)) badges.push("Shallow depth");
   if (!isSellable(product) && badges.length < 2) {
     badges.push(availabilityLabel(product.availabilityStatus));
   }
@@ -18,7 +18,7 @@ export function ProductCard({ product }: { product: Product }) {
 
   return (
     <article className="group flex h-full min-w-0 flex-col rounded-[var(--radius)] bg-white">
-      <Link href={`/produits/${product.slug}`} className="flex h-full min-w-0 flex-col">
+      <Link href={`/products/${product.slug}`} className="flex h-full min-w-0 flex-col">
         <div className="relative aspect-square overflow-hidden rounded-t-[var(--radius)] bg-cream">
           <Image
             src={productHeroImage(product)}
@@ -45,7 +45,7 @@ export function ProductCard({ product }: { product: Product }) {
             <p className="text-pretty text-xs leading-relaxed break-words text-muted md:text-sm">{meta}</p>
           ) : null}
           <ProductPrice product={product} />
-          <p className="text-xs leading-relaxed text-muted">Livraison offerte</p>
+          <p className="text-xs leading-relaxed text-muted">Free shipping</p>
           {deliveryLines.length > 0 ? (
             <div className="space-y-0.5">
               {deliveryLines.map((line) => (

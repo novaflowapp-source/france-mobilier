@@ -21,7 +21,7 @@ function messageFor(error: unknown) {
     return "Mot de passe actuel incorrect.";
   }
   if (raw.includes("password_too_short") || raw.includes("too short")) {
-    return "Le nouveau mot de passe doit contenir au moins 8 caractères.";
+    return "The new password must be at least 8 characters.";
   }
   if (raw.includes("password_too_long") || raw.includes("too long")) {
     return "Le nouveau mot de passe est trop long.";
@@ -29,7 +29,7 @@ function messageFor(error: unknown) {
   if (raw.includes("unauthorized") || raw.includes("forbidden")) {
     return "Reconnectez-vous pour changer le mot de passe.";
   }
-  return "Impossible de changer le mot de passe.";
+  return "Could not change the password.";
 }
 
 export async function POST(request: Request) {
@@ -37,20 +37,20 @@ export async function POST(request: Request) {
   const requestHeaders = await headers();
   const session = await auth.api.getSession({ headers: requestHeaders });
   if (!session?.user) {
-    return NextResponse.json({ error: "Connexion requise" }, { status: 401 });
+    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
   }
 
   const parsed = schema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) {
     return NextResponse.json(
-      { error: "Le nouveau mot de passe doit contenir au moins 8 caractères." },
+      { error: "The new password must be at least 8 characters." },
       { status: 400 },
     );
   }
 
   if (parsed.data.currentPassword === parsed.data.newPassword) {
     return NextResponse.json(
-      { error: "Le nouveau mot de passe doit être différent de l’actuel." },
+      { error: "The new password must be different from the current one." },
       { status: 400 },
     );
   }

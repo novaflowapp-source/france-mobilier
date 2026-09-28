@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { store } from "@/config/store";
 
-const FALLBACK_ORIGIN = "https://francemobilier.org";
+const FALLBACK_ORIGIN = "https://francemobilier.com";
 
 export function publicOrigin() {
   const origin = store.domain.replace(/\/$/, "");
