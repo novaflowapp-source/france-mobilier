@@ -87,7 +87,7 @@ export async function POST(request: Request) {
   let city = data.city;
   let activityFromRegistry: string | undefined;
   let siret = data.siret ? data.siret.replace(/\D/g, "") : "";
-  let status: "approved" | "pending" = "pending";
+  const status: "approved" | "pending" = "pending";
 
   if (french) {
     if (siret && !isValidSiret(siret, siren)) {

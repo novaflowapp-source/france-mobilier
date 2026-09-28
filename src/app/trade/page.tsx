@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ProAccessForm } from "@/components/pro-access-form";
-import { store } from "@/config/store";
 import { b2bConfig } from "@/lib/b2b";
 import { indexableMetadata } from "@/lib/seo";
 
