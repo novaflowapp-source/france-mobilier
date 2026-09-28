@@ -4,36 +4,81 @@ import { getProductMeasures } from "@/lib/products/presentation";
 import type { Product, ProductRoom, ProductTypeSlug } from "@/lib/types/commerce";
 
 export const ROOM_LABELS: Record<ProductRoom, string> = {
-  salon: "Living room",
-  chambre: "Bedroom",
-  entree: "Entry & storage",
-  bureau: "Office",
-  accessoires: "Accessories",
+  "living-room": "Living room",
+  bedroom: "Bedroom",
+  entry: "Entry & storage",
+  office: "Office",
+  accessories: "Accessories",
 };
 
 export const PRODUCT_TYPE_LABELS: Record<ProductTypeSlug, string> = {
-  "table-basse": "Coffee tables",
-  "meuble-tv": "TV stands",
-  "table-appoint": "Side tables",
-  "table-a-manger": "Dining tables",
-  "table-de-chevet": "Nightstands",
-  coiffeuse: "Vanities",
-  "meuble-chaussures": "Shoe storage",
-  casiers: "Cubbies",
-  etagere: "Shelves",
-  bureau: "Desks",
-  support: "Stands",
-  organiseur: "Organizers",
-  chariot: "Carts",
-  rangement: "Storage",
-  "meuble-litiere": "Pet furniture",
-  buffet: "Sideboards",
+  "coffee-table": "Coffee tables",
+  "tv-stand": "TV stands",
+  "side-table": "Side tables",
+  "dining-table": "Dining tables",
+  nightstand: "Nightstands",
+  vanity: "Vanities",
+  "shoe-storage": "Shoe storage",
+  cubbies: "Cubbies",
+  shelf: "Shelves",
+  desk: "Desks",
+  stand: "Stands",
+  organizer: "Organizers",
+  cart: "Carts",
+  storage: "Storage",
+  "pet-furniture": "Pet furniture",
+  sideboard: "Sideboards",
   console: "Consoles",
-  commode: "Dressers",
-  armoire: "Wardrobes",
-  caisson: "Pedestals",
-  banc: "Benches",
+  dresser: "Dressers",
+  wardrobe: "Wardrobes",
+  pedestal: "Pedestals",
+  bench: "Benches",
 };
+
+/** Old French filter query values → English productType. */
+export const LEGACY_PRODUCT_TYPE_QUERY: Record<string, ProductTypeSlug> = {
+  "table-basse": "coffee-table",
+  "meuble-tv": "tv-stand",
+  "table-appoint": "side-table",
+  "table-a-manger": "dining-table",
+  "table-de-chevet": "nightstand",
+  coiffeuse: "vanity",
+  "meuble-chaussures": "shoe-storage",
+  casiers: "cubbies",
+  etagere: "shelf",
+  bureau: "desk",
+  support: "stand",
+  organiseur: "organizer",
+  chariot: "cart",
+  rangement: "storage",
+  "meuble-litiere": "pet-furniture",
+  buffet: "sideboard",
+  console: "console",
+  commode: "dresser",
+  armoire: "wardrobe",
+  caisson: "pedestal",
+  banc: "bench",
+};
+
+export function normalizeProductTypeQuery(value?: string): string | undefined {
+  if (!value) return undefined;
+  return LEGACY_PRODUCT_TYPE_QUERY[value] ?? value;
+}
+
+/** Old French category query values → English. */
+export const LEGACY_CATEGORY_QUERY: Record<string, string> = {
+  maison: "home",
+  rangement: "storage",
+  bureau: "office",
+  cuisine: "kitchen",
+  "salle-de-bain": "bathroom",
+  animaux: "pets",
+};
+
+export function normalizeCategoryQuery(value?: string): string | undefined {
+  if (!value) return undefined;
+  return LEGACY_CATEGORY_QUERY[value] ?? value;
+}
 
 export function isSellable(product: Product) {
   return product.availabilityStatus === "available";
@@ -138,32 +183,32 @@ export function primaryRoom(product: Product): ProductRoom {
 
 function roomFromLegacyCategory(category: Product["category"]): ProductRoom {
   switch (category) {
-    case "bureau":
-      return "bureau";
-    case "rangement":
-      return "entree";
-    case "animaux":
-      return "accessoires";
-    case "cuisine":
-      return "salon";
-    case "salle-de-bain":
-      return "accessoires";
+    case "office":
+      return "office";
+    case "storage":
+      return "entry";
+    case "pets":
+      return "accessories";
+    case "kitchen":
+      return "living-room";
+    case "bathroom":
+      return "accessories";
     default:
-      return "salon";
+      return "living-room";
   }
 }
 
 export function collectionSlugForProduct(product: Product): string {
   switch (primaryRoom(product)) {
-    case "salon":
-      return "salon";
-    case "chambre":
-      return "chambre";
-    case "entree":
-      return "entree-rangement";
-    case "bureau":
-      return "bureau";
-    case "accessoires":
-      return product.category === "animaux" ? "animaux" : "accessoires";
+    case "living-room":
+      return "living-room";
+    case "bedroom":
+      return "bedroom";
+    case "entry":
+      return "entry-storage";
+    case "office":
+      return "office";
+    case "accessories":
+      return product.category === "pets" ? "pets" : "accessories";
   }
 }

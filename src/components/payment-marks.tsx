@@ -114,7 +114,7 @@ function GooglePayMark() {
 const marks: { slug: PaymentMethodSlug; Mark: typeof VisaMark }[] = [
   { slug: "visa", Mark: VisaMark },
   { slug: "mastercard", Mark: MastercardMark },
-  { slug: "cartes-bancaires", Mark: CartesBancairesMark },
+  { slug: "cb", Mark: CartesBancairesMark },
   { slug: "apple-pay", Mark: ApplePayMark },
   { slug: "google-pay", Mark: GooglePayMark },
 ];

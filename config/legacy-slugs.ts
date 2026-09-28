@@ -1,0 +1,62 @@
+/** French → English public path slugs (products & collections). Keep for 301s. */
+
+export const PRODUCT_SLUG_REDIRECTS: Record<string, string> = {
+  "meuble-casiers": "cubby-storage-unit",
+  "coiffeuse-enfant": "kids-vanity",
+  "meuble-entree": "entry-bench",
+  "table-a-manger-extensible": "extendable-dining-table",
+  "meuble-tv": "wood-tv-stand",
+  "table-basse-metal": "metal-coffee-table",
+  "table-de-chevet": "rattan-nightstand",
+  "bureau-assis-debout-electrique": "electric-sit-stand-desk",
+  "meuble-chaussures-etroit": "narrow-shoe-cabinet",
+  "etagere-salle-de-bain": "bathroom-wall-shelf",
+  "chariot-rangement-cuisine": "kitchen-storage-cart",
+  "support-ecran-double": "dual-monitor-stand",
+  "meuble-litiere-chat": "cat-litter-cabinet",
+  "table-appoint-reglable": "adjustable-side-table",
+  "etagere-modulable": "modular-shelf",
+  "rangement-sous-evier": "under-sink-storage",
+  "organiseur-de-bureau": "desk-organizer",
+  "buffet-bas": "low-sideboard",
+  "console-salon": "living-room-console",
+  "bibliotheque-basse": "low-bookcase",
+  "commode-3-tiroirs": "three-drawer-dresser",
+  "armoire-penderie-etroite": "narrow-wardrobe",
+  "banc-coffre": "storage-bench",
+  "console-entree": "entry-console",
+  "meuble-porte-manteaux": "coat-rack-unit",
+  "bureau-compact": "compact-desk",
+  "caisson-tiroirs": "drawer-pedestal",
+  "etagere-murale-bureau": "office-wall-shelf",
+};
+
+export const COLLECTION_SLUG_REDIRECTS: Record<string, string> = {
+  salon: "living-room",
+  chambre: "bedroom",
+  "entree-rangement": "entry-storage",
+  bureau: "office",
+  "petits-espaces": "small-spaces",
+  meubles: "furniture",
+  "tables-basses": "coffee-tables",
+  "meubles-tv": "tv-stands",
+  "tables-a-manger": "dining-tables",
+  "tables-de-chevet": "nightstands",
+  coiffeuses: "vanities",
+  "meubles-chaussures": "shoe-storage",
+  casiers: "cubbies",
+  buffets: "sideboards",
+  commodes: "dressers",
+  armoires: "wardrobes",
+  bureaux: "desks",
+  caissons: "pedestals",
+  accessoires: "accessories",
+  animaux: "pets",
+  // Legacy aliases that previously pointed at French collection URLs
+  maison: "furniture",
+  rangement: "entry-storage",
+};
+
+export const PAYMENT_METHOD_SLUG_REDIRECTS: Record<string, string> = {
+  "cartes-bancaires": "cb",
+};

@@ -24,7 +24,7 @@ export default function GuideNightstandPage() {
       <div className="mt-8 space-y-4 leading-relaxed text-muted">
         <p>
           The{" "}
-          <Link href="/products/table-de-chevet" className="text-navy underline-offset-4 hover:underline">
+          <Link href="/products/rattan-nightstand" className="text-navy underline-offset-4 hover:underline">
             rattan nightstand
           </Link>{" "}
           is 50 cm wide and 45 cm tall. Depth is not published yet — better an empty field than a
@@ -39,7 +39,7 @@ export default function GuideNightstandPage() {
           king bed.
         </p>
       </div>
-      <Link href="/collections/tables-de-chevet" className="btn btn-primary mt-10 inline-flex">
+      <Link href="/collections/nightstands" className="btn btn-primary mt-10 inline-flex">
         Shop nightstands
       </Link>
     </article>

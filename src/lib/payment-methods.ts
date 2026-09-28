@@ -1,6 +1,6 @@
 export const PAYMENT_METHODS_PATH = "/terms/payment-methods";
 
-export type PaymentMethodSlug = "visa" | "mastercard" | "cartes-bancaires" | "apple-pay" | "google-pay";
+export type PaymentMethodSlug = "visa" | "mastercard" | "cb" | "apple-pay" | "google-pay";
 
 export type PaymentMethod = {
   slug: PaymentMethodSlug;
@@ -39,12 +39,12 @@ export const paymentMethods: PaymentMethod[] = [
     extraTerms: null,
   },
   {
-    slug: "cartes-bancaires",
+    slug: "cb",
     name: "Cartes Bancaires",
     title: "Pay with Cartes Bancaires (CB)",
     description: "How French Cartes Bancaires (CB) cards work on France Mobilier checkout via Stripe.",
     summary:
-      "Cartes Bancaires is the French interbank network. Many cards issued in France are co-badged CB with Visa or Mastercard and may appear at checkout when Stripe supports them.",
+      "Cartes Bancaires (CB) is France’s interbank card network. Many cards issued in France are co-badged CB with Visa or Mastercard and may appear at checkout when Stripe supports them.",
     how: "At checkout you are redirected to Stripe’s secure payment page. An eligible CB card is charged like any other card. Your bank may require strong authentication (3-D Secure).",
     availability:
       "CB is shown only when Stripe makes it available for your card and device. Cards that cannot be used online, or issuers that block remote payment, will not succeed.",

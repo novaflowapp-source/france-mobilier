@@ -51,7 +51,7 @@ export default function CartPage() {
           <p className="mt-2 max-w-md text-muted">
             Browse furniture and home solutions for everyday rooms.
           </p>
-          <Link href="/collections/maison" className="btn btn-primary mt-6 inline-flex">
+          <Link href="/collections/furniture" className="btn btn-primary mt-6 inline-flex">
             Shop the store
           </Link>
         </div>

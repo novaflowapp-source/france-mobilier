@@ -25,14 +25,14 @@ export default function GuideEntryPage() {
       <div className="mt-8 space-y-4 leading-relaxed text-muted">
         <p>
           When depth is known, choose something that stays flush to the wall. Our{" "}
-          <Link href="/products/meuble-casiers" className="text-navy underline-offset-4 hover:underline">
+          <Link href="/products/cubby-storage-unit" className="text-navy underline-offset-4 hover:underline">
             cubby unit
           </Link>{" "}
           is 20 cm deep: it stores shoes and keeps the path clear.
         </p>
         <p>
           The{" "}
-          <Link href="/products/meuble-entree" className="text-navy underline-offset-4 hover:underline">
+          <Link href="/products/entry-bench" className="text-navy underline-offset-4 hover:underline">
             entryway bench / shoe cabinet
           </Link>{" "}
           doubles as seating. Depth will be published as soon as it is confirmed — we prefer a blank
@@ -43,7 +43,7 @@ export default function GuideEntryPage() {
           coming soon in the catalog.
         </p>
       </div>
-      <Link href="/collections/meubles-chaussures" className="btn btn-primary mt-10 inline-flex">
+      <Link href="/collections/shoe-storage" className="btn btn-primary mt-10 inline-flex">
         Shop shoe storage
       </Link>
     </article>

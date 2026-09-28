@@ -5,6 +5,8 @@ import {
   collectionSlugForProduct,
   isSellable,
   isSmallSpaceProduct,
+  normalizeCategoryQuery,
+  normalizeProductTypeQuery,
   primaryRoom,
   PRODUCT_TYPE_LABELS,
   ROOM_LABELS,
@@ -68,17 +70,17 @@ export function uniqueVariantColors(product: Product): ProductVariant[] {
 export const getProductBySlug = findProductBySlug;
 
 const COMPLEMENTARY_ROOMS: Record<ProductRoom, ProductRoom[]> = {
-  salon: ["entree", "chambre"],
-  chambre: ["entree", "salon"],
-  entree: ["salon", "chambre"],
-  bureau: ["salon"],
-  accessoires: [],
+  "living-room": ["entry", "bedroom"],
+  bedroom: ["entry", "living-room"],
+  entry: ["living-room", "bedroom"],
+  office: ["living-room"],
+  accessories: [],
 };
 
 function relatedScore(base: Product, other: Product): number {
   if (other.id === base.id) return -1;
   if (!isSellable(other)) return -1;
-  if (primaryRoom(base) !== "accessoires" && primaryRoom(other) === "accessoires") return -1;
+  if (primaryRoom(base) !== "accessories" && primaryRoom(other) === "accessories") return -1;
 
   let score = 0;
   if (base.collectionId && other.collectionId === base.collectionId) score += 160;
@@ -147,11 +149,13 @@ export function listCollectionProducts(slug: string): Product[] {
 }
 
 export function collectionSlugForCategory(category: Product["category"]) {
-  if (category === "cuisine") return "salon";
-  if (category === "salle-de-bain") return "accessoires";
-  if (category === "rangement") return "entree-rangement";
-  if (category === "maison") return "salon";
-  return category;
+  if (category === "kitchen") return "living-room";
+  if (category === "bathroom") return "accessories";
+  if (category === "storage") return "entry-storage";
+  if (category === "home") return "living-room";
+  if (category === "office") return "office";
+  if (category === "pets") return "pets";
+  return "furniture";
 }
 
 export function collectionSlugForProductPage(product: Product) {
@@ -183,10 +187,12 @@ function parseCmFilter(value?: string) {
 export function filterAndSortProducts(items: Product[], options: ProductFilterOptions) {
   let result = [...items];
   if (options.category) {
-    result = result.filter((p) => p.category === options.category);
+    const category = normalizeCategoryQuery(options.category);
+    result = result.filter((p) => p.category === category);
   }
   if (options.productType) {
-    result = result.filter((p) => p.productType === options.productType);
+    const productType = normalizeProductTypeQuery(options.productType);
+    result = result.filter((p) => p.productType === productType);
   }
   if (options.material) {
     result = result.filter((p) => p.material === options.material);

@@ -1,4 +1,9 @@
 import type { NextConfig } from "next";
+import {
+  COLLECTION_SLUG_REDIRECTS,
+  PAYMENT_METHOD_SLUG_REDIRECTS,
+  PRODUCT_SLUG_REDIRECTS,
+} from "./config/legacy-slugs";
 
 const nextConfig: NextConfig = {
   output: "standalone",
@@ -16,9 +21,32 @@ const nextConfig: NextConfig = {
       "www.francemobilier.com",
     ];
     return [
-      // Collection aliases
-      { source: "/collections/maison", destination: "/collections/meubles", permanent: true },
-      { source: "/collections/rangement", destination: "/collections/entree-rangement", permanent: true },
+      // French → English collection / product path slugs
+      ...Object.entries(COLLECTION_SLUG_REDIRECTS).map(([from, to]) => ({
+        source: `/collections/${from}`,
+        destination: `/collections/${to}`,
+        permanent: true,
+      })),
+      ...Object.entries(PRODUCT_SLUG_REDIRECTS).map(([from, to]) => ({
+        source: `/products/${from}`,
+        destination: `/products/${to}`,
+        permanent: true,
+      })),
+      ...Object.entries(PRODUCT_SLUG_REDIRECTS).map(([from, to]) => ({
+        source: `/produits/${from}`,
+        destination: `/products/${to}`,
+        permanent: true,
+      })),
+      ...Object.entries(PAYMENT_METHOD_SLUG_REDIRECTS).map(([from, to]) => ({
+        source: `/terms/payment-methods/${from}`,
+        destination: `/terms/payment-methods/${to}`,
+        permanent: true,
+      })),
+      ...Object.entries(PAYMENT_METHOD_SLUG_REDIRECTS).map(([from, to]) => ({
+        source: `/cgv/moyens-de-paiement/${from}`,
+        destination: `/terms/payment-methods/${to}`,
+        permanent: true,
+      })),
       // French → English storefront paths
       { source: "/panier", destination: "/cart", permanent: true },
       { source: "/paiement", destination: "/checkout", permanent: true },

@@ -109,7 +109,7 @@ export default function AboutPage() {
               {identity.hoursShort}.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/collections/meubles" className="btn btn-primary w-full sm:w-auto">
+              <Link href="/collections/furniture" className="btn btn-primary w-full sm:w-auto">
                 Shop furniture
               </Link>
               <Link href="/contact" className="btn btn-secondary w-full sm:w-auto">

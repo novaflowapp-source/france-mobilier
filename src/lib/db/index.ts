@@ -3,6 +3,12 @@ import { drizzle } from "drizzle-orm/libsql";
 import * as schema from "./schema";
 import fs from "node:fs";
 import path from "node:path";
+import { PRODUCT_SLUG_REDIRECTS } from "@/config/legacy-slugs";
+import {
+  LEGACY_REVIEW_BODY_EN,
+  LEGACY_REVIEW_EN,
+  LEGACY_REVIEW_TITLE_EN,
+} from "@/lib/reviews/legacy-en";
 
 function isNextProductionBuild() {
   return process.env.NEXT_PHASE === "phase-production-build";
@@ -380,7 +386,47 @@ async function migrateDatabase() {
   } catch (error) {
     console.error("[db] shop_activity unique index skipped", error);
   }
+  await translateLegacyReviews(client);
+  await remapLegacyProductSlugs(client);
   migrated = true;
+}
+
+async function translateLegacyReviews(client: Client) {
+  for (const [id, copy] of Object.entries(LEGACY_REVIEW_EN)) {
+    await withBusyRetry(() =>
+      client.execute({
+        sql: "UPDATE review SET title = ?, body = ? WHERE id = ?",
+        args: [copy.title, copy.body, id],
+      }),
+    );
+  }
+  for (const [fr, en] of Object.entries(LEGACY_REVIEW_BODY_EN)) {
+    await withBusyRetry(() =>
+      client.execute({
+        sql: "UPDATE review SET body = ? WHERE body = ?",
+        args: [en, fr],
+      }),
+    );
+  }
+  for (const [fr, en] of Object.entries(LEGACY_REVIEW_TITLE_EN)) {
+    await withBusyRetry(() =>
+      client.execute({
+        sql: "UPDATE review SET title = ? WHERE title = ?",
+        args: [en, fr],
+      }),
+    );
+  }
+}
+
+async function remapLegacyProductSlugs(client: Client) {
+  for (const [from, to] of Object.entries(PRODUCT_SLUG_REDIRECTS)) {
+    await withBusyRetry(() =>
+      client.execute({
+        sql: "UPDATE stock_alert SET product_slug = ? WHERE product_slug = ?",
+        args: [to, from],
+      }),
+    );
+  }
 }
 
 export async function ensureDatabase() {

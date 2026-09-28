@@ -10,12 +10,12 @@ const groups = [
   {
     title: "Shop",
     links: [
-      { href: "/collections/salon", label: "Living room" },
-      { href: "/collections/chambre", label: "Bedroom" },
-      { href: "/collections/entree-rangement", label: "Entry & storage" },
-      { href: "/collections/bureau", label: "Office" },
-      { href: "/collections/petits-espaces", label: "Small spaces" },
-      { href: "/collections/meubles", label: "All furniture" },
+      { href: "/collections/living-room", label: "Living room" },
+      { href: "/collections/bedroom", label: "Bedroom" },
+      { href: "/collections/entry-storage", label: "Entry & storage" },
+      { href: "/collections/office", label: "Office" },
+      { href: "/collections/small-spaces", label: "Small spaces" },
+      { href: "/collections/furniture", label: "All furniture" },
     ],
   },
   {

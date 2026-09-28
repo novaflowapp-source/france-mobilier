@@ -12,25 +12,25 @@ export const metadata: Metadata = indexableMetadata("/");
 
 const rooms = [
   {
-    slug: "salon",
+    slug: "living-room",
     image: "/lifestyle/maison.jpg",
     title: "Living room",
     text: "Tables, TV stands, compact pieces.",
   },
   {
-    slug: "chambre",
+    slug: "bedroom",
     image: "/lifestyle/marque.jpg",
     title: "Bedroom",
     text: "Nightstands and useful small furniture.",
   },
   {
-    slug: "entree-rangement",
+    slug: "entry-storage",
     image: "/lifestyle/rangement.jpg",
     title: "Entryway",
     text: "Slim storage and shoe cabinets.",
   },
   {
-    slug: "bureau",
+    slug: "office",
     image: "/lifestyle/bureau.jpg",
     title: "Office",
     text: "Work from home, comfortably.",
@@ -64,7 +64,7 @@ export default function HomePage() {
   const featured = listFeaturedProducts(8);
   const selection = featured.slice(0, 8);
   const entryUniverse = listSellableProducts()
-    .filter((product) => product.rooms?.includes("entree"))
+    .filter((product) => product.rooms?.includes("entry"))
     .slice(0, 4);
 
   return (
@@ -91,10 +91,10 @@ export default function HomePage() {
               Pieces chosen for everyday comfort, space, and simplicity.
             </p>
             <div className="mt-6 flex w-full flex-col gap-3 sm:mt-8 sm:w-auto sm:flex-row sm:flex-wrap">
-              <Link href="/collections/meubles" className="btn btn-inverse w-full sm:w-auto">
+              <Link href="/collections/furniture" className="btn btn-inverse w-full sm:w-auto">
                 Shop furniture
               </Link>
-              <Link href="/collections/petits-espaces" className="btn btn-on-dark w-full sm:w-auto">
+              <Link href="/collections/small-spaces" className="btn btn-on-dark w-full sm:w-auto">
                 Small spaces
               </Link>
             </div>
@@ -156,7 +156,7 @@ export default function HomePage() {
                 A short list of furniture chosen for everyday use and clear dimensions.
               </p>
             </div>
-            <Link href="/collections/meubles" className="btn btn-secondary w-full sm:w-auto">
+            <Link href="/collections/furniture" className="btn btn-secondary w-full sm:w-auto">
               All furniture
             </Link>
           </div>
@@ -187,7 +187,7 @@ export default function HomePage() {
             <p className="mt-5 leading-relaxed text-muted">
               Furniture for apartments, studios, and rooms where every inch counts.
             </p>
-            <Link href="/collections/petits-espaces" className="btn btn-primary mt-8 w-full sm:w-auto">
+            <Link href="/collections/small-spaces" className="btn btn-primary mt-8 w-full sm:w-auto">
               Shop small spaces
             </Link>
           </div>

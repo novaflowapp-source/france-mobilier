@@ -52,7 +52,7 @@ export default function ShippingPage() {
           </p>
         </section>
       </div>
-      <Link href="/collections/meubles" className="btn btn-secondary mt-8 inline-flex">
+      <Link href="/collections/furniture" className="btn btn-secondary mt-8 inline-flex">
         Browse the collection
       </Link>
     </div>

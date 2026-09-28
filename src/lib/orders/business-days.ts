@@ -1,4 +1,4 @@
-/** Civil dates in Europe/Paris. Weekends and jours fériés français are skipped. */
+/** Civil dates in Europe/Paris. Weekends and French public holidays are skipped. */
 
 function pad(value: number) {
   return String(value).padStart(2, "0");

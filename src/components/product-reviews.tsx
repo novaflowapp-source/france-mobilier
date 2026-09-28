@@ -27,7 +27,7 @@ function VerifiedPurchaseMark() {
   return (
     <div className="verified-purchase">
       <img
-        src="/achat-verifie.png"
+        src="/verified-purchase.png"
         className="verified-purchase-icon"
         alt=""
         aria-hidden="true"
@@ -63,6 +63,13 @@ export function ProductReviews({
     setPrefilledName(true);
   }, [session, prefilledName]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.location.hash !== "#avis") return;
+    window.history.replaceState(null, "", "#reviews");
+    document.getElementById("reviews")?.scrollIntoView({ block: "start" });
+  }, []);
+
   const average = useMemo(() => {
     if (reviews.length === 0) return null;
     return reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
@@ -92,7 +99,7 @@ export function ProductReviews({
   }
 
   return (
-    <section id="avis" className="section product-reviews border-t border-border">
+    <section id="reviews" className="section product-reviews border-t border-border">
       <div className="container-page">
       <div className="product-reviews-header">
         <h2 className="display text-3xl text-navy">Customer reviews</h2>

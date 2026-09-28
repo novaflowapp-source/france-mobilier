@@ -23,7 +23,7 @@ export default function GuideSmallLivingTablePage() {
       <div className="mt-8 space-y-4 leading-relaxed text-muted">
         <p>
           For everyday use, a slim coffee table is often enough. Our{" "}
-          <Link href="/products/table-basse-metal" className="text-navy underline-offset-4 hover:underline">
+          <Link href="/products/metal-coffee-table" className="text-navy underline-offset-4 hover:underline">
             coffee table
           </Link>{" "}
           stays light in the center of the room.
@@ -31,7 +31,7 @@ export default function GuideSmallLivingTablePage() {
         <p>
           If the living room also serves as dining space, an extendable table helps. The{" "}
           <Link
-            href="/products/table-a-manger-extensible"
+            href="/products/extendable-dining-table"
             className="text-navy underline-offset-4 hover:underline"
           >
             extendable dining table
@@ -43,7 +43,7 @@ export default function GuideSmallLivingTablePage() {
           that is too deep cuts the room in half, even if it looks great in photos.
         </p>
       </div>
-      <Link href="/collections/salon" className="btn btn-primary mt-10 inline-flex">
+      <Link href="/collections/living-room" className="btn btn-primary mt-10 inline-flex">
         Shop living room furniture
       </Link>
     </article>

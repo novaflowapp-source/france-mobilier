@@ -56,12 +56,12 @@ export function ProductInfo({
   }
 
   function scrollToReviews(event: MouseEvent<HTMLAnchorElement>) {
-    const reviews = document.getElementById("avis");
+    const reviews = document.getElementById("reviews");
     if (!reviews) return;
     event.preventDefault();
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     reviews.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
-    window.history.replaceState(null, "", "#avis");
+    window.history.replaceState(null, "", "#reviews");
   }
 
   return (
@@ -77,7 +77,7 @@ export function ProductInfo({
         <h1 className="display text-[1.75rem] text-navy md:text-4xl">{product.name}</h1>
         {ratingCount > 0 && ratingAverage != null ? (
           <a
-            href="#avis"
+            href="#reviews"
             className="product-rating-jump"
             onClick={scrollToReviews}
             aria-label={`View reviews: ${ratingAverage.toLocaleString("en-US", {

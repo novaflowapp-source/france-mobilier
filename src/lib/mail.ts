@@ -390,7 +390,7 @@ export async function sendProAccessRequestEmails(input: {
 
 export async function sendWelcomeEmail(input: { email: string; name?: string | null }) {
   const accountUrl = `${store.domain.replace(/\/$/, "")}/account`;
-  const catalogUrl = `${store.domain.replace(/\/$/, "")}/collections/meubles`;
+  const catalogUrl = `${store.domain.replace(/\/$/, "")}/collections/furniture`;
   const greeting = input.name?.trim() ? `Hello ${input.name.trim()},` : "Hello,";
   const subject = `Welcome to ${store.storeName}`;
   const text = [

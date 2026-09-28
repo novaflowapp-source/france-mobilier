@@ -183,7 +183,7 @@ export function CheckoutForm() {
     return (
       <div className="rounded-2xl border border-border bg-card p-8">
         <p className="text-muted">Your cart is empty.</p>
-        <Link href="/collections/meubles" className="btn btn-primary mt-6 inline-flex">
+        <Link href="/collections/furniture" className="btn btn-primary mt-6 inline-flex">
           Browse furniture
         </Link>
       </div>

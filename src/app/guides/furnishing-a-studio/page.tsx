@@ -25,7 +25,7 @@ export default function GuideStudioPage() {
         <p>
           An{" "}
           <Link
-            href="/products/table-a-manger-extensible"
+            href="/products/extendable-dining-table"
             className="text-navy underline-offset-4 hover:underline"
           >
             extendable dining table
@@ -34,11 +34,11 @@ export default function GuideStudioPage() {
         </p>
         <p>
           A{" "}
-          <Link href="/products/meuble-tv" className="text-navy underline-offset-4 hover:underline">
+          <Link href="/products/wood-tv-stand" className="text-navy underline-offset-4 hover:underline">
             24 cm deep TV stand
           </Link>{" "}
           and a{" "}
-          <Link href="/products/meuble-casiers" className="text-navy underline-offset-4 hover:underline">
+          <Link href="/products/cubby-storage-unit" className="text-navy underline-offset-4 hover:underline">
             20 cm deep cubby unit
           </Link>{" "}
           sit against the wall without eating floor space.
@@ -48,7 +48,7 @@ export default function GuideStudioPage() {
           they help daily life.
         </p>
       </div>
-      <Link href="/collections/petits-espaces" className="btn btn-primary mt-10 inline-flex">
+      <Link href="/collections/small-spaces" className="btn btn-primary mt-10 inline-flex">
         Shop small-space furniture
       </Link>
     </article>

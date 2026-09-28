@@ -12,7 +12,7 @@ function digitsOnly(value: string) {
   return value.replace(/\D/g, "");
 }
 
-/** Luhn, lu de droite à gauche (norme SIREN / SIRET). */
+/** Luhn check, right-to-left (SIREN / SIRET standard). */
 export function luhnOk(value: string) {
   const digits = digitsOnly(value);
   if (!digits.length) return false;

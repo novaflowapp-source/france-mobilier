@@ -18,7 +18,7 @@ export function isAdminEmail(email?: string | null) {
   return listAdminEmails().includes(email.trim().toLowerCase());
 }
 
-/** Funnel stats (paniers, vues, paiements) — reserved to the store owner. */
+/** Funnel stats (carts, views, payments) — reserved to the store owner. */
 export function isActivityAdminEmail(email?: string | null) {
   return email?.trim().toLowerCase() === "hugo.rusu@gmail.com";
 }

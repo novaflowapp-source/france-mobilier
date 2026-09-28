@@ -1,37 +1,37 @@
 export type AvailabilityStatus = "coming_soon" | "available" | "out_of_stock";
 
 export type ProductCategory =
-  | "maison"
-  | "rangement"
-  | "bureau"
-  | "cuisine"
-  | "salle-de-bain"
-  | "animaux";
+  | "home"
+  | "storage"
+  | "office"
+  | "kitchen"
+  | "bathroom"
+  | "pets";
 
-export type ProductRoom = "salon" | "chambre" | "entree" | "bureau" | "accessoires";
+export type ProductRoom = "living-room" | "bedroom" | "entry" | "office" | "accessories";
 
 export type ProductTypeSlug =
-  | "table-basse"
-  | "meuble-tv"
-  | "table-appoint"
-  | "table-a-manger"
-  | "table-de-chevet"
-  | "coiffeuse"
-  | "meuble-chaussures"
-  | "casiers"
-  | "etagere"
-  | "bureau"
-  | "support"
-  | "organiseur"
-  | "chariot"
-  | "rangement"
-  | "meuble-litiere"
-  | "buffet"
+  | "coffee-table"
+  | "tv-stand"
+  | "side-table"
+  | "dining-table"
+  | "nightstand"
+  | "vanity"
+  | "shoe-storage"
+  | "cubbies"
+  | "shelf"
+  | "desk"
+  | "stand"
+  | "organizer"
+  | "cart"
+  | "storage"
+  | "pet-furniture"
+  | "sideboard"
   | "console"
-  | "commode"
-  | "armoire"
-  | "caisson"
-  | "banc";
+  | "dresser"
+  | "wardrobe"
+  | "pedestal"
+  | "bench";
 
 export type ProductImageIssue =
   | "chinese_text"

@@ -169,7 +169,7 @@ export function OrderConfirmation() {
         </Link>
         .
       </p>
-      <Link href="/collections/maison" className="btn btn-primary inline-flex">
+      <Link href="/collections/furniture" className="btn btn-primary inline-flex">
         Continue shopping
       </Link>
     </div>

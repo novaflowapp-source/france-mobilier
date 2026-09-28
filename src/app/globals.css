@@ -439,7 +439,7 @@ button:disabled {
   }
 }
 
-#avis {
+#reviews {
   scroll-margin-top: calc(6.25rem + env(safe-area-inset-top));
 }
 

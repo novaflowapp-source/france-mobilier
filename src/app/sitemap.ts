@@ -34,12 +34,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified,
   }));
 
-  const collectionRoutes = collections
-    .filter((collection) => collection.slug !== "maison" && collection.slug !== "rangement")
-    .map((collection) => ({
-      url: canonicalUrl(`/collections/${collection.slug}`),
-      lastModified,
-    }));
+  const collectionRoutes = collections.map((collection) => ({
+    url: canonicalUrl(`/collections/${collection.slug}`),
+    lastModified,
+  }));
 
   const productRoutes = listProducts()
     .filter(isSellable)
